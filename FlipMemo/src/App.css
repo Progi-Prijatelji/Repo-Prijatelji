@@ -45,6 +45,7 @@ h1{
   background-color: white;
   border-radius: 10px;
   border: 1px solid rgb(208, 205, 205);
+  box-shadow: black 0px 2px 8px -2px;
 }
 
 .part {
@@ -107,7 +108,8 @@ h1{
 
 .login-inputs {
   position: relative;
-  margin: 20px 0;
+  margin-top: 10px;
+  margin-bottom: 20px;
   padding-top: 15px;
   transition: 0.5s ease all;
 }

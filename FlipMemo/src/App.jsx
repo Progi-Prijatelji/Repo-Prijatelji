@@ -22,7 +22,7 @@ function App() {
         <div className='login part'>
           <form action="" onSubmit={handleSubmit} className='login-form'>
             <label id = "welcome-label">Dobrodosli</label>
-            <label id = "login-label">Prijava</label>
+            <label id = "login-label">Unesite vase podatke</label>
             <div className="login-inputs">
               
               <input 
@@ -47,6 +47,7 @@ function App() {
 
               <label htmlFor="password">Lozinka: </label>
             </div>
+            <a href="#">Zaboravili ste lozinku?</a>
             <input type="submit" value="Prijavi se" className='button' />
           </form> 
           <div className="noAcc">
