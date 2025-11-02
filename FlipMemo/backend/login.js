@@ -18,22 +18,24 @@ con.connect((err) => {
   console.log("Connected to MySQL!");
 });
 
-app.post('/login', (req,res)=>{
-    const {email, password} = req.body;
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
 
-    const line = `select count(*) from login where email= ${email} and 
-                password = ${password}`;
+  const sql = "SELECT COUNT(*) AS count FROM login WHERE email = ? AND password = ?";
+  
+  con.query(sql, [email, password], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false });
+    }
     
-    con.query(line, function (err, result, fields) {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({success: false});
-                }})
-                if(result > 0){
-                    return res.json({success: true});
-                }
-                else return res.json({success: false});
-})
+    if (result[0].count > 0) {
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: false });
+    }
+  });
+});
 
 const PORT = 8080;
 app.listen(PORT, () => {

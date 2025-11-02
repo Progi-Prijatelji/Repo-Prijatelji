@@ -78,12 +78,6 @@ function Login() {
           </div>
         </div>
       </div>
-      <BrowserRouter>
-            <Routes>
-              <Route path="/home" element={<Login/>}/>
-              <Route path="/singup" element = {<SingUp/>}></Route>
-            </Routes>
-          </BrowserRouter>
     </>
   )
 }
