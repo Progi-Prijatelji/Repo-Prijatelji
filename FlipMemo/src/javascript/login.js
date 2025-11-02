@@ -1,7 +1,10 @@
-const express = require('express');
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+
 const app = express();
-import { browserHistory } from 'react-router';
-let mysql = require('mysql');
+app.use(cors());
+app.use(express.json());
 
 let con = mysql.createConnection({
   host: "localhost",
@@ -10,20 +13,27 @@ let con = mysql.createConnection({
   database: "mydb"
 });
 
-function CheckLoginInput(email, password) {
-    if(con.connect(function(err) {
-        if (err) throw err;
-        con.query(`select count() from login where email= ${email} and 
-                password = ${password}`, function (err, result, fields) {
-                if (err) throw "Email i lozinka se ne podudaraju!"
-                return result != null;});
-    }));
-}
+con.connect((err) => {
+  if (err) throw err;
+  console.log("Connected to MySQL!");
+});
 
-function LoginAttempt(email, password){
-     if(CheckLoginInput(email, password))
-    browserHistory.push("/home");
-}
+app.post('/login', (req,res)=>{
+    const {email, password} = req.body;
+
+    const line = `select count(*) from login where email= ${email} and 
+                password = ${password}`;
+    
+    con.query(line, function (err, result, fields) {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({success: false});
+                }})
+                if(result > 0){
+                    return res.json({success: true});
+                }
+                else return res.json({success: false});
+})
 
 const PORT = 8080;
 app.listen(PORT, () => {
