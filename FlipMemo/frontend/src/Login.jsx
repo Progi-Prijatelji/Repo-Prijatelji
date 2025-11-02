@@ -68,7 +68,6 @@ function Login() {
 
               <label htmlFor="password">Lozinka: </label>
             </div>
-            <a href="#">Zaboravili ste lozinku?</a>
             <input type="submit" value="Prijavi se" className='button' />
           </form> 
           <div className="noAcc">
