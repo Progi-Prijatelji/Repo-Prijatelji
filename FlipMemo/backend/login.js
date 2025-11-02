@@ -28,8 +28,27 @@ app.post('/login', (req, res) => {
       console.error(err);
       return res.status(500).json({ success: false });
     }
-    
-    if (result[0].count > 0) {
+
+    if (result.length > 0) {
+      return res.json({ success: true });
+    } else {
+      return res.json({ success: false });
+    }
+  });
+});
+
+app.post('/signup', (req, res) => {
+  const { email, password } = req.body;
+
+  const sql = "insert into mydb values(?,?)";
+  
+  con.query(sql, [email, password], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false });
+    }
+
+    if (result.length > 0) {
       return res.json({ success: true });
     } else {
       return res.json({ success: false });

@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import './css/login.css'
 import logo from './assets/FlipMemo__Logo.png'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-
 function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -30,6 +28,12 @@ function Login() {
       alert("Greška u povezivanju s poslužiteljem.");
     }
 
+  }
+
+  const handleReg = async (e)=>{
+    e.preventDefault();
+
+    window.location.href = "/signup";
   }
 
   return (
@@ -72,8 +76,7 @@ function Login() {
           </form> 
           <div className="noAcc">
             <p>Nemaš račun?</p>
-            <button className='button'>Registriraj se</button>
-
+            <button className='button' onClick={handleReg}>Registriraj se</button>
           </div>
         </div>
       </div>

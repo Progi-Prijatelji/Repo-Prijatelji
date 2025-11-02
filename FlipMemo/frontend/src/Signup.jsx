@@ -1,13 +1,32 @@
-import React from 'react'
 import { useState } from 'react'
 
 function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Handle login logic here
+
+    try {
+      const response = await fetch("http://localhost:8080/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+  
+      const data = await response.json();
+  
+      if(data.success){
+        alert("Uspješna registracija!");
+          window.location.href = "/home";
+        } else {
+          alert("Neuspješna registracija!");
+        }
+      } catch (error) {
+      console.error("Greška:", error);
+      alert("Greška u povezivanju s poslužiteljem.");
+    }
+
   }
 
   return (
