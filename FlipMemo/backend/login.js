@@ -70,6 +70,7 @@ app.post("/google-auth", async (req, res) => {
     });
 
     const payload = ticket.getPayload();
+    console.log(payload)
     const email = payload.email;
     const name = payload.name;
 
@@ -89,7 +90,8 @@ app.post("/google-auth", async (req, res) => {
 
       const transporter = nodemailer.createTransport({
         service: "gmail",
-        auth: { user: "flipmemo.fer@gmail.com", pass: process.env.EMAIL_PASS }
+        auth: { user: "flipmemo.fer@gmail.com", 
+          pass: "ihre xxav zpky lqif" }
       });
 
       await transporter.sendMail({
