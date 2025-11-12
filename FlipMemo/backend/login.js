@@ -3,18 +3,17 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { Client } = require("pg");
-const session = requre("express-session") ;
+const session = require("express-session") ;
 
+const app = express();
+app.use(cors());
+app.use(express.json());
 app.use(session({
   secret: "blablubli",
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false }
 }));
-
-const app = express();
-app.use(cors());
-app.use(express.json());
 
 // napravljeno za posebnu bazu mora se promijeniti
 const client = new Client ({
