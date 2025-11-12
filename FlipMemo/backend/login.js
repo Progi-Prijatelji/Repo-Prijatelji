@@ -29,11 +29,11 @@ app.use(session({
 
 // napravljeno za posebnu bazu mora se promijeniti
 const client = new Client ({
-    host: "localhost",
+    host: "dpg-d4ab1cjuibrs73car9v0-a",
     user: "myuser",
-    port: 5433,
-    password: "mysecretpwd",
-    database: "FlipMemo"
+    port: 5432,
+    password: "oEaV29J2gnc13fivqlkvAwy1zUf3rQGI",
+    database: "flipmemo_1evy"
 });
 client.connect();
 
@@ -178,4 +178,16 @@ app.post('/deleteacc', (req, res) =>{
             return res.json({ success: false, message: "Neuspješno brisanje računa!" });
         }
     });
+});
+
+
+
+const path = require("path");
+
+// Serve static files from frontend build
+app.use(express.static(path.join(__dirname, "frontend/dist"))); // ili "build" ako se tako zove
+
+// Catch-all route to serve index.html for SPA
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
 });
