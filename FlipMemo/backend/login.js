@@ -6,8 +6,10 @@ const { Client } = require("pg");
 const session = require("express-session");
 const { OAuth2Client } = require("google-auth-library");
 const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com");
-
+const sendgrid = require("@sendgrid/mail");
 const app = express();
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.use(cors({
   origin: "https://fmimage.onrender.com",
@@ -91,22 +93,19 @@ app.post("/google-auth", async (req, res) => {
       await client.query(`INSERT INTO users (userid, email, password) VALUES ($1, $2, $3)`, [userid, email, hashedPass]);
 
 
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: { user: "flipmemo.fer@gmail.com", 
-          pass: "ihre xxav zpky lqif" }
-      });
-
-      try {
-      await transporter.sendMail({
-        from: '"FlipMemo" <flipmemo.fer@gmail.com>',
+      const msg = {
         to: email,
+        from: 'flipmemo.fer@gmail.com',
         subject: "Vaša FlipMemo lozinka",
         text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
-      });
-      } catch (error) {
-          console.log(error)
       }
+      sendgrid.send(msg).then((response) => {
+        console.log(response[0].statusCode)
+        console.log(response[0].headers)
+      })
+      .catch((error) => {
+        console.error(error)
+      });
 
       req.session.userEmail = email;
       return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
