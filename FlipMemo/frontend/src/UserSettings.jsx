@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import logo from '../assets/FlipMemo__Logo.png'
-import Header from '../components/Header.jsx';
+import logo from './assets/FlipMemo__Logo.png'
+import Header from './components/Header.jsx';
 
 function UserSettings() {
     const [currentPassword, setCurrentPassword] = useState('')

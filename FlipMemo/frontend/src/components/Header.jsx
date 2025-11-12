@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Header.css'
+import '../css/header.css'
 import logo from '../assets/FlipMemo__Logo.png';
 import icon from '../assets/setting.png';
 
