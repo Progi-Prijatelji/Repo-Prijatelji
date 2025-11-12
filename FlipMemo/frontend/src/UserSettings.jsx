@@ -13,13 +13,13 @@ function UserSettings() {
 
     const handleDeleteAccount = async() => {
         try{
-            const res = await fetch("http://localhost:8080/current-user");
+            const res = await fetch("https://fmimage.onrender.com/current-user");
             const userData = await res.json(); 
             if (!userData.email) { 
                 alert("Niste prijavljeni!"); 
                 return; 
             }
-            const response = await fetch("http://localhost:8080/deleteacc", {
+            const response = await fetch("https://fmimage.onrender.com/deleteacc", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({email:userData.email, password }),
@@ -42,13 +42,13 @@ function UserSettings() {
     const handlePasswordChange = async(e) => {
         e.preventDefault()
         try{
-            const res = await fetch("http://localhost:8080/current-user");
+            const res = await fetch("https://fmimage.onrender.com/current-user");
             const userData = await res.json(); 
             if (!userData.email) { 
                 alert("Niste prijavljeni!"); 
                 return; 
             }
-            const response = await fetch("http://localhost:8080/changepass", {
+            const response = await fetch("https://fmimage.onrender.com/changepass", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({email:userData.email, currentPassword, newPassword, confirmNewPassword }),
