@@ -31,7 +31,7 @@ app.post('/changepass', async (req, res) =>{
 
     const wait = `SELECT COUNT(*) AS count FROM login WHERE email=$1`
 
-    client.query(wait, [userData.email,hashedPass], async (err, result) => {
+    client.query(wait, [userData.email,hashedPass], (err, result) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ success: false });
@@ -44,14 +44,13 @@ app.post('/changepass', async (req, res) =>{
             }
             const hashedPass2 = crypto.createHash("sha256").update(newpass1).digest("hex");
             
-            await client.query(`update INTO login (email, password) VALUES ($1, $2)`, [email, hashedPass2]);
-                const transporter = nodemailer.createTransport({
-                  service: "gmail",
-                  auth: {
-                    user: "flipmemo.fer@gmail.com",
-                    pass: "MEmoFlippers67" 
-                  }
-                });
+            client.query(`update login set (password = $1) where email = $2`, [hashedPass2, userData.email], (err,result) =>{
+                if (err) {
+                    console.error(err.message);
+                    return res.status(500).json({ success: false });
+                }
+                else return res.json({success: true})
+            });
         } else {
             return res.json({ success: false });
         }
