@@ -8,7 +8,7 @@ const session = require("express-session") ;
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://fmimage.onrender.com/",
   credentials: true
 }));
 
@@ -93,7 +93,7 @@ app.post("/google-auth", async (req, res) => {
       from: '"FlipMemo" <flipmemo.fer@gmail.com>',
       to: email,
       subject: "Vaša FlipMemo lozinka",
-      text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na http://localhost:5173/login`
+      text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
     });
 
     return res.json({ success: true,reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });

@@ -12,7 +12,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch("https://fmimage.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -40,7 +40,7 @@ function Login() {
 
       console.log("Google user:", googleUser);
 
-      const response = await fetch("http://localhost:8080/google-auth", {
+      const response = await fetch("https://fmimage.onrender.com/google-auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: googleUser.email, name: googleUser.name }),
