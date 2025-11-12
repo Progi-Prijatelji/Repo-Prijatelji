@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import logo from '../assets/FlipMemo__Logo.png'
+import Header from '../components/Header.jsx';
 
 function UserSettings() {
     const [currentPassword, setCurrentPassword] = useState('')
@@ -64,33 +65,50 @@ function UserSettings() {
 
     return (
         <>
-            <button>Obriši račun</button>
-            <button>Promjeni lozinku</button>
-            <form action="" onSubmit={handlePasswordChange}>
-                <input 
-                    type="password" 
-                    id="current-password"   
-                    name="current-password"
-                    value={currentPassword}
-                    onChange={(e)=>setCurrentPassword(e.target.value)}
-                    placeholder="Trenutna lozinka" required/>
-                <input
-                    type="password"
-                    id="new-password"
-                    name="new-password"
-                    value={newPassword}
-                    onChange={(e)=>setNewPassword(e.target.value)}
-                    placeholder="Nova lozinka" required/>
-                <input
-                    type="password"
-                    id="confirm-new-password"
-                    name="confirm-new-password"
-                    value={confirmNewPassword}
-                    onChange={(e)=>setConfirmNewPassword(e.target.value)}
-                    placeholder="Potvrdi novu lozinku" required/>
-                <button type="submit">Spremi promjene</button>
-
-            </form>
+            <Header />
+            <div className='container user-settings'>
+                <button>Obriši račun</button>
+                <div className='delete'>
+                    <form action="" onSubmit={handleDeleteAccount}>
+                        <input 
+                            type="password"
+                            id="current-password"
+                            name="current-password"
+                            value={currentPassword}
+                            onChange={(e)=>setCurrentPassword(e.target.value)}
+                            placeholder="Trenutna lozinka" required
+                            />
+                            <button type='submit'>Izbriši račun</button>
+                    </form>
+                </div>
+                <button>Promjeni lozinku</button>
+                <div className='change'>
+                    <form action="" onSubmit={handlePasswordChange}>
+                        <input 
+                            type="password" 
+                            id="current-password"   
+                            name="current-password"
+                            value={currentPassword}
+                            onChange={(e)=>setCurrentPassword(e.target.value)}
+                            placeholder="Trenutna lozinka" required/>
+                        <input
+                            type="password"
+                            id="new-password"
+                            name="new-password"
+                            value={newPassword}
+                            onChange={(e)=>setNewPassword(e.target.value)}
+                            placeholder="Nova lozinka" required/>
+                        <input
+                            type="password"
+                            id="confirm-new-password"
+                            name="confirm-new-password"
+                            value={confirmNewPassword}
+                            onChange={(e)=>setConfirmNewPassword(e.target.value)}
+                            placeholder="Potvrdi novu lozinku" required/>
+                        <button type="submit">Spremi promjene</button>
+                    </form>
+                </div>
+            </div>
         </>
     )
 }

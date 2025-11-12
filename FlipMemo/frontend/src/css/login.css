@@ -22,16 +22,6 @@ h1{
   padding: 0;
 }
 
-/* -------------------Logo------------------- */
-
-.page-logo {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 200px;
-  height: auto;
-  z-index: 1000;
-}
 
 /* -------------------Container------------------- */
 .container {

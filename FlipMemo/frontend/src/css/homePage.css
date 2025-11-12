@@ -1,9 +1,12 @@
-body{
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.contain{
+    display: grid;
     background-color: white;
+    width: 90vw;
+    height: 60vh;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;    
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: black 0px 2px 8px -2px;
 }

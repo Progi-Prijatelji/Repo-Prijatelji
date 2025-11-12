@@ -1,13 +1,27 @@
 header{
-    background-color: #ecc6b0;
+    position: fixed;
+    top: 10px;
+    left: 1%;
+    background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 10px 20px;
     display: flex;
-    position: absolute;
-    top: 0;
-    z-index: 100;
-    width: 100%;
+    width: 90vw;
+    height: 20vh;
     align-items: center;
-    justify-content: center;
-    
+    justify-content: space-between;
+    justify-self: center;
+    border-radius: 10px;
+    flex-direction: row;
+    padding: 0 20px;
+}
+
+.page-logo {
+    height: 30vh;
+    z-index: 1000;
+}
+
+
+.setting{
+    height: auto;
+    z-index: 1000;
 }
