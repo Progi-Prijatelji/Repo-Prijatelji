@@ -1,13 +1,14 @@
 const express = require("express");
 const cors = require("cors");
-import nodemailer from "nodemailer";
-import crypto from "crypto";
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const { Client } = require("pg");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const {Client} = require('pg'); // napravljeno za posebnu bazu mora se promijeniti
+// napravljeno za posebnu bazu mora se promijeniti
 const client = new Client ({
     host: "localhost",
     user: "myuser",
