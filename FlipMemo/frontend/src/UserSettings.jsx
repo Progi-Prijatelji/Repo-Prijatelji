@@ -58,6 +58,9 @@ function UserSettings() {
     }catch (error) {
         console.error("Greška:", error);
         alert("Greška u povezivanju s poslužiteljem.");
+        setConfirmNewPassword('');
+        setCurrentPassword('');
+        setNewPassword('');
     }
 }
 
@@ -65,6 +68,17 @@ function UserSettings() {
     return (
         <>
             <button>Obriši račun</button>
+            <form action="" onSubmit={handleDeleteAccount}>
+                <input 
+                    type="password"
+                    id="current-password"
+                    name="current-password"
+                    value={currentPassword}
+                    onChange={(e)=>setCurrentPassword(e.target.value)}
+                    placeholder="Trenutna lozinka" required
+                    />
+                    <button type='submit'>Izbriši račun</button>
+            </form>
             <button>Promjeni lozinku</button>
             <form action="" onSubmit={handlePasswordChange}>
                 <input 
