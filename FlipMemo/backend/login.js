@@ -10,7 +10,7 @@ const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkb
 const app = express();
 
 app.use(cors({
-  origin: "https://fmimage.onrender.com/",
+  origin: "https://fmimage.onrender.com",
   credentials: true
 }));
 
@@ -43,7 +43,7 @@ app.get("/current-user", (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-    const query = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    const query = `SELECT COUNT(*) AS count FROM users WHERE email=$1 AND password=$2`;
     client.query(query, [email, crypto.createHash("sha256").update(password).digest("hex")], (err, result) => {
         if (err) {
             console.error(err.message);
@@ -74,19 +74,19 @@ app.post("/google-auth", async (req, res) => {
     const email = payload.email;
     const name = payload.name;
 
-    const result = await client.query(`SELECT COUNT(*) AS count FROM login WHERE email=$1`, [email]);
+    const result = await client.query(`SELECT COUNT(*) AS count FROM users WHERE email=$1`, [email]);
     const count = parseInt(result.rows[0].count);
 
     if (count === 0) {
       const password = crypto.randomBytes(6).toString("hex");
       const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
-      const maxResult = await client.query(`SELECT MAX(userid) AS maxid FROM login`);
+      const maxResult = await client.query(`SELECT MAX(userid) AS maxid FROM users`);
       let userid = 1;
       if (maxResult.rows[0].maxid !== null) {
         userid = maxResult.rows[0].maxid + 1;
       } 
 
-      await client.query(`INSERT INTO login (userid, email, password) VALUES ($1, $2, $3)`, [userid, email, hashedPass]);
+      await client.query(`INSERT INTO users (userid, email, password) VALUES ($1, $2, $3)`, [userid, email, hashedPass]);
 
       const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -132,7 +132,7 @@ app.post('/changepass', (req, res) => {
 
     const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
 
-    const checkQuery = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    const checkQuery = `SELECT COUNT(*) AS count FROM users WHERE email=$1 AND password=$2`;
     client.query(checkQuery, [email, hashedPass], (err, result) => {
         if (err) {
             console.error(err.message);
@@ -143,7 +143,7 @@ app.post('/changepass', (req, res) => {
         if (count > 0) {
             const hashedNewPass = crypto.createHash("sha256").update(newpass1).digest("hex");
             client.query(
-                `UPDATE login SET password=$1 WHERE email=$2`,
+                `UPDATE users SET password=$1 WHERE email=$2`,
                 [hashedNewPass, email],
                 (err2) => {
                     if (err2) {
@@ -165,7 +165,7 @@ app.post('/deleteacc', (req, res) =>{
 
     const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
 
-    const checkQuery = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    const checkQuery = `SELECT COUNT(*) AS count FROM users WHERE email=$1 AND password=$2`;
     client.query(checkQuery, [email, hashedPass], (err, result) => {
         if (err) {
             console.error(err.message);
@@ -175,7 +175,7 @@ app.post('/deleteacc', (req, res) =>{
         const count = parseInt(result.rows[0].count);
         if (count > 0) {
             client.query(
-                `delete from login where password=$1 and email=$2`,
+                `delete from users where password=$1 and email=$2`,
                 [hashedPass, email],
                 (err2) => {
                     if (err2) {
