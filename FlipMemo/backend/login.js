@@ -1,40 +1,78 @@
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-let con = mysql.createConnection({
-  host: "localhost",
-  user: "yourusername",
-  password: "yourpassword",
-  database: "mydb"
+const {Client} = require('pg'); // napravljeno za posebnu bazu mora se promijeniti
+const client = new Client ({
+    host: "localhost",
+    user: "myuser",
+    port: 5433,
+    password: "mysecretpwd",
+    database: "FlipMemo"
 });
-
-con.connect((err) => {
-  if (err) throw err;
-  console.log("Connected to MySQL!");
-});
+client.connect();
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT COUNT(*) AS count FROM login WHERE email = ? AND password = ?";
-  
-  con.query(sql, [email, password], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false });
+    const query = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    client.query(query, [email, password], (err, result) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ success: false });
+        }
+
+        const count = parseInt(result.rows[0].count);
+        if (count > 0) {
+            return res.json({ success: true });
+        } else {
+            return res.json({ success: false });
+        }
+    });
+});
+
+app.post("/google-auth", async (req, res) => {
+  const { email, name } = req.body;
+
+  try {
+    const result = await client.query(`SELECT COUNT(*) AS count FROM login WHERE email=$1`, [email]);
+    const count = parseInt(result.rows[0].count);
+
+    if (count > 0) {
+      return res.json({ success: true, message: "Dobrodošli natrag!" });
     }
-    
-    if (result[0].count > 0) {
-      return res.json({ success: true });
-    } else {
-      return res.json({ success: false });
-    }
-  });
+
+    const password = crypto.randomBytes(6).toString("hex"); 
+    const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
+
+    await client.query(`INSERT INTO login (email, password) VALUES ($1, $2)`, [email, hashedPass]);
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "flipmemo.fer@gmail.com",
+        pass: "MEmoFlippers67" 
+      }
+    });
+
+    await transporter.sendMail({
+      from: '"FlipMemo" <flipmemo.fer@gmail.com>',
+      to: email,
+      subject: "Vaša FlipMemo lozinka",
+      text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na http://localhost:5173/login`
+    });
+
+    return res.json({ success: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: "Greška na poslužitelju!" });
+  }
 });
 
 const PORT = 8080;
