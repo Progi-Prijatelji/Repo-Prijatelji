@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import './css/login.css';
 import logo from './assets/FlipMemo__Logo.png';
 
