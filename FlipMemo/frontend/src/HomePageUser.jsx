@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import icon from './assets/setting.png'
 import Header from './components/Header.jsx';
 import './css/homePage.css'
 
