@@ -22,12 +22,6 @@ app.use(session({
   cookie: { secure: false, sameSite: "lax" }
 }));
 
-app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  next();
-});
-
 const client = new Client ({
     host: "dpg-d4ab1cjuibrs73car9v0-a",
     user: "myuser",
@@ -96,15 +90,19 @@ app.post("/google-auth", async (req, res) => {
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: { user: "flipmemo.fer@gmail.com", 
-          pass: process.env.EMAIL_PASS }
+          pass: "ihre xxav zpky lqif" }
       });
 
+      try {
       await transporter.sendMail({
         from: '"FlipMemo" <flipmemo.fer@gmail.com>',
         to: email,
         subject: "Vaša FlipMemo lozinka",
         text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
-      });
+    });
+    } catch (error) {
+        console.log(error)
+    }
 
       req.session.userEmail = email;
       return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
@@ -199,6 +197,7 @@ app.post('/deleteacc', (req, res) =>{
 
 
 const path = require("path");
+const { error } = require("console");
 
 // Serve static files from frontend build
 app.use(express.static(path.join(__dirname, "frontend/dist"))); // ili "build" ako se tako zove
