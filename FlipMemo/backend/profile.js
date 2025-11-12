@@ -55,3 +55,34 @@ app.post('/changepass', (req, res) => {
         }
     });
 });
+
+app.post('/deleteacc', (req, res) =>{
+    const {email, password} = req.body;
+
+    const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
+
+    const checkQuery = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    client.query(checkQuery, [email, hashedPass], (err, result) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ success: false });
+        }
+
+        const count = parseInt(result.rows[0].count);
+        if (count > 0) {
+            client.query(
+                `delete from login where password=$1 and email=$2`,
+                [hashedPass, email],
+                (err2) => {
+                    if (err2) {
+                        console.error(err2.message);
+                        return res.status(500).json({ success: false });
+                    }
+                    return res.json({ success: true, message: "Obrisan račun!" });
+                }
+            );
+        } else {
+            return res.json({ success: false, message: "Neuspješno brisanje računa!" });
+        }
+    });
+});
