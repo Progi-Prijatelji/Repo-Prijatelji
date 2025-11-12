@@ -7,6 +7,30 @@ function UserSettings() {
     const [newPassword, setNewPassword] = useState('')
     const [confirmNewPassword, setConfirmNewPassword] = useState('')
 
+    const handleDeleteAccount = async() => {
+        try{
+            const res = await fetch("http://localhost:8080/current-user");
+            const userData = await res.json(); 
+            if (!userData.email) { 
+                alert("Niste prijavljeni!"); 
+                return; 
+            }
+            const response = await fetch("http://localhost:8080/deleteacc", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({email:userData.email, currentPassword }),
+            });
+            const data = await response.json();
+            if(data.success){
+                alert("Račun uspješno obrisan!");
+                window.location.href = "/login";
+            }
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+
     const handlePasswordChange = async(e) => {
         e.preventDefault()
         try{
