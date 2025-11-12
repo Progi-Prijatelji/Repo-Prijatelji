@@ -19,7 +19,7 @@ app.use(session({
   secret: "blablubli",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, sameSite: "lax" }
+  cookie: { secure: true, sameSite: "none" }
 }));
 
 const client = new Client ({
@@ -32,6 +32,8 @@ const client = new Client ({
 client.connect();
 
 app.get("/current-user", (req, res) => {
+  console.log("Session on current-user:", req.session);
+
   if(req.session.userEmail) {
     res.json({ email: req.session.userEmail });
   } else {
@@ -41,6 +43,7 @@ app.get("/current-user", (req, res) => {
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
+  console.log("Session after login:", req.session);
 
     const query = `SELECT COUNT(*) AS count FROM users WHERE email=$1 AND password=$2`;
     client.query(query, [email, crypto.createHash("sha256").update(password).digest("hex")], (err, result) => {
@@ -87,6 +90,7 @@ app.post("/google-auth", async (req, res) => {
 
       await client.query(`INSERT INTO users (userid, email, password) VALUES ($1, $2, $3)`, [userid, email, hashedPass]);
 
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: { user: "flipmemo.fer@gmail.com", 
@@ -99,10 +103,10 @@ app.post("/google-auth", async (req, res) => {
         to: email,
         subject: "Vaša FlipMemo lozinka",
         text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
-    });
-    } catch (error) {
-        console.log(error)
-    }
+      });
+      } catch (error) {
+          console.log(error)
+      }
 
       req.session.userEmail = email;
       return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });

@@ -11,7 +11,8 @@ function UserSettings() {
     const [password, setPassword] = useState('')
     const [visible, setVisible] = useState('flex')
 
-    const handleDeleteAccount = async() => {
+    const handleDeleteAccount = async(e) => {
+        e.preventDefault();
         try{
             const res = await fetch("https://fmimage.onrender.com/current-user", {
             method: "GET",
