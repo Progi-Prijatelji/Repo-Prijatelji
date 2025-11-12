@@ -3,20 +3,15 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { Client } = require("pg");
-const session = require("express-session") ;
+const session = require("express-session");
+const { OAuth2Client } = require("google-auth-library");
+const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com");
 
 const app = express();
 
 app.use(cors({
   origin: "https://fmimage.onrender.com/",
   credentials: true
-}));
-
-app.use(session({
-  secret: "blablubli",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false, sameSite: "lax" } // 'lax' or 'none' if HTTPS
 }));
 
 app.use(express.json());
@@ -66,88 +61,57 @@ app.post('/login', (req, res) => {
 });
 
 app.post("/google-auth", async (req, res) => {
-  const { email, name } = req.body;
+  const { credential } = req.body;
 
   try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: "412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com"
+    });
+
+    const payload = ticket.getPayload();
+    const email = payload.email;
+    const name = payload.name;
+
     const result = await client.query(`SELECT COUNT(*) AS count FROM login WHERE email=$1`, [email]);
     const count = parseInt(result.rows[0].count);
 
-    if (count > 0) {
-      return res.json({ success: true, reg:false, message: "Dobrodošli natrag!" });
+    if (count === 0) {
+      const password = crypto.randomBytes(6).toString("hex");
+      const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
+      const maxResult = await client.query(`SELECT MAX(userid) AS maxid FROM login`);
+      let userid = 1;
+      if (maxResult.rows[0].maxid !== null) {
+        userid = maxResult.rows[0].maxid + 1;
+      } 
+
+      await client.query(`INSERT INTO login (userid, email, password) VALUES ($1, $2, $3)`, [userid, email, hashedPass]);
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: { user: "flipmemo.fer@gmail.com", pass: process.env.EMAIL_PASS }
+      });
+
+      await transporter.sendMail({
+        from: '"FlipMemo" <flipmemo.fer@gmail.com>',
+        to: email,
+        subject: "Vaša FlipMemo lozinka",
+        text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
+      });
+
+      req.session.userEmail = email;
+      return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
     }
 
-    const password = crypto.randomBytes(6).toString("hex"); 
-    const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
+    req.session.userEmail = email;
+    return res.json({ success: true, reg: false, message: "Dobrodošli natrag!" });
 
-    await client.query(`INSERT INTO login (email, password) VALUES ($1, $2)`, [email, hashedPass]);
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "flipmemo.fer@gmail.com",
-        pass: "yxgo knju luho wgfz" 
-      }
-    });
-
-    await transporter.sendMail({
-      from: '"FlipMemo" <flipmemo.fer@gmail.com>',
-      to: email,
-      subject: "Vaša FlipMemo lozinka",
-      text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
-    });
-
-    return res.json({ success: true,reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, reg: false, message: "Greška na poslužitelju!" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Neuspješna Google autentikacija" });
   }
 });
 
-const PORT = 8080;
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}!`);
-})
-
-app.post('/changepass', (req, res) => {
-    const { email, password, newpass1, newpass2 } = req.body;
-
-    if (!email || !password || !newpass1 || !newpass2) {
-        return res.status(400).json({ success: false, message: "Nedostaju podaci" });
-    }
-
-    if (newpass1 !== newpass2) {
-        return res.json({ success: false, message: "Lozinke se ne podudaraju" });
-    }
-
-    const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
-
-    const checkQuery = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
-    client.query(checkQuery, [email, hashedPass], (err, result) => {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ success: false });
-        }
-
-        const count = parseInt(result.rows[0].count);
-        if (count > 0) {
-            const hashedNewPass = crypto.createHash("sha256").update(newpass1).digest("hex");
-            client.query(
-                `UPDATE login SET password=$1 WHERE email=$2`,
-                [hashedNewPass, email],
-                (err2) => {
-                    if (err2) {
-                        console.error(err2.message);
-                        return res.status(500).json({ success: false });
-                    }
-                    return res.json({ success: true, message: "Lozinka uspješno promijenjena!" });
-                }
-            );
-        } else {
-            return res.json({ success: false, message: "Pogrešna trenutna lozinka" });
-        }
-    });
-});
 
 app.post('/deleteacc', (req, res) =>{
     const {email, password} = req.body;
