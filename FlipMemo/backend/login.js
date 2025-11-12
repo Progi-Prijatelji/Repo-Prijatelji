@@ -41,27 +41,10 @@ app.post('/login', (req, res) => {
             return res.json({ success: false });
         }
     });
-  });
-
-  // const sql = "SELECT COUNT(*) AS count FROM login WHERE email = ? AND password = ?";
-  
-  // con.query(sql, [email, password], (err, result) => {
-  //   if (err) {
-  //     console.error(err);
-  //     return res.status(500).json({ success: false });
-  //   }
-
-  //   if (result.length > 0) {
-  //     return res.json({ success: true });
-  //   } else {
-  //     return res.json({ success: false });
-  //   }
-  // });
+});
 
 app.post('/signup', (req, res) => {
   const { email, password } = req.body;
-
-  const sql = "insert into mydb values(?,?)";
   
   const query = `INSERT INTO login (email, password) VALUES ($1, $2) RETURNING *`;
     client.query(query, [email, password], (err, result) => {
