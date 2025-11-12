@@ -6,13 +6,25 @@ const { Client } = require("pg");
 const session = require("express-session") ;
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
+app.use(session({
+  secret: "blablubli",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, sameSite: "lax" } // 'lax' or 'none' if HTTPS
+}));
+
 app.use(express.json());
 app.use(session({
   secret: "blablubli",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { secure: false, sameSite: "lax" }
 }));
 
 // napravljeno za posebnu bazu mora se promijeniti
@@ -37,7 +49,7 @@ app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
     const query = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
-    client.query(query, [email, password], (err, result) => {
+    client.query(query, [email, crypto.createHash("sha256").update(password).digest("hex")], (err, result) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ success: false });
@@ -73,7 +85,7 @@ app.post("/google-auth", async (req, res) => {
       service: "gmail",
       auth: {
         user: "flipmemo.fer@gmail.com",
-        pass: "MEmoFlippers67" 
+        pass: "yxgo knju luho wgfz" 
       }
     });
 
@@ -96,3 +108,74 @@ const PORT = 8080;
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}!`);
 })
+
+app.post('/changepass', (req, res) => {
+    const { email, password, newpass1, newpass2 } = req.body;
+
+    if (!email || !password || !newpass1 || !newpass2) {
+        return res.status(400).json({ success: false, message: "Nedostaju podaci" });
+    }
+
+    if (newpass1 !== newpass2) {
+        return res.json({ success: false, message: "Lozinke se ne podudaraju" });
+    }
+
+    const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
+
+    const checkQuery = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    client.query(checkQuery, [email, hashedPass], (err, result) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ success: false });
+        }
+
+        const count = parseInt(result.rows[0].count);
+        if (count > 0) {
+            const hashedNewPass = crypto.createHash("sha256").update(newpass1).digest("hex");
+            client.query(
+                `UPDATE login SET password=$1 WHERE email=$2`,
+                [hashedNewPass, email],
+                (err2) => {
+                    if (err2) {
+                        console.error(err2.message);
+                        return res.status(500).json({ success: false });
+                    }
+                    return res.json({ success: true, message: "Lozinka uspješno promijenjena!" });
+                }
+            );
+        } else {
+            return res.json({ success: false, message: "Pogrešna trenutna lozinka" });
+        }
+    });
+});
+
+app.post('/deleteacc', (req, res) =>{
+    const {email, password} = req.body;
+
+    const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
+
+    const checkQuery = `SELECT COUNT(*) AS count FROM login WHERE email=$1 AND password=$2`;
+    client.query(checkQuery, [email, hashedPass], (err, result) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ success: false });
+        }
+
+        const count = parseInt(result.rows[0].count);
+        if (count > 0) {
+            client.query(
+                `delete from login where password=$1 and email=$2`,
+                [hashedPass, email],
+                (err2) => {
+                    if (err2) {
+                        console.error(err2.message);
+                        return res.status(500).json({ success: false });
+                    }
+                    return res.json({ success: true, message: "Obrisan račun!" });
+                }
+            );
+        } else {
+            return res.json({ success: false, message: "Neuspješno brisanje računa!" });
+        }
+    });
+});

@@ -9,7 +9,9 @@ function UserSettings() {
 
     const handleDeleteAccount = async() => {
         try{
-            const res = await fetch("http://localhost:8080/current-user");
+            const res = await fetch("http://localhost:8080/current-user", 
+                 {method: "GET",
+                 credentials: "include"});
             const userData = await res.json(); 
             if (!userData.email) { 
                 alert("Niste prijavljeni!"); 
@@ -18,12 +20,12 @@ function UserSettings() {
             const response = await fetch("http://localhost:8080/deleteacc", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({email:userData.email, currentPassword }),
+                body: JSON.stringify({ email: userData.email, password: currentPassword }),
             });
             const data = await response.json();
             if(data.success){
                 alert("Račun uspješno obrisan!");
-                window.location.href = "/login";
+                window.location.href = "/";
             }
         }catch (error) {
             console.error("Greška:", error);
@@ -34,7 +36,9 @@ function UserSettings() {
     const handlePasswordChange = async(e) => {
         e.preventDefault()
         try{
-            const res = await fetch("http://localhost:8080/current-user");
+            const res = await fetch("http://localhost:8080/current-user", 
+                 {method: "GET",
+                 credentials: "include"});
             const userData = await res.json(); 
             if (!userData.email) { 
                 alert("Niste prijavljeni!"); 
@@ -43,7 +47,7 @@ function UserSettings() {
             const response = await fetch("http://localhost:8080/changepass", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({email:userData.email, currentPassword, newPassword, confirmNewPassword }),
+                body: JSON.stringify({email:userData.email, password: currentPassword, newpass1: newPassword, newpass2: confirmNewPassword }),
         });
         const data = await response.json();
         if(data.success){
@@ -64,7 +68,7 @@ function UserSettings() {
 
     return (
         <>
-            <button>Obriši račun</button>
+            <button onClick={handleDeleteAccount}>Obriši račun</button>
             <button>Promjeni lozinku</button>
             <form action="" onSubmit={handlePasswordChange}>
                 <input 

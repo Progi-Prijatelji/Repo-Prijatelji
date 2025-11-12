@@ -16,6 +16,7 @@ function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include"
       });
 
       const data = await response.json();
@@ -52,7 +53,7 @@ function Login() {
         window.location.href = "/home";
       } else if(data.success && data.reg){
         alert(data.message || "Uspješna Google registracija!");
-         window.location.href = "/login";
+         window.location.href = "/";
       }else {
         alert("Google prijava nije uspjela!");
       }
