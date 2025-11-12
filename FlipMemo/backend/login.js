@@ -22,7 +22,12 @@ app.use(session({
   cookie: { secure: false, sameSite: "lax" }
 }));
 
-// napravljeno za posebnu bazu mora se promijeniti
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
+
 const client = new Client ({
     host: "dpg-d4ab1cjuibrs73car9v0-a",
     user: "myuser",
@@ -114,7 +119,7 @@ app.post("/google-auth", async (req, res) => {
   }
 });
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}!`);
 })
