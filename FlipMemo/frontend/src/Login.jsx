@@ -42,15 +42,18 @@ function Login() {
       const response = await fetch("http://localhost:8080/google-auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ email: googleUser.email, name: googleUser.name }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
+      if (data.success && !data.reg) {
         alert(data.message || "Uspješna Google prijava!");
         window.location.href = "/home";
-      } else {
+      } else if(data.success && data.reg){
+        alert(data.message || "Uspješna Google registracija!");
+         window.location.href = "/login";
+      }else {
         alert("Google prijava nije uspjela!");
       }
     } catch (err) {

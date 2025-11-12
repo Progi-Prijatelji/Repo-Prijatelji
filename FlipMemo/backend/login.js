@@ -3,6 +3,14 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { Client } = require("pg");
+const session = requre("express-session") ;
+
+app.use(session({
+  secret: "blablubli",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}));
 
 const app = express();
 app.use(cors());
@@ -18,6 +26,14 @@ const client = new Client ({
 });
 client.connect();
 
+app.get("/current-user", (req, res) => {
+  if(req.session.userEmail) {
+    res.json({ email: req.session.userEmail });
+  } else {
+    res.status(401).json({ error: "Not logged in" });
+  }
+});
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -30,6 +46,7 @@ app.post('/login', (req, res) => {
 
         const count = parseInt(result.rows[0].count);
         if (count > 0) {
+            req.session.userEmail = email;
             return res.json({ success: true });
         } else {
             return res.json({ success: false });
@@ -45,7 +62,7 @@ app.post("/google-auth", async (req, res) => {
     const count = parseInt(result.rows[0].count);
 
     if (count > 0) {
-      return res.json({ success: true, message: "Dobrodošli natrag!" });
+      return res.json({ success: true, reg:false, message: "Dobrodošli natrag!" });
     }
 
     const password = crypto.randomBytes(6).toString("hex"); 
@@ -68,11 +85,11 @@ app.post("/google-auth", async (req, res) => {
       text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na http://localhost:5173/login`
     });
 
-    return res.json({ success: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
+    return res.json({ success: true,reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ success: false, message: "Greška na poslužitelju!" });
+    return res.status(500).json({ success: false, reg: false, message: "Greška na poslužitelju!" });
   }
 });
 
