@@ -1,10 +1,10 @@
 import React from 'react'
 import {createRoot} from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './Login.jsx';
-import Signup from './Signup.jsx';
-import HomePageUser from './HomePageUser.jsx';
-import UserSettings from './UserSettings.jsx';
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
+import HomePageUser from './pages/HomePageUser.jsx';
+import UserSettings from './pages/UserSettings.jsx';
 
 function App() {
 
