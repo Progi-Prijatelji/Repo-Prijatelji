@@ -52,10 +52,16 @@ app.post('/login', async (req, res) => {
       const count = parseInt(result.rows[0].count);
 
       if (count > 0) {
+        const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
+        const adminStr = admin.rows[0].email;
+
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "3h" });
-        return res.json({ success: true, token });
+
+        if(adminStr == email){
+          res.json({ success: true, reg: false, admin: true, message: "Dobrodošli korijenski admine!", token });
+        }else return res.json({ success: true, reg: false, admin:false, token });
       }   else {
-        return res.json({ success: false, message: "Pogrešan email ili lozinka" });
+        return res.json({ success: false, reg: false, admin:false, message: "Pogrešan email ili lozinka" });
       }
     } catch (err) {
       console.error(err.message);
@@ -108,11 +114,18 @@ app.post("/google-auth", async (req, res) => {
       });
 
       const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
-      return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail.", token});
+      return res.json({ success: true, reg: true, admin: false, message: "Račun stvoren! Lozinka poslana na e-mail.", token});
     }
 
+    const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
+    const adminStr = admin.rows[0].email;
+
     const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
-    return res.json({ success: true, reg: false, message: "Dobrodošli natrag!", token });
+
+    if(adminStr == email){
+      res.json({ success: true, reg: false, admin: true, message: "Dobrodošli korijenski admine!", token });
+    }
+    else return res.json({ success: true, reg: false, admin: false, message: "Dobrodošli natrag!", token });
 
   } catch (error) {
     console.error(error);

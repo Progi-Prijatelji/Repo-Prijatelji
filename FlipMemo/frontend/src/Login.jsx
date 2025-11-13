@@ -24,7 +24,10 @@ function Login() {
       if (data.success) {
         alert("Uspješna prijava!");
         localStorage.setItem("jwt", data.token);
-        window.location.href = "/home";
+        if(data.admin){
+          window.location.href = "/homeAdmin";
+        }
+        else window.location.href = "/home";
       } else {
         alert("Email i lozinka se ne podudaraju!");
       }
@@ -48,15 +51,18 @@ function Login() {
       const data = await response.json();
 
       if (data.success) {
-          localStorage.setItem("jwt", data.token); 
+          localStorage.setItem("jwt", data.token);  
           if (!data.reg) {
             alert(data.message || "Uspješna Google prijava!");
-            window.location.href = "/home";
+            if(data.admin){
+            window.location.href = "/homeAdmin";
+            }
+            else window.location.href = "/home";
           } else {
             alert(data.message || "Uspješna Google registracija!");
             window.location.href = "/";
           }
-        }else {
+      }else {
         alert("Google prijava nije uspjela!");
       }
     } catch (err) {
