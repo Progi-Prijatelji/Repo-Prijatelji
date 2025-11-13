@@ -3,7 +3,7 @@ const router = express.Router();
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = "supersecretjwtkey";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const client = new Client({
   host: "dpg-d4ab1cjuibrs73car9v0-a",
