@@ -84,6 +84,15 @@ function HomePageAdmin() {
             });
             const data = await results.json();
 
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje admina.");
+                return;
+            }
+
+            setAdminUser(prev => [...prev, user]);         
+            setSearchResults(prev => prev.filter(u => u !== user)); 
+
+            
         }catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -93,47 +102,52 @@ function HomePageAdmin() {
         <>
         <Header />
             <div className="admin-page">
-                <div className="admin-card">
-                <h2 className="admin-title">Administracija korisnika</h2>
+                <div className="admin-main-layout">
+                    <div className="search">
+                        <form className="admin-search" onSubmit={handleSearch}>
+                            <input
+                            type="text"
+                            className="admin-input"
+                            placeholder="Pretraži korisnike..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <button className="admin-btn" type="submit">Traži</button>
+                        </form>
+                    </div>
+                    <div className="user-containers">
+                        <div className="search-list">
+                            <h3>Rezultati pretrage</h3>
+                            <ul className="admin-list">
+                            {searchResults.length > 0 ? (
+                                searchResults.map((result, index) => (
+                                <li key={index} className="admin-list-item">
+                                    <span>{result}</span>
+                                    <button className="admin-add-btn" onClick={() => handleAddAdmin(result)}>+</button>
+                                </li>
+                                ))
+                            ) : (
+                                <p className="admin-empty">Nema rezultata</p>
+                            )}
+                            </ul>
+                        </div>
+                        <div className="current-admins">
+                            
+                            <h3>Postojeći admini</h3>
+                            <ul className="admin-list">
+                            {adminUser.map((admin, index) => (
+                                <li key={index} className="admin-list-item">
+                                <span>{admin}</span>
+                                </li>
+                            ))}
+                            </ul>
+                        </div>
+                    </div>
 
-                <form className="admin-search" onSubmit={handleSearch}>
-                    <input
-                    type="text"
-                    className="admin-input"
-                    placeholder="Pretraži korisnike..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <button className="admin-btn" type="submit">Traži</button>
-                </form>
 
-                <div className="admin-section">
-                    <h3>Rezultati pretrage</h3>
-                    <ul className="admin-list">
-                    {searchResults.length > 0 ? (
-                        searchResults.map((result, index) => (
-                        <li key={index} className="admin-list-item">
-                            <span>{result}</span>
-                            <button className="admin-add-btn" onClick={() => handleAddAdmin(result)}>+</button>
-                        </li>
-                        ))
-                    ) : (
-                        <p className="admin-empty">Nema rezultata</p>
-                    )}
-                    </ul>
+
                 </div>
 
-                <div className="admin-section">
-                    <h3>Postojeći admini</h3>
-                    <ul className="admin-list">
-                    {adminUser.map((admin, index) => (
-                        <li key={index} className="admin-list-item">
-                        <span>{admin}</span>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
-                </div>
             </div>
         </>
     );

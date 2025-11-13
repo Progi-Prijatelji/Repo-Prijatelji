@@ -1,4 +1,4 @@
-/* Glavni layout */
+
 .admin-page {
   height: 100vh;
   width: 100vw;
@@ -7,9 +7,65 @@
   justify-content: center;
   align-items: center;
   font-family: "Poppins", sans-serif;
+  padding-top: 250px; /* razmak od headera */
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+  min-height: 100vh;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
 }
 
-/* Bijela kartica */
+
+.admin-main-layout{
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  flex: 1; /* zauzima sav preostali prostor */
+  padding: 10px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content:baseline;
+  gap: 15px
+
+  
+  
+}
+
+
+.search{
+  width: 100%;
+  
+  height: 50px;
+
+}
+
+.user-containers {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 20px; /* razmak koji lijepo raspoređuje oba kontainera */
+}
+
+/* Lijevi 30% */
+.search-list {
+  flex: 0 0 30%;
+  background-color: #d3bce8;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* Desni 70% */
+.current-admins {
+  flex: 1; /* automatski zauzima ostatak prostora → cca 70% */
+  background-color: #e7d9f5;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+
+
+/*-----------------------------------------------------------------------------------------*/
 .admin-card {
   background: #fff;
   padding: 40px 50px;
@@ -22,7 +78,7 @@
   text-align: center;
 }
 
-/* Naslov */
+
 .admin-title {
   font-size: 22px;
   font-weight: 600;
@@ -30,7 +86,7 @@
   margin-bottom: 10px;
 }
 
-/* Tražilica */
+
 .admin-search {
   display: flex;
   gap: 10px;
@@ -66,17 +122,11 @@
 }
 
 
-.admin-section {
-  text-align: left;
-}
 
-.admin-section h3 {
-  color: #5d2e86;
-  font-size: 16px;
-  margin-bottom: 8px;
-}
 
-/* Liste */
+
+
+
 .admin-list {
   list-style: none;
   padding: 0;
@@ -120,7 +170,7 @@
   color: #999;
   font-style: italic;
   text-align: center;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 
