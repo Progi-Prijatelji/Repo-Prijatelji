@@ -5,6 +5,7 @@ import Login from './Login.jsx';
 import Signup from './Signup.jsx';
 import HomePageUser from './HomePageUser.jsx';
 import UserSettings from './UserSettings.jsx';
+import HomePageAdmin from './HomePageAdmin.jsx';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/signup" element={<Signup/>}/>
         <Route path="/home" element={<HomePageUser/>}/>
         <Route path="/home/settings" element={<UserSettings/>}/>
+        <Route path="/homeAdmin" element={<HomePageAdmin/>}/>
       </Routes>
     </BrowserRouter>
   )
