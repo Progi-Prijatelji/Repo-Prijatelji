@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import logo from './assets/FlipMemo__Logo.png'
 import Header from './components/Header.jsx';
@@ -6,6 +6,34 @@ import './css/settingsUser.css'
 function HomePageAdmin() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
+    const [adminUser, setAdminUser] = useState([]);
+
+    useEffect(() => {
+        const fetchAdmin = async () => {
+            try {
+                const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendAdminList", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                 },
+                credentials: "include"
+                }); 
+                const data = await results.json();
+                if (!data.success) {
+                    alert(data.message || "Nemate pravo pristupa.");
+                    return;
+                }else{
+                    setAdminUser(data.users);
+                }
+                
+            } catch (error) {
+                console.error("Greška:", error);
+                alert("Greška u povezivanju s poslužiteljem.");
+                
+            }
+        }
+    }, []);
+    
     const handleSearch = async(e) => {
         e.preventDefault();
         if (!searchQuery) {
@@ -26,7 +54,6 @@ function HomePageAdmin() {
                 return;
             }
             
-            console.log(data.users);
             if (!data.users) {
                 alert("Nema dostupnih korisnika.");
                 return;
@@ -82,7 +109,15 @@ function HomePageAdmin() {
                             <p>{result}</p>
                             <button onClick={()=>handleAddAdmin(result)}>+</button>
                         </li>
-                        
+                    ))}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {adminUser.map((admin, index) => (
+                        <li key={index}>
+                            <p>{admin}</p>
+                        </li>
                     ))}
                 </ul>
             </div>
