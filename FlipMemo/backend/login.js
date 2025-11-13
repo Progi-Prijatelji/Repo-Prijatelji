@@ -13,7 +13,7 @@ app.use(express.json());
 const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com");
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretjwtkey";
+const JWT_SECRET = "supersecretjwtkey";
 
 app.use(cors({
   origin: "https://fmimage.onrender.com",

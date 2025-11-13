@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretjwtkey";
+const JWT_SECRET = "supersecretjwtkey";
+
 const client = new Client({
   host: "dpg-d4ab1cjuibrs73car9v0-a",
   user: "myuser",
@@ -21,12 +21,14 @@ function verifyToken(req, res, next) {
   const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
+    console.log(token)
+    console.log(decode)
     req.user = decoded;
     next();
   } catch (err) {
     return res.status(403).json({ success: false, message: "Neispravan ili istekao token" });
   }
-}
+};
 
 async function verifyAdmin(req, res, next) {
   const email = req.user.email;

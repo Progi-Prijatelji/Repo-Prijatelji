@@ -16,24 +16,24 @@ function HomePageAdmin() {
             const results = await fetch(`https://fmimage.onrender.com/homeAdmin/sendUserList`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                  },
                 credentials: "include"
             });
             const data = await results.json();
             if (!data.success) {
-  alert(data.message || "Nemate pravo pristupa.");
-  return;
-}
+                alert(data.message || "Nemate pravo pristupa.");
+                return;
+            }
 
-if (!data.users) {
-  alert("Nema dostupnih korisnika.");
-  return;
-}
+            if (!data.users) {
+                alert("Nema dostupnih korisnika.");
+                return;
+                }
 
-const filteredResults = data.users.filter(
-  (username) => username.toLowerCase() === searchQuery.toLowerCase()
-);
+                const filteredResults = data.users.filter(
+                (username) => username.toLowerCase() === searchQuery.toLowerCase()
+                );
 setSearchResults(filteredResults);
 
             setSearchResults(filteredResults);
