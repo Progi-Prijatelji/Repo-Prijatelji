@@ -23,6 +23,7 @@ function Login() {
 
       if (data.success) {
         alert("Uspješna prijava!");
+        localStorage.setItem("jwt", data.token);
         window.location.href = "/home";
       } else {
         alert("Email i lozinka se ne podudaraju!");

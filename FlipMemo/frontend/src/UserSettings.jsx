@@ -14,12 +14,22 @@ function UserSettings() {
     const handleDeleteAccount = async(e) => {
         e.preventDefault();
         try{
+            const token = localStorage.getItem("jwt");
+            if (!token) {
+                alert("Niste prijavljeni!"); 
+                return;
+            }
+
             const response = await fetch("https://fmimage.onrender.com/deleteacc", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({password}),
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token 
+                },
+                body: JSON.stringify({ password }),
                 credentials: "include"
             });
+
             const data = await response.json();
             if(data.success){
                 alert("Račun uspješno obrisan!");
@@ -38,9 +48,15 @@ function UserSettings() {
     const handlePasswordChange = async(e) => {
         e.preventDefault()
         try{
+            const token = localStorage.getItem("jwt");
+            if (!token) {
+                alert("Niste prijavljeni!"); 
+                return;
+            }
+
             const response = await fetch("https://fmimage.onrender.com/changepass", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json" , "Authorization": "Bearer " + token},
                 body: JSON.stringify({ password: currentPassword,newpass1: newPassword, newpass2: confirmNewPassword }),
                 credentials: "include"
         });
