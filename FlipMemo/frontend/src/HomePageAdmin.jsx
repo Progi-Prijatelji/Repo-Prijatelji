@@ -13,13 +13,13 @@ function HomePageAdmin() {
             return;
         }
         try {
-            const results = await fetch(`https://fmimage.onrender.com/adminsearch`, {
+            const results = await fetch(`https://fmimage.onrender.com/homeAdmin/sendAdminList`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include"
             });
             const data = await results.json();
-            const filteredResults = data.filter(
+            const filteredResults = data.users.filter(
                 (username) => username.toLowerCase() === searchQuery.toLowerCase()
             );
             setSearchResults(filteredResults);
@@ -34,12 +34,14 @@ function HomePageAdmin() {
 
     const handleAddAdmin = async(user) => {
         try {
-            const response = await fetch("https://fmimage.onrender.com/adminadd", {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addNewAdmin", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({user}),
+                body: JSON.stringify({email: user}),
                 credentials: "include"  
             });
+            const data = await results.json();
+
         }catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");

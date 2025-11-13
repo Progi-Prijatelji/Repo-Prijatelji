@@ -6,6 +6,7 @@ const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const sendgrid = require("@sendgrid/mail");
 const path = require("path");
+const adminRoutes = require("admin.routes");
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,8 @@ app.use(cors({
   origin: "https://fmimage.onrender.com",
   credentials: true
 }));
+
+app.use("/homeAdmin", adminRoutes);
 
 const client = new Client ({
     host: "dpg-d4ab1cjuibrs73car9v0-a",
