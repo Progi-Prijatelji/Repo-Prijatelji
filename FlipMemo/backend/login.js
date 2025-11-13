@@ -8,6 +8,7 @@ const sendgrid = require("@sendgrid/mail");
 const path = require("path");
 
 const app = express();
+app.use(express.json());
 const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com");
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
@@ -94,7 +95,7 @@ app.post("/google-auth", async (req, res) => {
         to: email,
         from: 'flipmemo.fer@gmail.com',
         subject: "Vaša FlipMemo lozinka",
-        text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
+        text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com`
       }
 
       sendgrid.send(msg).then((response) => {
