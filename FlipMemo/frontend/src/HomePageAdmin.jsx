@@ -16,7 +16,7 @@ function HomePageAdmin() {
             const results = await fetch(`https://fmimage.onrender.com/homeAdmin/sendUserList`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}` 
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                  },
                 credentials: "include"
             });
@@ -51,7 +51,7 @@ setSearchResults(filteredResults);
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addNewAdmin", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}` 
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
                 body: JSON.stringify({email: user}),
                 credentials: "include"  
