@@ -1,27 +1,21 @@
 const express = require("express");
 const cors = require("cors");
-const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { Client } = require("pg");
-const session = require("express-session");
 const { OAuth2Client } = require("google-auth-library");
-const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com");
+const jwt = require("jsonwebtoken");
 const sendgrid = require("@sendgrid/mail");
+const path = require("path");
+
 const app = express();
+const googleClient = new OAuth2Client("412606688461-n8sf0ppktrgr9hc0jn1pc5c3vkkbp7no.apps.googleusercontent.com");
 
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretjwtkey";
 
 app.use(cors({
   origin: "https://fmimage.onrender.com",
   credentials: true
-}));
-
-app.use(express.json());
-app.use(session({
-  secret: "blablubli",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: true, sameSite: "none" }
 }));
 
 const client = new Client ({
@@ -33,35 +27,38 @@ const client = new Client ({
 });
 client.connect();
 
-app.get("/current-user", (req, res) => {
-  console.log("Session on current-user:", req.session);
+function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Nema tokena" });
 
-  if(req.session.userEmail) {
-    res.json({ email: req.session.userEmail });
-  } else {
-    res.status(401).json({ error: "Not logged in" });
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(403).json({ success: false, message: "Neispravan ili istekao token" });
   }
-});
+}
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  console.log("Session after login:", req.session);
+  const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
 
-    const query = `SELECT COUNT(*) AS count FROM users WHERE email=$1 AND password=$2`;
-    client.query(query, [email, crypto.createHash("sha256").update(password).digest("hex")], (err, result) => {
-        if (err) {
-            console.error(err.message);
-            return res.status(500).json({ success: false });
-        }
+    try {
+      const result = await client.query(`SELECT COUNT(*) AS count FROM users WHERE email=$1 AND password=$2`, [email, hashedPass]);
+      const count = parseInt(result.rows[0].count);
 
-        const count = parseInt(result.rows[0].count);
-        if (count > 0) {
-            req.session.userEmail = email;
-            return res.json({ success: true });
-        } else {
-            return res.json({ success: false });
-        }
-    });
+      if (count > 0) {
+        const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "3h" });
+        return res.json({ success: true, token });
+      }   else {
+        return res.json({ success: false, message: "Pogrešan email ili lozinka" });
+      }
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).json({ success: false });
+    }
 });
 
 app.post("/google-auth", async (req, res) => {
@@ -99,6 +96,7 @@ app.post("/google-auth", async (req, res) => {
         subject: "Vaša FlipMemo lozinka",
         text: `Pozdrav ${name},\n\nVaša lozinka za FlipMemo je: ${password}\n\nPrijavite se na https://fmimage.onrender.com/login`
       }
+
       sendgrid.send(msg).then((response) => {
         console.log(response[0].statusCode)
         console.log(response[0].headers)
@@ -107,12 +105,12 @@ app.post("/google-auth", async (req, res) => {
         console.error(error)
       });
 
-      req.session.userEmail = email;
-      return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail." });
+      const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
+      return res.json({ success: true, reg: true, message: "Račun stvoren! Lozinka poslana na e-mail.", token});
     }
 
-    req.session.userEmail = email;
-    return res.json({ success: true, reg: false, message: "Dobrodošli natrag!" });
+    const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
+    return res.json({ success: true, reg: false, message: "Dobrodošli natrag!", token });
 
   } catch (error) {
     console.error(error);
@@ -120,15 +118,11 @@ app.post("/google-auth", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}!`);
-})
+app.post('/changepass',verifyToken, (req, res) => {
+    const email = req.user.email;
+    const { password, newpass1, newpass2 } = req.body;
 
-app.post('/changepass', (req, res) => {
-    const { email, password, newpass1, newpass2 } = req.body;
-
-    if (!email || !password || !newpass1 || !newpass2) {
+    if (!password || !newpass1 || !newpass2) {
         return res.status(400).json({ success: false, message: "Nedostaju podaci" });
     }
 
@@ -165,9 +159,9 @@ app.post('/changepass', (req, res) => {
     });
 });
 
-
-app.post('/deleteacc', (req, res) =>{
-    const {email, password} = req.body;
+app.post('/deleteacc',verifyToken, (req, res) =>{
+    const email = req.user.email;
+    const {password} = req.body;
 
     const hashedPass = crypto.createHash("sha256").update(password).digest("hex");
 
@@ -197,15 +191,12 @@ app.post('/deleteacc', (req, res) =>{
     });
 });
 
-
-
-const path = require("path");
-const { error } = require("console");
-
-// Serve static files from frontend build
-app.use(express.static(path.join(__dirname, "frontend/dist"))); // ili "build" ako se tako zove
-
-// Catch-all route to serve index.html for SPA
+app.use(express.static(path.join(__dirname, "frontend/dist"))); 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
 });
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}!`);
+})
