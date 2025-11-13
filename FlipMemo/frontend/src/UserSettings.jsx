@@ -34,7 +34,7 @@ function UserSettings() {
             const data = await response.json();
             if(data.success){
                 alert("Račun uspješno obrisan!");
-                window.location.href = "/login";
+                window.location.href = "/";
             }
             else{
                 alert("Došlo je do greške pri brisanju računa.");
