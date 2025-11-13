@@ -26,14 +26,15 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-
+            
+            console.log(data.users);
             if (!data.users) {
                 alert("Nema dostupnih korisnika.");
                 return;
                 }
 
                 const filteredResults = data.users.filter(
-                (username) => username.toLowerCase() === searchQuery.toLowerCase()
+                (username) => username.toLowerCase().includes(searchQuery.toLowerCase())
                 );
 setSearchResults(filteredResults);
 
