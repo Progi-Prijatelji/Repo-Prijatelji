@@ -6,7 +6,7 @@ const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
 const sendgrid = require("@sendgrid/mail");
 const path = require("path");
-const adminRoutes = require("admin.routes");
+const adminRoutes = require("./admin.routes");
 
 const app = express();
 app.use(express.json());
