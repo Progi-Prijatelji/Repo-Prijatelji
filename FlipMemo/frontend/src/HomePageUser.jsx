@@ -18,6 +18,7 @@ function HomePageUser() {
             language={language}
             onChange={setLanguage} 
           />
+          *Ovo je testni primjer. Nije primljeno iz baze podataka*
 
           <div className="dictionary-list">
             {dictionaries.map((dict) => (

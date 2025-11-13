@@ -35,12 +35,13 @@ header {
 
 
 .setting{
-    width: 100px;
+    width: 50px;
     height: 100%;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
+    
     
 }
 

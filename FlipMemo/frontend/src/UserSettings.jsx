@@ -111,6 +111,7 @@ function UserSettings() {
             <div className="user-settings-page">
 
                 <div className='container user-settings'>
+                    <h2 calssName="user-settings-title">Postavke računa</h2>
                     <div className='user-setings-part'>
                         <button className='button' onClick={()=>display("delete")}>Obriši račun</button>
                         <div className='delete'>

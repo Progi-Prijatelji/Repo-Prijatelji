@@ -114,10 +114,14 @@ function Login() {
             <div className='login part'>
           <div className="google-login">
             <h2>Prijavi se ili registriraj putem Googlea</h2>
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => alert("Google prijava nije uspjela")}
-            />
+            
+
+              <GoogleLogin
+                
+                onSuccess={handleGoogleSuccess}
+                onError={() => alert("Google prijava nije uspjela")}
+              />
+            
           </div>
           </div>
         </div>

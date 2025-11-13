@@ -22,7 +22,7 @@ const Header = () => {
                 <Link to="/home/settings">
                     <Settings className="setting-icon"
                                 color="black"
-                                size="50"/>
+                                size="30"/>
                 </Link>
             </div>
         </header>

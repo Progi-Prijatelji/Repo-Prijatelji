@@ -9,7 +9,7 @@ html, body, #root {
 }
 
 body {
-  background-color: #ecc6b0;
+  /* background-color: #ecc6b0; */
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -19,6 +19,7 @@ body {
   justify-content: center;
   height: 100vh; /* puni ekran */
   width: 100vw;
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
 }
 
 .login-form{
@@ -135,7 +136,7 @@ h2{
 }
 
 .login-inputs:hover input{
-  transform: scale(1.02);
+  
   
 }
 
@@ -174,12 +175,20 @@ h2{
   color: transparent;
 }
 
+.google-login{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .noAcc{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
 
 @media (max-width: 500px) {
   .container {

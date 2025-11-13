@@ -14,6 +14,9 @@ html, body, #root {
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 20px;
+
+
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
 }
 
 .homepage-main-container {
@@ -25,6 +28,8 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   justify-content:end;
+
+  
   
 
 
@@ -44,6 +49,8 @@ html, body, #root {
   gap: 16px;
   justify-content: center;    
   padding: 10px;
+
+  
 }
 
 .dictionary-card {

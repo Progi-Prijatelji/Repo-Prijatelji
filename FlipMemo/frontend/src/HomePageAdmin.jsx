@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import logo from './assets/FlipMemo__Logo.png'
 import Header from './components/Header.jsx';
-import './css/settingsUser.css'
+import './css/homeAdmin.css'
 function HomePageAdmin() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
@@ -92,38 +92,49 @@ function HomePageAdmin() {
     return(
         <>
         <Header />
-        <div>
-            <form action="" onSubmit={handleSearch}>
-                <input 
-                type="text" 
-                id="searchBar"
-                name='searchBar'
-                value={searchQuery}
-                onChange={(e)=>setSearchQuery(e.target.value)}
-                />
-                <button type='submit'>traži</button>
-            </form>
-            <div>
-                <ul>
-                    {searchResults.map((result, index) => (
-                        <li key={index}>
-                            <p>{result}</p>
-                            <button onClick={()=>handleAddAdmin(result)}>+</button>
+            <div className="admin-page">
+                <div className="admin-card">
+                <h2 className="admin-title">Administracija korisnika</h2>
+
+                <form className="admin-search" onSubmit={handleSearch}>
+                    <input
+                    type="text"
+                    className="admin-input"
+                    placeholder="Pretraži korisnike..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button className="admin-btn" type="submit">Traži</button>
+                </form>
+
+                <div className="admin-section">
+                    <h3>Rezultati pretrage</h3>
+                    <ul className="admin-list">
+                    {searchResults.length > 0 ? (
+                        searchResults.map((result, index) => (
+                        <li key={index} className="admin-list-item">
+                            <span>{result}</span>
+                            <button className="admin-add-btn" onClick={() => handleAddAdmin(result)}>+</button>
                         </li>
-                    ))}
-                </ul>
-            </div>
-            <div>
-                <ul>
-                    <p>Postojeći admini:</p>
+                        ))
+                    ) : (
+                        <p className="admin-empty">Nema rezultata</p>
+                    )}
+                    </ul>
+                </div>
+
+                <div className="admin-section">
+                    <h3>Postojeći admini</h3>
+                    <ul className="admin-list">
                     {adminUser.map((admin, index) => (
-                        <li key={index}>
-                            <p>{admin}</p>
+                        <li key={index} className="admin-list-item">
+                        <span>{admin}</span>
                         </li>
                     ))}
-                </ul>
+                    </ul>
+                </div>
+                </div>
             </div>
-        </div>
         </>
     );
 }
