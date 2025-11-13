@@ -13,23 +13,37 @@ function HomePageAdmin() {
             return;
         }
         try {
-            const results = await fetch(`https://fmimage.onrender.com/adminsearch}`, {
+            const results = await fetch(`https://fmimage.onrender.com/adminsearch`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include"
             });
             const data = await results.json();
+            const filteredResults = data.filter(
+                (username) => username.toLowerCase() === searchQuery.toLowerCase()
+            );
+            setSearchResults(filteredResults);
 
         }catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
-        for (let i = 0; i < data.length; i++) {
-            if (data[i]===searchQuery){
-                setSearchResults(prevResults => [...prevResults, data[i]]);     
-            }
-        }
         
+        
+    }
+
+    const handleAddAdmin = async(user) => {
+        try {
+            const response = await fetch("https://fmimage.onrender.com/adminadd", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({user}),
+                credentials: "include"  
+            });
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
     }
     return(
         <>
@@ -43,12 +57,16 @@ function HomePageAdmin() {
                 value={searchQuery}
                 onChange={(e)=>setSearchQuery(e.target.value)}
                 />
-                <button type='submit'></button>
+                <button type='submit'>traži</button>
             </form>
             <div>
                 <ul>
                     {searchResults.map((result, index) => (
-                        <li key={index}>{result}</li>
+                        <li key={index}>
+                            <p>{result}</p>
+                            <button onClick={()=>handleAddAdmin(result)}>+</button>
+                        </li>
+                        
                     ))}
                 </ul>
             </div>
