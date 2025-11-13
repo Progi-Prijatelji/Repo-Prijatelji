@@ -73,8 +73,9 @@ function Login() {
 
   return (
     <>
-      <img src={logo} alt="Flip Memo Logo" className="page-logo" />
-      <div className='container'>
+      {/* <Header /> */}
+      <div className="login-page">
+        <div className='container'>
         <div className='title part'>
           <h1>Flip Memo</h1>
         </div>
@@ -108,7 +109,7 @@ function Login() {
 
             <input type="submit" value="Prijavi se" className='button' />
           </form>
-
+          <hr className="separator" />
           <div className="noAcc">
             <div className='login part'>
           <div className="google-login">
@@ -121,6 +122,8 @@ function Login() {
           </div>
         </div>
       </div>
+      </div>
+      
     </>
   );
 }

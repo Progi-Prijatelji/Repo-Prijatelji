@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../css/header.css'
 import logo from '../assets/FlipMemo__Logo.png';
-import icon from '../assets/settings.png';
-import home from '../assets/home.png';
+import { Link } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 
 const Header = () => {
+
+    const [language, setLanguage] = useState('engleski')
+
     return(
+        
+
         <header>
-            <img src={logo} alt="Flip Memo Logo" className="page-logo" />
+            <Link to="/home" 
+                className="page-logo"><img 
+                src={logo} alt="Flip Memo Logo" 
+                className="page-logo" /></Link>
             <h1>FlipMemo</h1>
-            <div>
-                <a href="/home"><img src={home} alt="home" className='home'/></a>
-                <a href="/home/settings"><img src={icon} alt="settings" className='setting'/></a>
+            <div className="setting">
+
+                <Link to="/home/settings">
+                    <Settings className="setting-icon"
+                                color="black"
+                                size="50"/>
+                </Link>
             </div>
         </header>
+        
     )
 }
 

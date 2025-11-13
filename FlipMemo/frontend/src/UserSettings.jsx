@@ -108,50 +108,53 @@ function UserSettings() {
     return (
         <>
             <Header />
-            <div className='container user-settings'>
-                <div className='user-setings-part'>
-                    <button className='button' onClick={()=>display("delete")}>Obriši račun</button>
-                    <div className='delete'>
-                        <form action="" onSubmit={handleDeleteAccount}>
-                            <input 
-                                type="password"
-                                id="current-password"
-                                name="current-password"
-                                value={password}
-                                onChange={(e)=>setPassword(e.target.value)}
-                                placeholder="Trenutna lozinka" required
-                                />
-                                <button type='submit' className='button'>Izbriši račun</button>
-                        </form>
+            <div className="user-settings-page">
+
+                <div className='container user-settings'>
+                    <div className='user-setings-part'>
+                        <button className='button' onClick={()=>display("delete")}>Obriši račun</button>
+                        <div className='delete'>
+                            <form action="" onSubmit={handleDeleteAccount}>
+                                <input 
+                                    type="password"
+                                    id="current-password"
+                                    name="current-password"
+                                    value={password}
+                                    onChange={(e)=>setPassword(e.target.value)}
+                                    placeholder="Trenutna lozinka" required
+                                    />
+                                    <button type='submit' className='button'>Izbriši račun</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <div className='user-setings-part'>
-                    <button className='button' onClick={()=>display("change")}>Promjeni lozinku</button>
-                    <div className='change'>
-                        <form action="" onSubmit={handlePasswordChange}>
-                            <input 
-                                type="password" 
-                                id="current-password"   
-                                name="current-password"
-                                value={currentPassword}
-                                onChange={(e)=>setCurrentPassword(e.target.value)}
-                                placeholder="Trenutna lozinka" required/>
-                            <input
-                                type="password"
-                                id="new-password"
-                                name="new-password"
-                                value={newPassword}
-                                onChange={(e)=>setNewPassword(e.target.value)}
-                                placeholder="Nova lozinka" required/>
-                            <input
-                                type="password"
-                                id="confirm-new-password"
-                                name="confirm-new-password"
-                                value={confirmNewPassword}
-                                onChange={(e)=>setConfirmNewPassword(e.target.value)}
-                                placeholder="Potvrdi novu lozinku" required/>
-                            <button type="submit" className='button'>Spremi promjene</button>
-                        </form>
+                    <div className='user-setings-part'>
+                        <button className='button' onClick={()=>display("change")}>Promjeni lozinku</button>
+                        <div className='change'>
+                            <form action="" onSubmit={handlePasswordChange}>
+                                <input 
+                                    type="password" 
+                                    id="current-password"   
+                                    name="current-password"
+                                    value={currentPassword}
+                                    onChange={(e)=>setCurrentPassword(e.target.value)}
+                                    placeholder="Trenutna lozinka" required/>
+                                <input
+                                    type="password"
+                                    id="new-password"
+                                    name="new-password"
+                                    value={newPassword}
+                                    onChange={(e)=>setNewPassword(e.target.value)}
+                                    placeholder="Nova lozinka" required/>
+                                <input
+                                    type="password"
+                                    id="confirm-new-password"
+                                    name="confirm-new-password"
+                                    value={confirmNewPassword}
+                                    onChange={(e)=>setConfirmNewPassword(e.target.value)}
+                                    placeholder="Potvrdi novu lozinku" required/>
+                                <button type="submit" className='button'>Spremi promjene</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

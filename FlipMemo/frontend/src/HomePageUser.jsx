@@ -1,19 +1,37 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { useState } from 'react';
 import Header from './components/Header.jsx';
-import './css/homePage.css'
+import LanguageSelector from './components/LanguageSelector.jsx';
+import DictionaryCard from './components/DictionaryCard.jsx';
+import './css/homePage.css';
+import { LANGUAGE, DICTIONARY } from './mockData.js';
 
 function HomePageUser() {
-    return (
-        <>
-            <Header />
-            <div className='contain'>
-                <h1>
-                    Dobro došli!
-                </h1>
-            </div>
-        </>
-    )
+  const [language, setLanguage] = useState(LANGUAGE[0]); 
+  const dictionaries = DICTIONARY.filter(d => d.langId === language.langId);
+
+  return (
+    <>
+      <Header />
+      <div className="homepage-page">
+        <div className="homepage-main-container">
+          <LanguageSelector 
+            language={language}
+            onChange={setLanguage} 
+          />
+
+          <div className="dictionary-list">
+            {dictionaries.map((dict) => (
+              <DictionaryCard 
+                key={dict.dictId} 
+                name={dict.dictName} 
+                description={dict.description} 
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default HomePageUser;

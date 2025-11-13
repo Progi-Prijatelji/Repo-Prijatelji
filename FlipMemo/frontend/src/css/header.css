@@ -1,32 +1,59 @@
-/*@import url(https://db.onlinewebfonts.com/c/b7c46534c8a2d55edd840bf49383777d?family=Ahkio-Regular);*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 
-header{
-    position: fixed;
-    top: 10px;
-    left: 3%;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+header {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 80px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+ 
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+
+
+.page-logo img{
+    height: 60px;
+    z-index: 1000;
+    transition: transform 0.2s;
+}
+.page-logo:hover{
+    transform: scale(1.05);
+}
+
+
+.setting{
+    width: 100px;
+    height: 100%;
+    z-index: 1000;
     display: flex;
-    width: 90vw;
-    height: 20vh;
     align-items: center;
-    justify-content: space-between;
-    justify-self: center;
-    border-radius: 10px;
-    flex-direction: row;
-    padding: 0 20px;
-    font-family: 'Ahkio-Regular', sans-serif;
-    color: #D623A6;
+    justify-content: center;
+    
 }
 
-.page-logo {
-    height: 30vh;
-    z-index: 1000;
+.setting-icon{
+
+   cursor: pointer;
+    transition: transform 0.2s;
 }
 
-
-.setting, .home {
-    height: auto;
-    z-index: 1000;
+.setting-icon:hover{
+    transform: scale(1.1);
+}
+img{
+    height: 100%;
+    width: 100%;
 }
