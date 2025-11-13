@@ -13,7 +13,7 @@ function HomePageAdmin() {
             return;
         }
         try {
-            const results = await fetch(`https://fmimage.onrender.com/homeAdmin/sendAdminList`, {
+            const results = await fetch(`https://fmimage.onrender.com/homeAdmin/sendUserList`, {
                 method: "GET",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("token")}` 

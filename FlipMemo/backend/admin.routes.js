@@ -34,7 +34,17 @@ async function verifyAdmin(req, res, next) {
 
   if (parseInt(result.rows[0].count) != 1) return res.status(403).json({ success: false, message: "Niste admin" });
   next();
-}
+};
+
+router.get('/sendUserList', verifyToken, verifyAdmin, async (req, res) =>{
+    try {
+        const result = await client.query(`SELECT email FROM users WHERE role=$1`, ["student"]);
+    
+        res.json({success: true, users: result.rows.map(r => r.email)});
+    } catch (err) {
+        res.status(500).json({success: false});
+    }
+});
 
 router.get('/sendAdminList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
