@@ -19,6 +19,7 @@ function UserSettings() {
                 alert("Niste prijavljeni!"); 
                 return;
             }
+            console.log("JWT token:", token);
 
             const response = await fetch("https://fmimage.onrender.com/deleteacc", {
                 method: "POST",

@@ -47,13 +47,16 @@ function Login() {
 
       const data = await response.json();
 
-      if (data.success && !data.reg) {
-        alert(data.message || "Uspješna Google prijava!");
-        window.location.href = "/home";
-      } else if(data.success && data.reg){
-        alert(data.message || "Uspješna Google registracija!");
-         window.location.href = "/";
-      }else {
+      if (data.success) {
+          localStorage.setItem("jwt", data.token); 
+          if (!data.reg) {
+            alert(data.message || "Uspješna Google prijava!");
+            window.location.href = "/home";
+          } else {
+            alert(data.message || "Uspješna Google registracija!");
+            window.location.href = "/";
+          }
+        }else {
         alert("Google prijava nije uspjela!");
       }
     } catch (err) {
