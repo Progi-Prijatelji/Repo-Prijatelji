@@ -32,6 +32,7 @@ function HomePageAdmin() {
                 
             }
         }
+        fetchAdmin();
     }, []);
     
     const handleSearch = async(e) => {
@@ -114,6 +115,7 @@ function HomePageAdmin() {
             </div>
             <div>
                 <ul>
+                    <p>Postojeći admini:</p>
                     {adminUser.map((admin, index) => (
                         <li key={index}>
                             <p>{admin}</p>
