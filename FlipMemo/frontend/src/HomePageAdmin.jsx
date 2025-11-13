@@ -21,6 +21,7 @@ function HomePageAdmin() {
                 credentials: "include"
             });
             const data = await results.json();
+            console.log(data.user);
             if (!data.success) {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
@@ -29,12 +30,13 @@ function HomePageAdmin() {
             if (!data.users) {
                 alert("Nema dostupnih korisnika.");
                 return;
-                }
+            }
 
-                const filteredResults = data.users.filter(
-                (username) => username.toLowerCase() === searchQuery.toLowerCase()
-                );
-setSearchResults(filteredResults);
+            const filteredResults = data.users.filter(
+            (username) => username.toLowerCase().includes(searchQuery.toLowerCase())
+                
+            );
+            
 
             setSearchResults(filteredResults);
 
