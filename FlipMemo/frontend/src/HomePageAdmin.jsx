@@ -21,6 +21,7 @@ function HomePageAdmin() {
                 credentials: "include"
             });
             const data = await results.json();
+            console.log(data.users);
             if (!data.success) {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;

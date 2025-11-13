@@ -24,6 +24,7 @@ function Login() {
       if (data.success) {
         alert("Uspješna prijava!");
         localStorage.setItem("jwt", data.token);
+        console.log("login", data.token);
         if(data.admin){
           window.location.href = "/homeAdmin";
         }
