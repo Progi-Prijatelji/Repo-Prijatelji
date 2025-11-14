@@ -93,6 +93,12 @@ Projekt je razvijen u sklopu kolegija [Programsko inženjerstvo](https://www.fer
    - Nakon zadnje posude — riječ se smatra naučenom
 
 ---
+## Demo
+
+Možete vidjeti **live verziju** aplikacije ovdje: https://fmimage.onrender.com
+
+
+---
 
 ## Autentifikacija
 
