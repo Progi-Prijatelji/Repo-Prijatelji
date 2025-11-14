@@ -1,0 +1,190 @@
+
+.admin-page {
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  padding-top: 250px; /* razmak od headera */
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+  min-height: 100vh;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+}
+
+
+.admin-main-layout{
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  flex: 1; /* zauzima sav preostali prostor */
+  padding: 10px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content:baseline;
+  gap: 15px
+
+  
+  
+}
+
+
+.search{
+  width: 100%;
+  
+  height: 50px;
+
+}
+
+.user-containers {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 20px; /* razmak koji lijepo raspoređuje oba kontainera */
+}
+
+/* Lijevi 30% */
+.search-list {
+  flex: 0 0 30%;
+  background-color: #d3bce8;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* Desni 70% */
+.current-admins {
+  flex: 1; /* automatski zauzima ostatak prostora → cca 70% */
+  background-color: #e7d9f5;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+
+
+/*-----------------------------------------------------------------------------------------*/
+.admin-card {
+  background: #fff;
+  padding: 40px 50px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 420px;
+  max-width: 90%;
+  text-align: center;
+}
+
+
+.admin-title {
+  font-size: 22px;
+  font-weight: 600;
+  
+  margin-bottom: 10px;
+}
+
+
+.admin-search {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #cfc4dd;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.admin-input:focus {
+  border-color: #5d2e86;
+  box-shadow: 0 0 0 3px rgba(93, 46, 134, 0.15);
+}
+
+.admin-btn {
+  background-color: #5d2e86;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.admin-btn:hover {
+  background-color: #7d47a8;
+  
+}
+
+
+
+
+
+
+
+.admin-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.admin-list-item {
+  background: #faf8fc;
+  border: 1px solid #e0d7ef;
+
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+
+
+.admin-add-btn {
+  background-color: #5d2e86;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.admin-add-btn:hover {
+  background-color: #7d47a8;
+  transform: scale(1.1);
+}
+
+
+.admin-empty {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
+@media (max-width: 480px) {
+  .admin-card {
+    padding: 25px;
+    width: 90%;
+  }
+
+  .admin-search {
+    flex-direction: column;
+  }
+
+  .admin-btn {
+    width: 100%;
+  }
+}

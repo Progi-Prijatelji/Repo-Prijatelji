@@ -1,0 +1,156 @@
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import logo from './assets/FlipMemo__Logo.png'
+import Header from './components/Header.jsx';
+import './css/homeAdmin.css'
+function HomePageAdmin() {
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchResults, setSearchResults] = useState([])
+    const [adminUser, setAdminUser] = useState([]);
+
+    useEffect(() => {
+        const fetchAdmin = async () => {
+            try {
+                const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendAdminList", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                 },
+                credentials: "include"
+                }); 
+                const data = await results.json();
+                if (!data.success) {
+                    alert(data.message || "Nemate pravo pristupa.");
+                    return;
+                }else{
+                    setAdminUser(data.users);
+                }
+                
+            } catch (error) {
+                console.error("Greška:", error);
+                alert("Greška u povezivanju s poslužiteljem.");
+                
+            }
+        }
+        fetchAdmin();
+    }, []);
+    
+    const handleSearch = async(e) => {
+        e.preventDefault();
+        if (!searchQuery) {
+            alert("Unesite pojam za pretraživanje.");
+            return;
+        }
+        try {
+            const results = await fetch(`https://fmimage.onrender.com/homeAdmin/sendUserList`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                 },
+                credentials: "include"
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Nemate pravo pristupa.");
+                return;
+            }
+            
+            if (!data.users) {
+                alert("Nema dostupnih korisnika.");
+                return;
+            }
+
+            const filteredResults = data.users.filter(
+            (username) => username.toLowerCase().includes(searchQuery.toLowerCase()));
+            setSearchResults(filteredResults);
+
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+        
+        
+    }
+
+    const handleAddAdmin = async(user) => {
+        try {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addNewAdmin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                },
+                body: JSON.stringify({email: user}),
+                credentials: "include"  
+            });
+            const data = await results.json();
+
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje admina.");
+                return;
+            }
+
+            setAdminUser(prev => [...prev, user]);         
+            setSearchResults(prev => prev.filter(u => u !== user)); 
+
+            
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+    return(
+        <>
+        <Header />
+            <div className="admin-page">
+                <div className="admin-main-layout">
+                    <div className="search">
+                        <form className="admin-search" onSubmit={handleSearch}>
+                            <input
+                            type="text"
+                            className="admin-input"
+                            placeholder="Pretraži korisnike..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <button className="admin-btn" type="submit">Traži</button>
+                        </form>
+                    </div>
+                    <div className="user-containers">
+                        <div className="search-list">
+                            <h3>Rezultati pretrage</h3>
+                            <ul className="admin-list">
+                            {searchResults.length > 0 ? (
+                                searchResults.map((result, index) => (
+                                <li key={index} className="admin-list-item">
+                                    <span>{result}</span>
+                                    <button className="admin-add-btn" onClick={() => handleAddAdmin(result)}>+</button>
+                                </li>
+                                ))
+                            ) : (
+                                <p className="admin-empty">Nema rezultata</p>
+                            )}
+                            </ul>
+                        </div>
+                        <div className="current-admins">
+                            
+                            <h3>Postojeći admini</h3>
+                            <ul className="admin-list">
+                            {adminUser.map((admin, index) => (
+                                <li key={index} className="admin-list-item">
+                                <span>{admin}</span>
+                                </li>
+                            ))}
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </>
+    );
+}
+
+export default HomePageAdmin;

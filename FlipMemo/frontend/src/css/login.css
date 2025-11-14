@@ -1,0 +1,197 @@
+@import url(https://db.onlinewebfonts.com/c/b7c46534c8a2d55edd840bf49383777d?family=Ahkio-Regular);
+
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* background-color: #ecc6b0; */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* puni ekran */
+  width: 100vw;
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+}
+
+.login-form{
+  display: flex;
+  flex-direction: column;
+
+}
+
+.separator{
+  border: none;           /* ukloni default */
+  border-top: 1px solid #ccc;  /* linija */
+  margin: 20px 0;         /* razmak gore/dole */
+  width: 80%;             /* širina crte */
+  align-self: center;
+}
+
+p{
+  margin: 0;
+  padding: 0;
+}
+
+h1{
+  margin: 0;
+  padding: 0;
+}
+
+h2{
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+
+/* -------------------Container------------------- */
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 450px;
+  min-width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  border: 1px solid rgb(208, 205, 205);
+  box-shadow: black 0px 2px 8px -2px;
+  padding: 20px;
+}
+
+.part {
+  margin: 0;
+  padding: 10px 20px;
+  /* text-align: center; */
+} 
+
+/* -------------------Title Section------------------- */
+.title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #D623A6;
+  font-family: 'Ahkio-Regular', sans-serif;
+
+}
+
+/* -------------------Login Section------------------- */
+.login {
+  font-size: 15px;
+  color: gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  
+}
+.login form {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+}
+
+#welcome-label{
+  margin-bottom: 10px;
+  font-size: 27px;
+  font-weight: bold;
+  position: relative;
+  color: rgb(43, 43, 43);
+}
+
+.button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #5d2e86;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.button:hover {
+  background-color: #7e3eb6;
+  transform: scale(1.02);
+  box-shadow: black 0px 4px 8px -2px;
+  
+}
+
+.login-inputs {
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-top: 15px;
+  transition: 0.5s ease all;
+  
+}
+#mail, #password{
+  width: 100%;
+}
+
+.login-inputs:hover input{
+  
+  
+}
+
+
+.login-inputs input{
+  width: 200px;
+  padding: 10px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  background: transparent;
+  color: grey;
+  outline: none;
+  transition: 0.3s ease all;
+}
+
+.login-inputs label {
+  position: absolute;
+  left: 10px;
+  top: 65%;
+  transform: translateY(-50%);
+  color: grey;
+  pointer-events: none;
+  transition: 0.3s ease all;
+  /* background-color: #f06787; */
+  padding: 0 5px;
+}
+
+.login-inputs input:focus ~ label,
+.login-inputs input:not(:placeholder-shown) ~ label {
+  top: 0px;
+  font-size: 12px;
+  transform: translateY(0);
+}
+
+.login-inputs input::placeholder {
+  color: transparent;
+}
+
+.google-login{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.noAcc{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+@media (max-width: 500px) {
+  .container {
+    width: 90vw;
+  }
+}
