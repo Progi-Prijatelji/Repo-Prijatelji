@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import logo from './assets/FlipMemo__Logo.png'
-import Header from './components/Header.jsx';
+import HeaderAdmin from './components/HeaderAdmin.jsx';
 import './css/homeAdmin.css'
 function HomePageAdmin() {
     const [searchQuery, setSearchQuery] = useState('')
@@ -126,7 +126,7 @@ function HomePageAdmin() {
     }
     return(
         <>
-        <Header />
+        <HeaderAdmin />
             <div className="admin-page">
                 <div className="admin-main-layout">
                     <div className="search">

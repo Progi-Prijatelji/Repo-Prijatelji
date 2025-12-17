@@ -4,21 +4,22 @@ import logo from '../assets/FlipMemo__Logo.png';
 import { Link } from 'react-router-dom';
 import { Settings } from 'lucide-react';
 
-const Header = () => {
+const HeaderAdmin = () => {
+
     const [language, setLanguage] = useState('engleski')
 
     return(
         
 
         <header>
-            <Link to="/home" 
+            <Link to="/homeAdmin" 
                 className="page-logo"><img 
                 src={logo} alt="Flip Memo Logo" 
                 className="page-logo" /></Link>
             <h1>FlipMemo</h1>
             <div className="setting">
 
-                <Link to="/home/settings">
+                <Link to="/homeAdmin/settings">
                     <Settings className="setting-icon"
                                 color="black"
                                 size="30"/>
@@ -30,4 +31,4 @@ const Header = () => {
 }
 
 
-export default Header;
+export default HeaderAdmin;
