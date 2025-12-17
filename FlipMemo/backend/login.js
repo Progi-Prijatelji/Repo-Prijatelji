@@ -22,12 +22,17 @@ app.use(cors({
 
 app.use("/homeAdmin", adminRoutes);
 
+const DATABASE_HOSTNAME = process.env.DATABASE_HOSTNAME;
+const DATABASE_USER = process.env.DATABASE_USER;
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
+const DATABASE_NAME = process.env.DATABASE_NAME;
+
 const client = new Client ({
-    host: "dpg-d4ab1cjuibrs73car9v0-a",
-    user: "myuser",
-    port: 5432,
-    password: "oEaV29J2gnc13fivqlkvAwy1zUf3rQGI",
-    database: "flipmemo_1evy"
+  host: DATABASE_HOSTNAME,
+  user: DATABASE_USER,
+  port: 5432,
+  password: DATABASE_PASSWORD,
+  database: DATABASE_NAME
 });
 client.connect();
 
