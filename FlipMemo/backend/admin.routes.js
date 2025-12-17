@@ -84,4 +84,77 @@ router.post('/removeAdmin', verifyToken, verifyAdmin, async (req, res) =>{
     }
 })
 
+router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
+    const {name, langID, desc} = req.body;
+    
+    try {
+      const usedNames = await client.query(`SELECT dictname FROM dictionaries`);
+
+      if (usedNames.rows.some(r => r.dictname === name)) {
+        return res.status(403).json({
+        success: false,
+        message: "Postoji rječnik s tim imenom."
+        });
+      }
+
+      const usedDictIDs = await client.query(`SELECT dictid FROM dictionaries`);
+      let i = 1;
+      const existingIDs = usedDictIDs.rows.map(r => r.dictid);
+      while (existingIDs.includes(i)) {
+      i++;
+      }
+
+
+      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, langID, desc]);
+      const result = await client.query(`SELECT dictname FROM dictionaries`);
+    
+      res.json({success: true, dictionaries: result.rows.map(r => r.dictname)});
+    } catch (err) {
+      res.status(500).json({success: false});
+    }
+});
+
+router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
+  const { word, langID, translation } = req.body;
+
+  try {
+    const usedTranslations = await client.query(`select translationId, word from words`);
+
+    let translationId;
+    const existingTranslation = usedTranslations.rows.find(r => r.word === translation);
+
+    if (!existingTranslation) {
+      const usedWordIDs = await client.query(`select wordId from words`);
+      const existingIDs = usedWordIDs.rows.map(r => r.wordid);
+
+      let i = 1;
+      while (existingIDs.includes(i)) {
+        i++;
+      }
+
+      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, 1, null]);
+
+      translationId = i;
+    } else {
+      translationId = existingTranslation.translationid;
+    }
+
+    const usedWordIDs = await client.query(`select wordId from words`);
+    const existingIDs = usedWordIDs.rows.map(r => r.wordid);
+
+    let j = 1;
+    while (existingIDs.includes(j)) {
+      j++;
+    }
+
+    await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`, [j, word, langID, translationId]);
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
+
 module.exports = router;
