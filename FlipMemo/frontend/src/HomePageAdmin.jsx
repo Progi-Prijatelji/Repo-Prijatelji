@@ -72,6 +72,32 @@ function HomePageAdmin() {
         
     }
 
+    const handleRemoveAdmin = async(user) => {
+        try {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/removeAdmin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                },
+                body: JSON.stringify({email: user}),
+                credentials: "include"  
+            });
+            const data = await results.json();
+
+            if (!data.success) {
+                alert(data.message || "Neuspješno micanje admina.");
+                return;
+            }
+
+            setAdminUser(prev => [...prev, user]);         
+            setSearchResults(prev => prev.filter(u => u !== user)); 
+
+            
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
     const handleAddAdmin = async(user) => {
         try {
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addNewAdmin", {
@@ -138,6 +164,7 @@ function HomePageAdmin() {
                             {adminUser.map((admin, index) => (
                                 <li key={index} className="admin-list-item">
                                 <span>{admin}</span>
+                                <button  className="admin-remove-btn" onClick={() => handleRemoveAdmin(result)}>X</button>
                                 </li>
                             ))}
                             </ul>
