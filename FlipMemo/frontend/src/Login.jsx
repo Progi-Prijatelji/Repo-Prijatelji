@@ -52,6 +52,7 @@ function Login() {
 
       if (data.success) {
           localStorage.setItem("jwt", data.token);  
+          localStorage.setItem("isAdmin", data.admin); 
           if (!data.reg) {
             alert(data.message || "Uspješna Google prijava!");
             if(data.admin){
