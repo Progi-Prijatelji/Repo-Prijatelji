@@ -64,7 +64,7 @@ function AdminSettings() {
         const data = await response.json();
         if(data.success){
             alert("Lozinka uspješno promijenjena!");
-            window.location.href = "/home";
+            window.location.href = "/homeAdmin";
         } else {
             alert("Došlo je do greške pri promjeni lozinke.");
             setConfirmNewPassword('');

@@ -89,8 +89,8 @@ function HomePageAdmin() {
                 return;
             }
 
-            setAdminUser(prev => [...prev, user]);         
-            setSearchResults(prev => prev.filter(u => u !== user)); 
+            setAdminUser(prev => prev.filter(a => a !== user));
+
 
             
         }catch (error) {
@@ -164,7 +164,7 @@ function HomePageAdmin() {
                             {adminUser.map((admin, index) => (
                                 <li key={index} className="admin-list-item">
                                 <span>{admin}</span>
-                                <button  className="admin-remove-btn" onClick={() => handleRemoveAdmin(result)}>X</button>
+                                <button  className="admin-remove-btn" onClick={() => handleRemoveAdmin(admin)}>X</button>
                                 </li>
                             ))}
                             </ul>
