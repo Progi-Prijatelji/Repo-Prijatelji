@@ -68,4 +68,16 @@ router.post('/addNewAdmin', verifyToken, verifyAdmin, async (req, res) =>{
     }
 })
 
+router.post('/removeAdmin', verifyToken, verifyAdmin, async (req, res) =>{
+    const {email} = req.body;
+    try {
+        await client.query(`update users set role = $2 WHERE email=$1`, [email, "student"]);
+        const result = await client.query(`SELECT email FROM users WHERE role=$1`, ["admin"]);
+    
+        res.json({success: true, users: result.rows.map(r => r.email)});
+    } catch (err) {
+        res.status(500).json({success: false});
+    }
+})
+
 module.exports = router;
