@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
     const admin = localStorage.getItem("isAdmin");
 
     if (!isAuthenticated) return <Navigate to="/" replace />;
-    if (admin) return <Navigate to="/homeAdmin" replace />;
+    if (admin === "true") return <Navigate to="/homeAdmin" replace />;
 
     return <Outlet />;
     }
