@@ -2,7 +2,12 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
     const isAuthenticated = localStorage.getItem("jwt");
-    return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
-}
+    const admin = localStorage.getItem("isAdmin");
+
+    if (!isAuthenticated) return <Navigate to="/" replace />;
+    if (admin) return <Navigate to="/homeAdmin" replace />;
+
+    return <Outlet />;
+    }
 
 export default ProtectedRoute;
