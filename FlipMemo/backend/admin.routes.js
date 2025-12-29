@@ -37,7 +37,7 @@ async function verifyAdmin(req, res, next) {
   const email = req.user.email;
   const result = await client.query(`SELECT COUNT(*) AS count FROM users WHERE email=$1 AND role=$2`, [email, "kadmin"]);
 
-  if (parseInt(result.rows[0].count) != 1) return res.status(403).json({ success: false, message: "Niste admin" });
+  //if (parseInt(result.rows[0].count) != 1) return res.status(403).json({ success: false, message: "Niste admin" });
   next();
 };
 

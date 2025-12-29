@@ -7,6 +7,7 @@ function HomePageAdmin() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
     const [adminUser, setAdminUser] = useState([]);
+    const kadmin = localStorage.getItem("isKadmin");
 
     useEffect(() => {
         const fetchAdmin = async () => {
@@ -128,6 +129,23 @@ function HomePageAdmin() {
         <>
         <HeaderAdmin />
             <div className="admin-page">
+                <div className='add-dictionary'>
+                    <div adding-section>
+                        <h2>Dodaj novi rječnik</h2>
+                        <form action="">
+                            <input type="text" placeholder="Naziv rječnika"/>
+                            <input type="text" placeholder="Jezik rječnika"/>
+                            <button type="submit">Dodaj rječnik</button>
+                        </form>
+                    </div>
+                    <div className='old-dictionary'>
+                        <h2>Stari rječnici</h2>
+                    </div>
+                </div>
+
+                {
+                    kadmin === "true" &&(
+
                 <div className="admin-main-layout">
                     <div className="search">
                         <form className="admin-search" onSubmit={handleSearch}>
@@ -174,6 +192,8 @@ function HomePageAdmin() {
 
 
                 </div>
+                    )
+                }
 
             </div>
         </>

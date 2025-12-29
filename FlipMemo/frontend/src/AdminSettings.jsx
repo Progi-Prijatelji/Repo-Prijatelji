@@ -77,7 +77,7 @@ function AdminSettings() {
         }
     }
 
-
+ 
     const display = (action) =>{
         if (action === 'delete') {
             const deleteSection = document.querySelector('.delete');
