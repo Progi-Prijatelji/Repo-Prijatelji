@@ -124,15 +124,22 @@ app.post("/google-auth", async (req, res) => {
       return res.json({ success: true, reg: true, admin: false, message: "Račun stvoren! Lozinka poslana na e-mail.", token});
     }
 
-    const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
-    const adminStr = admin.rows[0].email;
+    const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["admin"]);
+    
+
+    const kadmin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
+    const kadminStr = admin.rows[0].email;
 
     const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
 
-    if(adminStr == email){
-      res.json({ success: true, reg: false, admin: true, message: "Dobrodošli korijenski admine!", token });
+    if(admin.includes(email)){
+      res.json({ success: true, reg: false, admin: true, kadmin: false, message: "Dobrodošli admine!", token });
     }
-    else return res.json({ success: true, reg: false, admin: false, message: "Dobrodošli natrag!", token });
+    else if(kadminStr === email){
+      res.json({ success: true, reg: false, admin: true, kadmin: true, message: "Dobrodošli korijenski admine!", token });
+
+    }
+    else return res.json({ success: true, reg: false, admin: false, kadmin: false, message: "Dobrodošli natrag!", token });
 
   } catch (error) {
     console.error(error);

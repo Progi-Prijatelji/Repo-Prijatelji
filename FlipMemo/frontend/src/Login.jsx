@@ -52,7 +52,9 @@ function Login() {
 
       if (data.success) {
           localStorage.setItem("jwt", data.token);  
-          localStorage.setItem("isAdmin", data.admin); 
+          localStorage.setItem("isAdmin", data.admin);
+          localStorage.setItem("isKadmin", data.kadmin);
+          
           if (!data.reg) {
             alert(data.message || "Uspješna Google prijava!");
             if(data.admin){
