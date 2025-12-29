@@ -60,14 +60,22 @@ app.post('/login', async (req, res) => {
       const count = parseInt(result.rows[0].count);
 
       if (count > 0) {
-        const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
-        const adminStr = admin.rows[0].email;
+        const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["admin"]);
+        const adminEmails = admin.rows.map(r => r.email);
+
+
+        const kadmin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
+        const kadminStr = kadmin.rows[0].email;
 
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "3h" });
 
-        if(adminStr == email){
-          res.json({ success: true, reg: false, admin: true, message: "Dobrodošli korijenski admine!", token });
-        }else return res.json({ success: true, reg: false, admin:false, token });
+        if(adminEmails.includes(email)){
+          res.json({ success: true, reg: false, admin: true, kadmin: false, message: "Dobrodošli admine!", token });
+        }
+        else if(kadminStr === email){
+          res.json({ success: true, reg: false, admin: true, kadmin: true, message: "Dobrodošli korijenski admine!", token });
+        }
+        else return res.json({ success: true, reg: false, admin:false, kadmin: false, token });
       }   else {
         return res.json({ success: false, reg: false, admin:false, message: "Pogrešan email ili lozinka" });
       }
@@ -128,7 +136,6 @@ app.post("/google-auth", async (req, res) => {
     const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["admin"]);
     const adminEmails = admin.rows.map(r => r.email);
 
-
     const kadmin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
     const kadminStr = kadmin.rows[0].email;
 
@@ -139,7 +146,6 @@ app.post("/google-auth", async (req, res) => {
     }
     else if(kadminStr === email){
       res.json({ success: true, reg: false, admin: true, kadmin: true, message: "Dobrodošli korijenski admine!", token });
-
     }
     else return res.json({ success: true, reg: false, admin: false, kadmin: false, message: "Dobrodošli natrag!", token });
 
