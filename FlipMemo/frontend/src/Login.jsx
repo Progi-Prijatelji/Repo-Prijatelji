@@ -23,7 +23,9 @@ function Login() {
 
       if (data.success) {
         alert("Uspješna prijava!");
-        localStorage.setItem("jwt", data.token);
+        localStorage.setItem("jwt", data.token);  
+        localStorage.setItem("isAdmin", data.admin);
+        localStorage.setItem("isKadmin", data.kadmin);
         if(data.admin){
           window.location.href = "/homeAdmin";
         }

@@ -126,14 +126,15 @@ app.post("/google-auth", async (req, res) => {
     }
 
     const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["admin"]);
-    
+    const adminEmails = admin.rows.map(r => r.email);
+
 
     const kadmin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
-    const kadminStr = admin.rows[0].email;
+    const kadminStr = kadmin.rows[0].email;
 
     const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "24h" });
 
-    if(admin.includes(email)){
+    if(adminEmails.includes(email)){
       res.json({ success: true, reg: false, admin: true, kadmin: false, message: "Dobrodošli admine!", token });
     }
     else if(kadminStr === email){
