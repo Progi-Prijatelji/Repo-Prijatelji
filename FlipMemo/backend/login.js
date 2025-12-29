@@ -32,7 +32,8 @@ const client = new Client ({
   user: DATABASE_USER,
   port: 5432,
   password: DATABASE_PASSWORD,
-  database: DATABASE_NAME
+  database: DATABASE_NAME,
+  ssl: {rejectUnauthorized: false}
 });
 client.connect();
 
