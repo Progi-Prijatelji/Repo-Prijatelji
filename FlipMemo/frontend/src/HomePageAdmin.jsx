@@ -9,6 +9,39 @@ function HomePageAdmin() {
     const [adminUser, setAdminUser] = useState([]);
     const kadmin = localStorage.getItem("isKadmin");
 
+    const [dictName, setDictName] = useState("");
+    const [dictDesc, setDictDesc] = useState("");
+    const [langID, setLangID] = useState("");
+    const [dictionaries, setDictionaries] = useState([]);
+
+    const handleAddDictionary = async (e) => {
+        e.preventDefault();
+        if (!dictName || !langID) {
+            alert("Molimo ispunite sva obavezna polja.");
+            return;
+        }
+        try {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addDictionary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({name: dictName, langID: langID, desc: dictDesc})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje rječnika.");
+                return;
+            }
+            setDictionaries(data.dictionaries);
+            setDictName("");
+            setLangID("");
+            setDictDesc("");
+        } catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
     useEffect(() => {
         const fetchAdmin = async () => {
             try {
@@ -130,16 +163,27 @@ function HomePageAdmin() {
         <HeaderAdmin />
             <div className="admin-page">
                 <div className='add-dictionary'>
-                    <div adding-section>
-                        <h2>Dodaj novi rječnik</h2>
-                        <form action="">
-                            <input type="text" placeholder="Naziv rječnika"/>
-                            <input type="text" placeholder="Jezik rječnika"/>
+                    <h2>Dodavanje rječnika</h2>
+                    <div className='adding-section'>
+                        <h3>Dodaj novi rječnik</h3>
+                        <form onSubmit={handleAddDictionary}>
+                            <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
+                            <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
+                            <input type="text" placeholder="Jezik" value={langID} onChange={(e) => setLangID(e.target.value)}/>
                             <button type="submit">Dodaj rječnik</button>
                         </form>
                     </div>
                     <div className='old-dictionary'>
                         <h2>Stari rječnici</h2>
+                        <ul>
+                            {dictionaries.map((dict) => (
+                            <li key={dict.dictid}>
+                                <p>{dict.dictname}</p>
+                                <p>{dict.description}</p>
+                                <p>{dict.langid}</p>
+                            </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 
@@ -148,6 +192,7 @@ function HomePageAdmin() {
 
                 <div className="admin-main-layout">
                     <div className="search">
+                        <h2>Dodavanje admina</h2>
                         <form className="admin-search" onSubmit={handleSearch}>
                             <input
                             type="text"
