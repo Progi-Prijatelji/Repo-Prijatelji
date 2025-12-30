@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import LanguageSelector from './components/LanguageSelector.jsx';
 import DictionaryCard from './components/DictionaryCard.jsx';
@@ -10,6 +11,7 @@ import { LANGUAGE, DICTIONARY } from './mockData.js';
 function HomePageUser() {
   const [language, setLanguage] = useState(LANGUAGE[0]); 
   const [selectedDict, setSelectedDict] = useState(null);
+  const navigate = useNavigate();
   const dictionaries = DICTIONARY.filter(d => d.langId === language.langId);
 
   const handleCardClick = (dict) => {
@@ -18,6 +20,10 @@ function HomePageUser() {
 
   const closeModal = () => {
     setSelectedDict(null);
+  };
+
+  const handleModeClick = (mode) => {
+    navigate(`/learn/${selectedDict.dictId}/${mode}`);
   };
 
   return (
@@ -52,25 +58,21 @@ function HomePageUser() {
                 <p><strong>Jezik:</strong> {language.langName}</p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">
-                  <div className="mod-card">
+                  <div className="mod-card" onClick={() => handleModeClick('foreign-to-native')}>
                     <BookA color="black" size="30"/>
                     <p>Strani u materinji</p>
                   </div>
-                  <div className="mod-card">
-                    <Languages color="black"
-                                size="30"/>
+                  <div className="mod-card" onClick={() => handleModeClick('native-to-foreign')}>
+                    <Languages color="black" size="30"/>
                     <p>Materinji u strani</p>
                   </div>
-                  <div className="mod-card">
-                    <Pen color="black"
-                          size="30"/>
+                  <div className="mod-card" onClick={() => handleModeClick('writing')}>
+                    <Pen color="black" size="30"/>
                     <p>Pisanje</p>
                   </div>    
-                  <div className="mod-card">
-                    <Mic color="black"
-                                size="30"/>
+                  <div className="mod-card" onClick={() => handleModeClick('pronunciation')}>
+                    <Mic color="black" size="30"/>
                     <p>Izgovor</p>
-
                   </div>
 
                 </div>
