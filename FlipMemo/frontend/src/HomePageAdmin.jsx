@@ -33,7 +33,7 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje rječnika.");
                 return;
             }
-            setDictionaries(data.dictionaries);
+            setDictionaries(prev => [...prev, data.dictionary]);
             setDictName("");
             setLangID("");
             setDictDesc("");
@@ -43,6 +43,26 @@ function HomePageAdmin() {
         }
     }
     useEffect(() => {
+        const fetchDictionaries = async () => {
+            try {
+                const results = await fetch("https://fmimage.onrender.com/homeAdmin/getDictionaries", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                 },
+                credentials: "include"
+                });
+                const data = await results.json();
+                if (!data.success) {
+                    alert(data.message || "Nemate pravo pristupa.");
+                    return;
+                }
+                setDictionaries(data.dictionaries);
+            } catch (error) {
+                console.error("Greška:", error);
+                alert("Greška u povezivanju s poslužiteljem.");
+            }
+        };
         const fetchAdmin = async () => {
             try {
                 const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendAdminList", {
@@ -66,6 +86,7 @@ function HomePageAdmin() {
                 
             }
         }
+        fetchDictionaries();
         fetchAdmin();
     }, []);
     
@@ -168,13 +189,13 @@ function HomePageAdmin() {
                         <h3>Dodaj novi rječnik</h3>
                         <form onSubmit={handleAddDictionary}>
                             <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
-                            <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                             <input type="text" placeholder="Jezik" value={langID} onChange={(e) => setLangID(e.target.value)}/>
+                            <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                             <button type="submit">Dodaj rječnik</button>
                         </form>
                     </div>
                     <div className='old-dictionary'>
-                        <h2>Stari rječnici</h2>
+                        <h2>Postojeći rječnici</h2>
                         <ul>
                             {dictionaries.map((dict) => (
                             <li key={dict.dictid}>
