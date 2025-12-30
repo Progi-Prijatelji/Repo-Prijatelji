@@ -13,7 +13,7 @@ function LearnPage() {
       <div className="learn-page">
         <button onClick={() => navigate(-1)}>← Nazad</button>
         <h1>Učenje - Mod: {mode}</h1>
-        <p>Rečnik ID: {dictId}</p>
+        <p>Riječnik ID: {dictId}</p>
         {/* Sadržaj za učenje dolazi ovdje */}
       </div>
     </>
