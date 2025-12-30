@@ -116,7 +116,7 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
 
 router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
-        const result = await client.query(`SELECT * FROM DICTIONARIES`);
+        const result = await client.query(`SELECT dictname FROM DICTIONARIES`);
     
         res.json({success: true, dicts: result.rows.map(r => r.dictname)});
     } catch (err) {
@@ -172,7 +172,7 @@ router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   const {discid} = req.body
 
   try {
-    const returnWords = await client.query(`select w.* from words join dictword ON w.wordid = dw.wordid where dw.wordid in $1`, [discid])
+    const returnWords = await client.query(`select word from words join dictword ON w.wordid = dw.wordid where dw.wordid in $1`, [discid])
 
     res.json({success: true, words: returnWords.rows.map(r => r.word)});
   } catch (error) {
