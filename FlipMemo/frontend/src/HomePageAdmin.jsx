@@ -7,8 +7,62 @@ function HomePageAdmin() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
     const [adminUser, setAdminUser] = useState([]);
+    const kadmin = localStorage.getItem("isKadmin");
 
+    const [dictName, setDictName] = useState("");
+    const [dictDesc, setDictDesc] = useState("");
+    const [langID, setLangID] = useState("");
+    const [dictionaries, setDictionaries] = useState([]);
+
+    const handleAddDictionary = async (e) => {
+        e.preventDefault();
+        if (!dictName || !langID) {
+            alert("Molimo ispunite sva obavezna polja.");
+            return;
+        }
+        try {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addDictionary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({name: dictName, langID: langID, desc: dictDesc})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje rječnika.");
+                return;
+            }
+            setDictionaries(prev => [...prev, data.dictionary]);
+            setDictName("");
+            setLangID("");
+            setDictDesc("");
+        } catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
     useEffect(() => {
+        const fetchDictionaries = async () => {
+            try {
+                const results = await fetch("https://fmimage.onrender.com/homeAdmin/getDictionaries", {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                 },
+                credentials: "include"
+                });
+                const data = await results.json();
+                if (!data.success) {
+                    alert(data.message || "Nemate pravo pristupa.");
+                    return;
+                }
+                setDictionaries(data.dictionaries);
+            } catch (error) {
+                console.error("Greška:", error);
+                alert("Greška u povezivanju s poslužiteljem.");
+            }
+        };
         const fetchAdmin = async () => {
             try {
                 const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendAdminList", {
@@ -32,6 +86,7 @@ function HomePageAdmin() {
                 
             }
         }
+        fetchDictionaries();
         fetchAdmin();
     }, []);
     
@@ -128,8 +183,37 @@ function HomePageAdmin() {
         <>
         <HeaderAdmin />
             <div className="admin-page">
+                <div className='add-dictionary'>
+                    <h2>Dodavanje rječnika</h2>
+                    <div className='adding-section'>
+                        <h3>Dodaj novi rječnik</h3>
+                        <form onSubmit={handleAddDictionary}>
+                            <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
+                            <input type="text" placeholder="Jezik" value={langID} onChange={(e) => setLangID(e.target.value)}/>
+                            <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
+                            <button type="submit">Dodaj rječnik</button>
+                        </form>
+                    </div>
+                    <div className='old-dictionary'>
+                        <h2>Postojeći rječnici</h2>
+                        <ul>
+                            {dictionaries.map((dict) => (
+                            <li key={dict.dictid}>
+                                <p>{dict.dictname}</p>
+                                <p>{dict.description}</p>
+                                <p>{dict.langid}</p>
+                            </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+
+                {
+                    kadmin === "true" &&(
+
                 <div className="admin-main-layout">
                     <div className="search">
+                        <h2>Dodavanje admina</h2>
                         <form className="admin-search" onSubmit={handleSearch}>
                             <input
                             type="text"
@@ -174,6 +258,8 @@ function HomePageAdmin() {
 
 
                 </div>
+                    )
+                }
 
             </div>
         </>

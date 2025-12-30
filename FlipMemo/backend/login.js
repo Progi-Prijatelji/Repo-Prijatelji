@@ -63,7 +63,6 @@ app.post('/login', async (req, res) => {
         const admin = await client.query(`SELECT email FROM users WHERE role = $1`, ["admin"]);
         const adminEmails = admin.rows.map(r => r.email);
 
-
         const kadmin = await client.query(`SELECT email FROM users WHERE role = $1`, ["kadmin"]);
         const kadminStr = kadmin.rows[0].email;
 
