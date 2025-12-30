@@ -118,7 +118,7 @@ router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
         const result = await client.query(`SELECT * FROM DICTIONARIES`);
     
-        res.json({success: true, dicts: result.rows});
+        res.json({success: true, dicts: result.rows.map(r => r.dictname)});
     } catch (err) {
         res.status(500).json({success: false});
     }
