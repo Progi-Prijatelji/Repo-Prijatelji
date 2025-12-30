@@ -45,7 +45,7 @@ function HomePageAdmin() {
     useEffect(() => {
         const fetchDictionaries = async () => {
             try {
-                const results = await fetch("https://fmimage.onrender.com/homeAdmin/getDictionaries", {
+                const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictList", {
                     method: "GET",
                     headers: { "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
