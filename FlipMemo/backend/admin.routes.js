@@ -174,7 +174,7 @@ router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   try {
     const returnWords = await client.query(`select w.* from words join dictword ON w.wordid = dw.wordid where dw.wordid in $1`, [discid])
 
-    res.json({success: true, words: returnWords.rows});
+    res.json({success: true, words: returnWords.rows.map(r => r.word)});
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false });
