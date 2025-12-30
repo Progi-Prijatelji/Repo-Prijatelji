@@ -105,13 +105,22 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
       i++;
       }
 
-
       await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, langID, desc]);
       const result = await client.query(`SELECT dictname FROM dictionaries`);
     
       res.json({success: true, dictionaries: result.rows.map(r => r.dictname)});
     } catch (err) {
       res.status(500).json({success: false});
+    }
+});
+
+router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
+    try {
+        const result = await client.query(`SELECT * FROM DICTIONARIES`);
+    
+        res.json({success: true, users: result.rows.map(r => r.email)});
+    } catch (err) {
+        res.status(500).json({success: false});
     }
 });
 
@@ -154,6 +163,19 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
 
   } catch (err) {
     console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
+
+router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
+  const {discid} = req.body
+
+  try {
+    const returnWords = await client.query(`select w.* from words join dictword ON w.wordid = dw.wordid where dw.wordid in $1`, [discid])
+
+    res.json({success: true, words: returnWords.rows});
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ success: false });
   }
 });
