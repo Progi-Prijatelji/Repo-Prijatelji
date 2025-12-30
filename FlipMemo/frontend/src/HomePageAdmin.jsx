@@ -33,7 +33,7 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje rječnika.");
                 return;
             }
-            setDictionaries(prev => [...prev, data.dictionary]);
+            await fetchDictionaries();
             setDictName("");
             setLangID("");
             setDictDesc("");
@@ -57,7 +57,7 @@ function HomePageAdmin() {
                     alert(data.message || "Nemate pravo pristupa.");
                     return;
                 }
-                setDictionaries(data.dictionaries);
+                setDictionaries(data.dicts || []);
             } catch (error) {
                 console.error("Greška:", error);
                 alert("Greška u povezivanju s poslužiteljem.");
