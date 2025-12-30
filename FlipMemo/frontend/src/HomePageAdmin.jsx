@@ -198,10 +198,8 @@ function HomePageAdmin() {
                         <h2>Postojeći rječnici</h2>
                         <ul>
                             {dictionaries.map((dict) => (
-                            <li key={dict.dictid}>
-                                <p>{dict.dictname}</p>
-                                <p>{dict.description}</p>
-                                <p>{dict.langid}</p>
+                            <li key={dict}>
+                                <p>{dict}</p>
                             </li>
                             ))}
                         </ul>
