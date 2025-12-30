@@ -69,10 +69,10 @@ app.post('/login', async (req, res) => {
         const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "3h" });
 
         if(adminEmails.includes(email)){
-          res.json({ success: true, reg: false, admin: true, kadmin: false, token });
+          res.json({ success: true, reg: false, admin: true, kadmin: false, message: "Dobrodošli admine!", token });
         }
         else if(kadminStr === email){
-          res.json({ success: true, reg: false, admin: true, kadmin: true, token });
+          res.json({ success: true, reg: false, admin: true, kadmin: true, message: "Dobrodošli korijenski admine!", token });
         }
         else return res.json({ success: true, reg: false, admin:false, kadmin: false, token });
       }   else {

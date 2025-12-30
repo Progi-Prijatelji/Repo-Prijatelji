@@ -125,9 +125,10 @@ router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
 });
 
 router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
-  const { word, langID, translation } = req.body;
+  const { word, langname, translation } = req.body;
 
   try {
+    const getLangID = await client.query(`select langid from LANGUAGES where name = $1`, [langname]);
     const usedTranslations = await client.query(`select translationId, word from words`);
 
     let translationId;
@@ -142,7 +143,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
         i++;
       }
 
-      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, 1, null]);
+      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, getLangID.rows[0].langid, null]);
 
       translationId = i;
     } else {
@@ -157,7 +158,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       j++;
     }
 
-    await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`, [j, word, langID, translationId]);
+    await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`, [j, word, getLangID.rows[0].langid, translationId]);
 
     res.json({ success: true });
 
