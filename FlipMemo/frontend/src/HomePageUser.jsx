@@ -23,7 +23,7 @@ function HomePageUser() {
   };
 
   const handleModeClick = (mode) => {
-    navigate(`/learn/${selectedDict.dictId}/${mode}`);
+    navigate(`/learn/${selectedDict.dictName}/${mode}`);
   };
 
   return (
@@ -39,7 +39,7 @@ function HomePageUser() {
 
           <div className="dictionary-list">
             {dictionaries.map((dict) => (
-              <div key={dict.dictId} onClick={() => handleCardClick(dict)}>
+              <div key={dict.dictName} onClick={() => handleCardClick(dict)}>
                 <DictionaryCard 
                   name={dict.dictName} 
                   description={dict.description} 
