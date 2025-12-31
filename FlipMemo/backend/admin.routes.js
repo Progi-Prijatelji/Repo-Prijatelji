@@ -172,9 +172,10 @@ router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   const {discid} = req.body
 
   try {
-    const returnWords = await client.query(`select word from words join dictword ON w.wordid = dw.wordid where dw.wordid in $1`, [discid])
+    const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation FROM dictword dw JOIN words w ON w.wordid = dw.wordid
+                                            LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [discid])
 
-    res.json({success: true, words: returnWords.rows.map(r => r.word)});
+    res.json({success: true, words: returnWords.rows});
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false });
