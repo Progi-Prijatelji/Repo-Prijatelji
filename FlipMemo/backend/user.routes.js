@@ -33,4 +33,30 @@ function verifyToken(req, res, next) {
   }
 };
 
+async function updateWords(userid) {
+  await client.query(`update userword set container = container + 1 
+                      where userid = $1 and added >= NOW() - INTERVAL '1 day'`, [userid])
+}
+
+router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
+  const {email, dictid, method} = req.body     
+
+  try {
+    const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
+    const userid = userResult.rows[0].userid;
+
+    await updateWords(userid);
+
+    const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation FROM dictword dw 
+                                            JOIN words w ON w.wordid = dw.wordid
+                                            LEFT JOIN words t ON t.wordid = w.translationid 
+                                            JOIN userword uw on uw.wordid = dw.wordid
+                                            WHERE dw.dictid = $1 and userid = $2 and container <= 5 and method = $3`, [dictid, userid, method]);
+  
+  res.json({success: true, words: returnWords.rows});     
+  } catch (err) {
+    res.status(500).json({success: false});
+  }
+});
+
 module.exports = router;
