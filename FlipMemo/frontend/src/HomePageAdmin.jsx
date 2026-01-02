@@ -14,6 +14,60 @@ function HomePageAdmin() {
     const [langID, setLangID] = useState("");
     const [dictionaries, setDictionaries] = useState([]);
 
+    const [word, setWord] = useState("");
+    const [wordTrans, setWordTrans] = useState("");
+    const [wordLangID, setWordLangID] = useState("");
+
+    const handleAddWord = async (e) => {
+        e.preventDefault();
+        if (!word || !wordLangID || !wordTrans) {
+            alert("Molimo ispunite sva obavezna polja.");
+            return;
+        }
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWord", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({word: word, wordTrans: wordTrans, wordLangID: wordLangID})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje riječi.");
+                return;
+            }
+            
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+
+    }
+
+    const handleAddWordToDictionary = async (e) => {
+        e.preventDefault();
+        /*try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDictionary", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({word: word, wordTrans: wordTrans, wordLangID: wordLangID})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje riječi.");
+                return;
+            }
+            setWord("");
+            setWordTrans("");
+            setWordLangID("");
+        }catch(error){
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }*/
+    }
     const handleAddDictionary = async (e) => {
         e.preventDefault();
         if (!dictName || !langID) {
@@ -42,27 +96,29 @@ function HomePageAdmin() {
             alert("Greška u povezivanju s poslužiteljem.");
         }
     }
-    useEffect(() => {
-        const fetchDictionaries = async () => {
-            try {
-                const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictList", {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
-                 },
-                credentials: "include"
-                });
-                const data = await results.json();
-                if (!data.success) {
-                    alert(data.message || "Nemate pravo pristupa.");
-                    return;
-                }
-                setDictionaries(data.dicts || []);
-            } catch (error) {
-                console.error("Greška:", error);
-                alert("Greška u povezivanju s poslužiteljem.");
+
+    const fetchDictionaries = async () => {
+        console.log("bla");
+        try {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictList", {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+            credentials: "include"
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Nemate pravo pristupa.");
+                return;
             }
-        };
+            setDictionaries(data.dicts || []);
+        } catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    };
+    useEffect(() => {
         const fetchAdmin = async () => {
             try {
                 const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendAdminList", {
@@ -203,6 +259,28 @@ function HomePageAdmin() {
                             </li>
                             ))}
                         </ul>
+                    </div>
+                </div>
+
+                <div className='add-word'>
+                    <h2>Dodavanje riječi</h2>
+                    <div className='adding-section'>
+                        <h3>Dodaj novu riječ</h3>
+                        <form onSubmit={handleAddWord}>
+                            <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
+                            <input type="text" placeholder="Jezik" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}/>
+                            <textarea placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
+                            <button type="submit">Dodaj riječ</button>
+                        </form>
+                        <form onSubmit={handleAddWordToDictionary}>
+                            <label>Odaberi rječnik u koji želiš dodati riječ:</label>
+                            <select>
+                                {dictionaries.map((dict) => (
+                                    <option key={dict} value={dict}>{dict}</option>
+                                ))}
+                            </select>
+                            <button type="submit">Dodaj riječ u rječnik</button>
+                        </form>
                     </div>
                 </div>
 
