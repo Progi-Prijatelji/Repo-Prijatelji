@@ -168,6 +168,23 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
   }
 });
 
+router.post('/addWordToDicts', verifyToken, verifyAdmin, async (req, res) =>{
+  try {
+    const {wordid, dictids} = req.body;
+  
+    for (let index = 0; index < dictids.length; index++) {
+      const element = dictids[index];
+      
+      await client.query(`insert into dictword (wordid, dictid) values ($1, $2)`, [wordid, element])
+    }
+  
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
+
 router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   const {discid} = req.body
 
@@ -176,10 +193,23 @@ router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
                                             LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [discid])
 
     res.json({success: true, words: returnWords.rows});
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ success: false });
   }
+});
+
+router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
+   const {wordid} = req.body;
+
+   try {
+    await client.query()
+
+    res.json({ success: true });
+   } catch (err) {
+    console.error(err);
+    res.status(500).e({ success: false });
+   }
 });
 
 module.exports = router;
