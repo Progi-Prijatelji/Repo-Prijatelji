@@ -18,6 +18,8 @@ function HomePageAdmin() {
     const [wordTrans, setWordTrans] = useState("");
     const [wordLangID, setWordLangID] = useState("");
 
+    const [languages, setLanguages] = useState([]);
+
     const handleAddWord = async (e) => {
         e.preventDefault();
         if (!word || !wordLangID || !wordTrans) {
@@ -96,7 +98,26 @@ function HomePageAdmin() {
             alert("Greška u povezivanju s poslužiteljem.");
         }
     }
-
+    const fetchLanguages = async () => {
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendLangList", {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+            credentials: "include"
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Nemate pravo pristupa.");
+                return;
+            }
+            setLanguages(data.langs || []);
+        } catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
     const fetchDictionaries = async () => {
         console.log("bla");
         try {
@@ -112,7 +133,7 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-            setDictionaries(data.dicts || []);
+            setDictionaries(data.dicts.name || []);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -142,6 +163,7 @@ function HomePageAdmin() {
                 
             }
         }
+        fetchLanguages();
         fetchDictionaries();
         fetchAdmin();
     }, []);
@@ -245,6 +267,12 @@ function HomePageAdmin() {
                         <h3>Dodaj novi rječnik</h3>
                         <form onSubmit={handleAddDictionary}>
                             <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
+                            <select >
+                                {languages.map((lang) => (
+                                    <option key={lang} value={lang}>{lang}</option>
+                                ))}
+
+                            </select>
                             <input type="text" placeholder="Jezik" value={langID} onChange={(e) => setLangID(e.target.value)}/>
                             <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                             <button type="submit">Dodaj rječnik</button>
