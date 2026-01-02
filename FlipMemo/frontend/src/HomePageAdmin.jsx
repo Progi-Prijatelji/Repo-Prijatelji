@@ -112,14 +112,14 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-            setLanguages(data.langs || []);
+            console.log(data.langs);
+            setLanguages(data.langs);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
     }
     const fetchDictionaries = async () => {
-        console.log("bla");
         try {
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictList", {
                 method: "GET",
@@ -133,7 +133,7 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-            setDictionaries(data.dicts.name || []);
+            setDictionaries(data.dicts);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -272,7 +272,6 @@ function HomePageAdmin() {
                                     <option key={lang} value={lang}>{lang}</option>
                                 ))}
                             </select>
-
                             <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                             <button type="submit">Dodaj rječnik</button>
                         </form>
