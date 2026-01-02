@@ -268,7 +268,7 @@ function HomePageAdmin() {
                         <form onSubmit={handleAddDictionary}>
                             <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
                             <select value={langID} onChange={(e) => setLangID(e.target.value)}>
-                                <option value="">--odaberi jezik</option>
+                                <option value="">Jezik</option>
                                 {languages.map((lang) => (
                                     <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
                                 ))}
@@ -295,19 +295,22 @@ function HomePageAdmin() {
                         <h3>Dodaj novu riječ</h3>
                         <form onSubmit={handleAddWord}>
                             <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
-                            <input type="text" placeholder="Jezik" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}/>
+                            <select value={langID} onChange={(e) => setLangID(e.target.value)}>
+                                <option value="">Jezik</option>
+                                {languages.map((lang) => (
+                                    <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
+                                ))}
+                            </select>
                             <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
                             <button type="submit">Dodaj riječ</button>
                         </form>
-                        <form onSubmit={handleAddWordToDictionary}>
+                        {/*<form onSubmit={handleAddWordToDictionary}>
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                            <select>
-                                {dictionaries.map((dict) => (
-                                    <option key={dict.dictname} value={dict.dictName}>{dict.dictname}</option>
-                                ))}
-                            </select>
+                            {dictionaries.map((dict) => (
+                                <input type="checkbox" key={dict.dictname} value={dict.dictName}/>
+                            ))}
                             <button type="submit">Dodaj riječ u rječnik</button>
-                        </form>
+                        </form>*/}
                     </div>
                 </div>
 
