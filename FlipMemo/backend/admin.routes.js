@@ -153,7 +153,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
         i++;
       }
 
-      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, 1, null]);
+      await client.query(`insert into words (wordId, word, langid, translationId, audioFile) values ($1, $2, $3, $4, $5)`,[i, translation, 1, null, "aaaa"]);
 
       translationId = i;
     } else {
@@ -213,7 +213,7 @@ router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
    const {wordid} = req.body;
 
    try {
-    await client.query()
+    await client.query(`delete from words where wordid = $1`, [wordid])
 
     res.json({ success: true });
    } catch (err) {
