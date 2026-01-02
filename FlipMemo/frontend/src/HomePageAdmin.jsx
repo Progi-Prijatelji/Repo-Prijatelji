@@ -113,7 +113,7 @@ function HomePageAdmin() {
                 return;
             }
             console.log(data.langs);
-            setLanguages(data.langs.map(lang => lang.langName) || []);
+            setLanguages(data.langs || []);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -269,7 +269,7 @@ function HomePageAdmin() {
                             <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
                             <select value={langID} onChange={(e) => setLangID(e.target.value)}>
                                 {languages.map((lang) => (
-                                    <option key={lang} value={lang}>{lang}</option>
+                                    <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
                                 ))}
                             </select>
                             <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
@@ -280,8 +280,8 @@ function HomePageAdmin() {
                         <h2>Postojeći rječnici</h2>
                         <ul>
                             {dictionaries.map((dict) => (
-                            <li key={dict}>
-                                <p>{dict}</p>
+                            <li key={dict.dictname}>
+                                <p>{dict.dictname}</p>
                             </li>
                             ))}
                         </ul>
@@ -302,7 +302,7 @@ function HomePageAdmin() {
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                             <select>
                                 {dictionaries.map((dict) => (
-                                    <option key={dict.dictname} value={dict}>{dict}</option>
+                                    <option key={dict.dictname} value={dict.dictName}>{dict.dictname}</option>
                                 ))}
                             </select>
                             <button type="submit">Dodaj riječ u rječnik</button>
