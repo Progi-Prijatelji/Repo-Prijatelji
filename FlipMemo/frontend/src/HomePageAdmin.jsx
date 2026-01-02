@@ -267,13 +267,12 @@ function HomePageAdmin() {
                         <h3>Dodaj novi rječnik</h3>
                         <form onSubmit={handleAddDictionary}>
                             <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
-                            <select >
+                            <select value={langID} onChange={(e) => setLangID(e.target.value)}>
                                 {languages.map((lang) => (
                                     <option key={lang} value={lang}>{lang}</option>
                                 ))}
-
                             </select>
-                            <input type="text" placeholder="Jezik" value={langID} onChange={(e) => setLangID(e.target.value)}/>
+
                             <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                             <button type="submit">Dodaj rječnik</button>
                         </form>
@@ -304,7 +303,7 @@ function HomePageAdmin() {
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                             <select>
                                 {dictionaries.map((dict) => (
-                                    <option key={dict} value={dict}>{dict}</option>
+                                    <option key={dict.dictname} value={dict}>{dict}</option>
                                 ))}
                             </select>
                             <button type="submit">Dodaj riječ u rječnik</button>
