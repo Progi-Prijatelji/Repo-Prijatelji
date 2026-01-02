@@ -197,11 +197,11 @@ router.post('/addWordToDicts', verifyToken, verifyAdmin, async (req, res) =>{
 });
 
 router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
-  const {discid} = req.body
+  const {dictid} = req.body
 
   try {
     const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation FROM dictword dw JOIN words w ON w.wordid = dw.wordid
-                                            LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [discid])
+                                            LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid])
 
     res.json({success: true, words: returnWords.rows});
   } catch (err) {
