@@ -1,21 +1,25 @@
 import React from 'react';
 import '../css/LanguageSelector.css';
-import { LANGUAGE } from '../mockData';
 
-const LanguageSelector = ({ language, onChange }) => {
+const LanguageSelector = ({ language, languages = [], onChange }) => {
+  const langs = languages.length ? languages : [];
+  const value = language?.langid ?? '';
+
   return (
     <div className="language-selector-wrapper">
-      <select 
-        value={language.langId} 
+      <select
+        value={value}
         onChange={(e) => {
-          const lang = LANGUAGE.find(l => l.langId === Number(e.target.value));
-          onChange(lang);
+          const selectedId = Number(e.target.value);
+          const lang = langs.find((l) => l.langid === selectedId);
+          onChange(lang || null);
         }}
         className="language-selector"
       >
-        {LANGUAGE.map((lang) => (
-          <option key={lang.langId} value={lang.langId}>
-            {lang.langName}
+        <option value="" disabled hidden>Odaberi jezik</option>
+        {langs.map((lang) => (
+          <option key={lang.langid} value={lang.langid}>
+            {lang.langname}
           </option>
         ))}
       </select>

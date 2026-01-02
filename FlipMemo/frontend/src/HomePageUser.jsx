@@ -8,9 +8,9 @@ import './css/homePage.css';
 
 function HomePageUser() {
   const [languages, setLanguages] = useState([]);
+  const [dictionaries, setDictionaries] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedDict, setSelectedDict] = useState(null);
-  const [dictionaries, setDictionaries] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('jwt');
 
@@ -35,7 +35,7 @@ function HomePageUser() {
         const langData = await langRes.json();
         if (langData.success && langData.langs.length > 0) {
           setLanguages(langData.langs);
-          setSelectedLanguage(langData.langs[0]); 
+          setSelectedLanguage(langData.langs[0]);
         }
       } catch (err) {
         console.error('Greška pri dohvaćanju podataka:', err);
