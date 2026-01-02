@@ -91,7 +91,7 @@ function HomePageAdmin() {
             }
             await fetchDictionaries();
             setDictName("");
-            setLangID("");
+            //setLangID("");
             setDictDesc("");
         } catch (error) {
             console.error("Greška:", error);
@@ -268,6 +268,7 @@ function HomePageAdmin() {
                         <form onSubmit={handleAddDictionary}>
                             <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
                             <select value={langID} onChange={(e) => setLangID(e.target.value)}>
+                                <option value="">--odaberi jezik</option>
                                 {languages.map((lang) => (
                                     <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
                                 ))}
