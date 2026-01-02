@@ -128,7 +128,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
   const { word, langname, translation } = req.body;
 
   try {
-    const getLangID = await client.query(`select langid from LANGUAGES where name = $1`, [langname]);
+    const getLangID = await client.query(`select langid from LANGUAGES where langname = $1`, [langname]);
     const usedTranslations = await client.query(`select translationId, word from words`);
 
     let translationId;
@@ -143,7 +143,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
         i++;
       }
 
-      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, getLangID.rows[0].langid, null]);
+      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, 1, null]);
 
       translationId = i;
     } else {
@@ -158,7 +158,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       j++;
     }
 
-    await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`, [j, word, getLangID.rows[0].langid, translationId]);
+    await client.query(`insert into words (wordId, word, langid, translationId, audioFile) values ($1, $2, $3, $4, $5)`, [j, word, getLangID.rows[0].langid, translationId, "aaaa"]);  //aaaa je placeholder jer baza ne prima null za audiofile rijeci koja nije na hrvatskom
 
     res.json({ success: true });
 
