@@ -1,11 +1,9 @@
-import { WORDS } from '../mockData.js';
 import { useState, useEffect } from 'react';
 
+const ForeignToNative = ({ words }) => {
 
-
-const ForeignToNative = () => {
-
-    const [dictWords, setDictWords] = useState(WORDS.filter(word => word.langId === 2));
+    const [dictWords, setDictWords] = useState([]);
+    const [allTranslations, setAllTranslations] = useState([]); //hrvatske rijeci
     const [questionWord, setQuestionWord] = useState('');
     const [options, setOptions] = useState([]);
     const [currentCorrectWord, setCurrentCorrectWord] = useState(null);
@@ -13,81 +11,74 @@ const ForeignToNative = () => {
     const [score, setScore] = useState(0);
 
     useEffect(() => {
-        const croWords = WORDS.filter(word => word.langId === 1);
-        const engWords = WORDS.filter(word => word.langId === 2);
+        if (words.length > 0) {
+        
+            setDictWords(words);
+         
+            setAllTranslations(words.map(w => w.translation));
+        }
+    }, [words]);
 
-        // Izaberi random englesku riječ
-        const randWord = engWords[Math.floor(Math.random() * engWords.length)];
-        const correctWord = croWords.find(word => word.wordId === randWord.translateId);
-        setCurrentCorrectWord(correctWord);
+    useEffect(() => {
+        if (dictWords.length > 0 && allTranslations.length > 0 && progress === 0) {
+            generateQuestion();
+        }
+    }, [dictWords, allTranslations]);
 
-        // Izaberi 3 random pogrešna odgovora
-        const wrongAnswers = croWords
-            .filter(word => word.wordId !== correctWord.wordId)
+    useEffect(() => {
+        if (progress > 0 && progress < words.length && dictWords.length > 0) {
+            generateQuestion();
+        }
+    }, [progress]);
+
+    const generateQuestion = () => {
+        const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
+        const correctTranslation = randWord.translation;
+        setCurrentCorrectWord(correctTranslation);
+
+  
+        const wrongAnswers = allTranslations
+            .filter(t => t !== correctTranslation)
             .sort(() => Math.random() - 0.5)
             .slice(0, 3);
 
-        // Kombiniraj tačan odgovor sa pogrešnim i izmješaj
-        const allOptions = [correctWord, ...wrongAnswers]
+
+        const allOptions = [correctTranslation, ...wrongAnswers]
             .sort(() => Math.random() - 0.5);
 
         setQuestionWord(randWord.word);
         setOptions(allOptions);
-    }, []);
-
-    
-
-    useEffect(() => {
-        if (progress > 0 && progress < 10) {
-            const croWords = WORDS.filter(word => word.langId === 1);
-
-            // Izaberi random englesku riječ
-            const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
-            const correctWord = croWords.find(word => word.wordId === randWord.translateId);
-            setCurrentCorrectWord(correctWord);
-
-            // Izaberi 3 random pogrešna odgovora
-            const wrongAnswers = croWords
-                .filter(word => word.wordId !== correctWord.wordId)
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
-
-            // Kombiniraj tačan odgovor sa pogrešnim i izmješaj
-            const allOptions = [correctWord, ...wrongAnswers]
-                .sort(() => Math.random() - 0.5);
-
-            setQuestionWord(randWord.word);
-            setOptions(allOptions);
-        }
-    }, [progress]);
+    };
 
     const handleClick = (option) => {
-        if (option.wordId === currentCorrectWord.wordId) {
-            setProgress(progress + 1);
-            setDictWords(dictWords.filter(word => word.translateId !== currentCorrectWord.wordId));
+        if (option === currentCorrectWord) {
             setScore(score + 1);
             alert("Točno!");
         } else {
-            setProgress(progress + 1);
-            setDictWords(dictWords.filter(word => word.translateId !== currentCorrectWord.wordId));
-
-            alert("Pogrešno! Pokušaj ponovno.");
+            alert("Pogrešno! Točan odgovor: " + currentCorrectWord);
         }
+        
+        setProgress(progress + 1);
+        setDictWords(dictWords.filter(w => w.word !== questionWord));
+    };
+
+    if (words.length === 0) {
+        return <div>Nema rijeci</div>;
     }
-   
+
     return (
         <div className="learn-main-container">
-            {progress >= 10 && (
+            {progress >= words.length && (
                 <div className="congrats-message">
                     <h2>Čestitamo! Završili ste lekciju!</h2>
-                    <label className="score-lable">Vaš rezultat: {score} / 10</label>
+                    <label className="score-lable">Vaš rezultat: {score} / {progress} </label>
                 </div>
             )}
-            {progress < 10 && (
+            {progress < words.length && (
                 <>  
                     <div className="progress-bar">
-                        <p>Napredak: {progress} / 10</p>
-                        <div className="progress-fill" style={{ width: `${(progress / 10) * 100}%` }}></div>
+                        <p>Napredak: {progress} / {words.length}</p>
+                        <div className="progress-fill" style={{ width: `${(progress / words.length) * 100}%` }}></div>
                     </div>
                     
                     <div className="question-section">
@@ -95,12 +86,12 @@ const ForeignToNative = () => {
                     </div>
                     
                     <div className="selection-section">
-                        {options.map((opt) => (
+                        {options.map((opt, index) => (
                             <button 
-                                key={opt.wordId} 
+                                key={index} 
                                 className="option-card" 
                                 onClick={() => handleClick(opt)}>
-                                {opt.word}
+                                {opt}
                             </button>
                         ))}
                     </div>
@@ -108,6 +99,6 @@ const ForeignToNative = () => {
             )}
         </div>
     );
-}
+};
 
 export default ForeignToNative;

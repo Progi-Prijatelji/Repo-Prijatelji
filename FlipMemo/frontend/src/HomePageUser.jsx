@@ -23,7 +23,7 @@ function HomePageUser() {
   };
 
   const handleModeClick = (mode) => {
-    navigate(`/learn/${selectedDict.dictName}/${mode}`);
+    navigate(`/learn/${selectedDict.dictId}/${mode}`);
   };
 
   return (
