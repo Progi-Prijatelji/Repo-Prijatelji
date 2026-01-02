@@ -1,11 +1,12 @@
-import { WORDS } from '../mockData.js';
+
 import { useState, useEffect } from 'react';
 
 
 
-const ForeignToNative = () => {
+const ForeignToNative = ( { words } ) => {
 
-    const [dictWords, setDictWords] = useState(WORDS.filter(word => word.langId === 1));
+    const [dictWords, setDictWords] = useState([]);// rijeci iz rjecnika
+    const [allTranslations, setAllTranslations] = useState([]); //engleske rijeci
     const [questionWord, setQuestionWord] = useState('');
     const [options, setOptions] = useState([]);
     const [currentCorrectWord, setCurrentCorrectWord] = useState(null);
@@ -13,81 +14,75 @@ const ForeignToNative = () => {
     const [score, setScore] = useState(0);
 
     useEffect(() => {
-        const croWords = WORDS.filter(word => word.langId === 1);
-        const engWords = WORDS.filter(word => word.langId === 2);
-
-        // Izaberi random hrvatsku riječ
-        const randWord = croWords[Math.floor(Math.random() * croWords.length)];
-        const correctWord = engWords.find(word => word.translateId === randWord.wordId);
-        setCurrentCorrectWord(correctWord);
-
-        // Izaberi 3 random pogrešna odgovora
-        const wrongAnswers = engWords
-            .filter(word => word.wordId !== correctWord.wordId)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-
-        // Kombiniraj tačan odgovor sa pogrešnim i izmješaj
-        const allOptions = [correctWord, ...wrongAnswers]
-            .sort(() => Math.random() - 0.5);
-
-        setQuestionWord(randWord.word);
-        setOptions(allOptions);
-    }, []);
-
-    
+        if( words.length > 0 ) {
+        
+            setDictWords(words);
+         
+            setAllTranslations(words.map( w => w.word ));
+        }
+    }, [words]);
 
     useEffect(() => {
-        if (progress > 0 && progress < 10) {
-            const engWords = WORDS.filter(word => word.langId === 2);
+        if (dictWords.length > 0 && allTranslations.length > 0 && progress === 0) {
+            generateQuestion();
+        }
+    }, [dictWords, allTranslations]);
 
-            // Izaberi random hrvatsku riječ
-            const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
-            const correctWord = engWords.find(word => word.translateId === randWord.wordId);
-            setCurrentCorrectWord(correctWord);
-
-            // Izaberi 3 random pogrešna odgovora
-            const wrongAnswers = engWords
-                .filter(word => word.wordId !== correctWord.wordId)
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
-
-            // Kombiniraj tačan odgovor sa pogrešnim i izmješaj
-            const allOptions = [correctWord, ...wrongAnswers]
-                .sort(() => Math.random() - 0.5);
-
-            setQuestionWord(randWord.word);
-            setOptions(allOptions);
+    useEffect(() => {
+        if (progress > 0 && progress < words.length && dictWords.length > 0) {
+            generateQuestion();
         }
     }, [progress]);
 
+    const generateQuestion = () => {
+        const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
+        const correctTranslation = randWord.word;
+        setCurrentCorrectWord(correctTranslation);
+
+     
+        const wrongAnswers = allTranslations
+            .filter(t => t !== correctTranslation)
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 3);
+
+
+        const allOptions = [correctTranslation, ...wrongAnswers]
+            .sort(() => Math.random() - 0.5);
+
+        setQuestionWord(randWord.translation);
+        setOptions(allOptions);
+    }
+ 
+
     const handleClick = (option) => {
-        if (option.wordId === currentCorrectWord.wordId) {
-            setProgress(progress + 1);
-            setDictWords(dictWords.filter(word => word.wordId !== currentCorrectWord.translateId));
+        if (option === currentCorrectWord) {
             setScore(score + 1);
             alert("Točno!");
         } else {
-            setProgress(progress + 1);
-            setDictWords(dictWords.filter(word => word.wordId !== currentCorrectWord.translateId));
-
-            alert("Pogrešno! Pokušaj ponovno.");
+            alert("Pogrešno! Točan odgovor: " + currentCorrectWord);
         }
+        
+        setProgress(progress + 1);
+        setDictWords(dictWords.filter(w => w.word !== questionWord));
+    };
+
+    if (words.length === 0) {
+        return <div>Nema rijeci</div>;
     }
    
     return (
         <div className="learn-main-container">
-            {progress >= 10 && (
+            {progress >= words.length && (
                 <div className="congrats-message">
                     <h2>Čestitamo! Završili ste lekciju!</h2>
-                    <label className="score-lable">Vaš rezultat: {score} / 10</label>
+                    <label className="score-lable">Vaš rezultat: {score} / {progress} </label>
                 </div>
             )}
-            {progress < 10 && (
+            {progress < words.length && (
                 <>  
                     <div className="progress-bar">
-                        <p>Napredak: {progress} / 10</p>
-                        <div className="progress-fill" style={{ width: `${(progress / 10) * 100}%` }}></div>
+                        <p>Napredak: {progress} / {words.length}</p>
+                        <div className="progress-fill" style={{ width: `${(progress / words.length) * 100}%` }}></div>
                     </div>
                     
                     <div className="question-section">

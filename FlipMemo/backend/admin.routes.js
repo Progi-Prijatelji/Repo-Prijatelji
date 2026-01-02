@@ -86,7 +86,7 @@ router.post('/removeAdmin', verifyToken, verifyAdmin, async (req, res) =>{
 })
 
 router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
-    const {name, langID, desc} = req.body;
+    const {name, langname, desc} = req.body;
     
     try {
       const usedNames = await client.query(`SELECT dictname FROM dictionaries`);
@@ -105,10 +105,11 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
       i++;
       }
 
-      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, langID, desc]);
-      const result = await client.query(`SELECT dictname FROM dictionaries`);
+      const usedlangid = await client.query(`SELECT langid FROM languages where langname = $1`, [langname]);
+
+      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, usedlangid, desc]);
     
-      res.json({success: true, dictionaries: result.rows.map(r => r.dictname)});
+      res.json({ success: true });
     } catch (err) {
       res.status(500).json({success: false});
     }
@@ -116,9 +117,9 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
 
 router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
-        const result = await client.query(`SELECT dictname FROM DICTIONARIES`);
+        const result = await client.query(`SELECT * FROM DICTIONARIES`);
     
-        res.json({success: true, dicts: result.rows.map(r => r.dictname)});
+        res.json({success: true, dicts: result.rows});
     } catch (err) {
         res.status(500).json({success: false});
     }
@@ -128,7 +129,7 @@ router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
         const result = await client.query(`SELECT * FROM LANGUAGES where langid > 1`);
     
-        res.json({success: true, langs: result.rows});
+        res.json({success: true, langs: result.rows.map(r => r.name)});
     } catch (err) {
         res.status(500).json({success: false});
     }
@@ -153,7 +154,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
         i++;
       }
 
-      await client.query(`insert into words (wordId, word, langid, translationId) values ($1, $2, $3, $4)`,[i, translation, 1, null]);
+      await client.query(`insert into words (wordId, word, langid, translationId, audioFile) values ($1, $2, $3, $4, $5)`,[i, translation, 1, null, "aaaa"]);
 
       translationId = i;
     } else {
@@ -170,7 +171,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
 
     await client.query(`insert into words (wordId, word, langid, translationId, audioFile) values ($1, $2, $3, $4, $5)`, [j, word, getLangID.rows[0].langid, translationId, "aaaa"]);  //aaaa je placeholder jer baza ne prima null za audiofile rijeci koja nije na hrvatskom
 
-    res.json({ success: true });
+    res.json({ success: true, wordid: j});
 
   } catch (err) {
     console.error(err);
@@ -213,7 +214,7 @@ router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
    const {wordid} = req.body;
 
    try {
-    await client.query()
+    await client.query(`delete from words where wordid = $1`, [wordid])
 
     res.json({ success: true });
    } catch (err) {
