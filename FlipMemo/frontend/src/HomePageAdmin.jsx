@@ -133,7 +133,7 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-            setDictionaries(data.dicts || []);
+            setDictionaries(data.dicts.name || []);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
