@@ -124,6 +124,16 @@ router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
     }
 });
 
+router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
+    try {
+        const result = await client.query(`SELECT * FROM LANGUAGES where langid > 1`);
+    
+        res.json({success: true, langs: result.rows});
+    } catch (err) {
+        res.status(500).json({success: false});
+    }
+});
+
 router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
   const { word, langname, translation } = req.body;
 
