@@ -63,11 +63,15 @@ function HomePageUser() {
             onChange={setSelectedLanguage}
           />
           <div className="dictionary-list">
-            {dictionaries.filter((dict) => dict.langid === selectedLanguage?.langid).map((dict) => (
-              <div key={dict.dictid} onClick={() => handleCardClick(dict)}>
-                <DictionaryCard name={dict.dictname} description={dict.description} />
-              </div>
-            ))}
+            {dictionaries
+              .filter((dict) =>
+                !selectedLanguage || Number(dict.langid) === Number(selectedLanguage.langid)
+              )
+              .map((dict) => (
+                <div key={dict.dictid} onClick={() => handleCardClick(dict)}>
+                  <DictionaryCard name={dict.dictname} description={dict.description} />
+                </div>
+              ))}
           </div>
 
           {selectedDict && (

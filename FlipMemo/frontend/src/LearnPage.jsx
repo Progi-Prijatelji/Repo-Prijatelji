@@ -9,6 +9,7 @@ import './css/LearnPage.css';
 
 function LearnPage() {
   const { dictId, mode } = useParams();
+  const dictionary = '';
   const navigate = useNavigate();
   const [words, setWords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,6 +25,17 @@ function LearnPage() {
           },
           body: JSON.stringify({ dictid: parseInt(dictId) })
         });
+
+
+        const dictRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendDictList', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const dictData = await dictRes.json();
+        if (dictData.success) dictionary = dictData.dicts.find(d => d.dictid === parseInt(dictId)).dictName;
+        
 
         const data = await response.json();
         if(data.success){
@@ -49,7 +61,7 @@ function LearnPage() {
       <div className="learn-page">
         <button onClick={() => navigate(-1)}>← Nazad</button>
         <h1>Učenje - Mod: {mode}</h1>
-        <p>Riječnik: {dictId}</p>
+        <p>Riječnik: {dictionary}</p>
 
         {mode === 'foreign-to-native' && (
           <ForeighToNative words={words} />

@@ -90,12 +90,12 @@ const ForeignToNative = ( { words } ) => {
                     </div>
                     
                     <div className="selection-section">
-                        {options.map((opt) => (
+                        {options.map((opt, index) => (
                             <button 
-                                key={opt.wordId} 
+                                key={index} 
                                 className="option-card" 
                                 onClick={() => handleClick(opt)}>
-                                {opt.word}
+                                {opt}
                             </button>
                         ))}
                     </div>
