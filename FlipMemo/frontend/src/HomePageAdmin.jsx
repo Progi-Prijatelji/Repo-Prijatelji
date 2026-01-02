@@ -113,7 +113,7 @@ function HomePageAdmin() {
                 return;
             }
             console.log(data.langs);
-            setLanguages(data.langs);
+            setLanguages(data.langs || []);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -133,7 +133,7 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-            setDictionaries(data.dicts);
+            setDictionaries(data.dicts || []);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
