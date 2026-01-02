@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './components/Header.jsx';
 import LanguageSelector from './components/LanguageSelector.jsx';
@@ -12,7 +12,12 @@ function HomePageUser() {
   const [language, setLanguage] = useState(LANGUAGE[0]); 
   const [selectedDict, setSelectedDict] = useState(null);
   const navigate = useNavigate();
-  const dictionaries = DICTIONARY.filter(d => d.langId === language.langId);
+  const [dictionaries, setDictionaries] = useState([]);
+
+  useEffect(() => {
+    
+  })
+
 
   const handleCardClick = (dict) => {
     setSelectedDict(dict);

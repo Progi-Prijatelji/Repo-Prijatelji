@@ -22,7 +22,7 @@ function LearnPage() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           },
-          body: JSON.stringify({ dictId: parseInt(dictId) })
+          body: JSON.stringify({ dictid: parseInt(dictId) })
         });
 
         const data = await response.json();
