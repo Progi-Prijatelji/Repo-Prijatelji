@@ -125,11 +125,38 @@ router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
     }
 });
 
+router.post('/addLang', verifyToken, verifyAdmin, async (req, res) =>{
+  const {langname} = req.body
+  try {
+    const usedNames = await client.query(`SELECT langname FROM languages`);
+
+      if (usedNames.rows.some(r => r.dictname === langname)) {
+        return res.status(403).json({
+        success: false,
+        message: "Postoji taj jezik."
+        });
+      }
+
+      const usedLangIDs = await client.query(`SELECT langid FROM languages`);
+      let i = 1;
+      const existingIDs = usedLangIDs.rows.map(r => r.langid);
+      while (existingIDs.includes(i)) {
+      i++;
+      }
+
+      await client.query(`insert into languages values (langid, langname, langImg) `, [i, langname, "aaaa"])
+    
+    res.json({success: true});
+  } catch (err) {
+      res.status(500).json({success: false});
+  }
+});
+
 router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
         const result = await client.query(`SELECT * FROM LANGUAGES where langid > 1`);
     
-        res.json({success: true, langs: result.rows.map(r => r.name)});
+        res.json({success: true, langs: result.rows.map(r => r.langname)});
     } catch (err) {
         res.status(500).json({success: false});
     }
