@@ -30,7 +30,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word,  wordLangName: langname, wordTrans: translation})
+                body: JSON.stringify({word: word,  langname: wordLangID, translation: wordTrans})
             });
             const data = await results.json();
             if (!data.success) {
