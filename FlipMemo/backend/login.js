@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const sendgrid = require("@sendgrid/mail");
 const path = require("path");
 const adminRoutes = require("./admin.routes");
+const userRoutes = require("./user.routes")
 
 const app = express();
 app.use(express.json());
