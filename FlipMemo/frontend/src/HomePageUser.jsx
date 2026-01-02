@@ -5,30 +5,51 @@ import LanguageSelector from './components/LanguageSelector.jsx';
 import DictionaryCard from './components/DictionaryCard.jsx';
 import { Pen, Mic, Languages, BookA} from 'lucide-react';
 import './css/homePage.css';
-import { LANGUAGE, DICTIONARY } from './mockData.js';
-
 
 function HomePageUser() {
-  const [language, setLanguage] = useState(LANGUAGE[0]); 
+  const [languages, setLanguages] = useState([]);
+  const [selectedLanguage, setSelectedLanguage] = useState(null);
   const [selectedDict, setSelectedDict] = useState(null);
-  const navigate = useNavigate();
   const [dictionaries, setDictionaries] = useState([]);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('jwt');
 
   useEffect(() => {
-    
-  })
+    const fetchData = async () => {
+      try {
+        const dictRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendDictList', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const dictData = await dictRes.json();
+        if (dictData.success) setDictionaries(dictData.dicts);
 
+        const langRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendLangList', {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const langData = await langRes.json();
+        if (langData.success && langData.langs.length > 0) {
+          setLanguages(langData.langs);
+          setSelectedLanguage(langData.langs[0]); 
+        }
+      } catch (err) {
+        console.error('Greška pri dohvaćanju podataka:', err);
+      }
+    };
 
-  const handleCardClick = (dict) => {
-    setSelectedDict(dict);
-  };
+    if (token) fetchData();
+  }, [token]);
 
-  const closeModal = () => {
-    setSelectedDict(null);
-  };
-
+  const handleCardClick = (dict) => setSelectedDict(dict);
+  const closeModal = () => setSelectedDict(null);
   const handleModeClick = (mode) => {
-    navigate(`/learn/${selectedDict.dictId}/${mode}`);
+    if (!selectedDict) return;
+    navigate(`/learn/${selectedDict.dictid}/${mode}`);
   };
 
   return (
@@ -36,20 +57,15 @@ function HomePageUser() {
       <Header />
       <div className="homepage-page">
         <div className="homepage-main-container">
-          <LanguageSelector 
-            language={language}
-            onChange={setLanguage} 
+          <LanguageSelector
+            language={selectedLanguage}
+            languages={languages}
+            onChange={setSelectedLanguage}
           />
-          *Ovo je testni primjer. Nije primljeno iz baze podataka*
-
           <div className="dictionary-list">
             {dictionaries.map((dict) => (
-              <div key={dict.dictName} onClick={() => handleCardClick(dict)}>
-                <DictionaryCard 
-                  name={dict.dictName} 
-                  description={dict.description} 
-                />
-
+              <div key={dict.dictid} onClick={() => handleCardClick(dict)}>
+                <DictionaryCard name={dict.dictname} description={dict.description} />
               </div>
             ))}
           </div>
@@ -58,28 +74,23 @@ function HomePageUser() {
             <div className="modal-overlay" onClick={closeModal}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="modal-close" onClick={closeModal}>✕</button>
-                <h2>{selectedDict.dictName}</h2>
+                <h2>{selectedDict.dictname}</h2>
                 <p><strong>Opis:</strong> {selectedDict.description}</p>
-                <p><strong>Jezik:</strong> {language.langName}</p>
+                <p><strong>Jezik:</strong> {selectedLanguage?.langname ?? '---'}</p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">
                   <div className="mod-card" onClick={() => handleModeClick('foreign-to-native')}>
-                    <BookA color="black" size="30"/>
-                    <p>Strani u materinji</p>
+                    <BookA color="black" size="30"/><p>Strani u materinji</p>
                   </div>
                   <div className="mod-card" onClick={() => handleModeClick('native-to-foreign')}>
-                    <Languages color="black" size="30"/>
-                    <p>Materinji u strani</p>
+                    <Languages color="black" size="30"/><p>Materinji u strani</p>
                   </div>
                   <div className="mod-card" onClick={() => handleModeClick('writing')}>
-                    <Pen color="black" size="30"/>
-                    <p>Pisanje</p>
-                  </div>    
-                  <div className="mod-card" onClick={() => handleModeClick('pronunciation')}>
-                    <Mic color="black" size="30"/>
-                    <p>Izgovor</p>
+                    <Pen color="black" size="30"/><p>Pisanje</p>
                   </div>
-
+                  <div className="mod-card" onClick={() => handleModeClick('pronunciation')}>
+                    <Mic color="black" size="30"/><p>Izgovor</p>
+                  </div>
                 </div>
               </div>
             </div>

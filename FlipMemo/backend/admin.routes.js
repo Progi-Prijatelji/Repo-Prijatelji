@@ -156,7 +156,7 @@ router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
         const result = await client.query(`SELECT * FROM LANGUAGES where langid > 1`);
     
-        res.json({success: true, langs: result.rows.map(r => r.langname)});
+        res.json({success: true, langs: result.rows});
     } catch (err) {
         res.status(500).json({success: false});
     }

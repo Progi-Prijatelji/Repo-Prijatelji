@@ -66,3 +66,19 @@ html, body, #root {
     text-align: center;
     justify-content: center;
 }
+
+.progress-bar{
+    width: 80%;
+    height: 24px;
+    background: #e0e0e0;
+    border-radius: 12px;
+    margin: 0 auto 20px auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill{
+    height: 100%;
+    background: #4caf50;
+    transition: width 0.3s ease;
+}

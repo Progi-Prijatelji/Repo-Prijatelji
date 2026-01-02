@@ -113,7 +113,7 @@ function HomePageAdmin() {
                 return;
             }
             console.log(data.langs);
-            setLanguages(data.langs || []);
+            setLanguages(data.langs.map(lang => lang.langName) || []);
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
