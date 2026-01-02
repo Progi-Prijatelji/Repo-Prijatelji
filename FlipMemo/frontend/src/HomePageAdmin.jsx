@@ -30,7 +30,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word, wordTrans: wordTrans, wordLangID: wordLangID})
+                body: JSON.stringify({word: word,  wordLangID: wordLangID, wordTrans: wordTrans})
             });
             const data = await results.json();
             if (!data.success) {
@@ -269,7 +269,7 @@ function HomePageAdmin() {
                         <form onSubmit={handleAddWord}>
                             <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
                             <input type="text" placeholder="Jezik" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}/>
-                            <textarea placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
+                            <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
                             <button type="submit">Dodaj riječ</button>
                         </form>
                         <form onSubmit={handleAddWordToDictionary}>
