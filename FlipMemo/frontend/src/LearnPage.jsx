@@ -9,7 +9,7 @@ import './css/LearnPage.css';
 
 function LearnPage() {
   const { dictId, mode } = useParams();
-  const dictionary = '';
+  const [dictionary, setDictionary] = useState('');
   const navigate = useNavigate();
   const [words, setWords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,8 +34,10 @@ function LearnPage() {
           }
         });
         const dictData = await dictRes.json();
-        if (dictData.success) dictionary = dictData.dicts.find(d => d.dictid === parseInt(dictId)).dictName;
-        
+        if (dictData.success) {
+          const foundDict = dictData.dicts.find(d => d.dictid === parseInt(dictId));
+          if (foundDict) setDictionary(foundDict.dictName); // Koristi setter
+        }
 
         const data = await response.json();
         if(data.success){
