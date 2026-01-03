@@ -14,12 +14,14 @@ function HomePageAdmin() {
     const [langID, setLangID] = useState("");
     const [dictionaries, setDictionaries] = useState([]);
 
-    const [inputs, setInputs] = useState({});
     const [word, setWord] = useState("");
     const [wordTrans, setWordTrans] = useState("");
     const [wordLangID, setWordLangID] = useState("");
 
-    const [ID, setID] = useState("");
+   const [wordId, setWordId] = useState("");
+   const [selectedDictIds, setSelectedDictIds] = useState([]);
+
+    const [language, setLanguage] = useState("");
 
     const [languages, setLanguages] = useState([]);
 
@@ -42,6 +44,7 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje riječi.");
                 return;
             }
+            setWordId(data.wordid);
             
         }catch (error) {
             console.error("Greška:", error);
@@ -52,13 +55,13 @@ function HomePageAdmin() {
 
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
-        /*try{
-            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDictionary", {
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word, wordTrans: wordTrans, wordLangID: wordLangID})
+                body: JSON.stringify({wordid: wordId, dictids: selectedDictIds})
             });
             const data = await results.json();
             if (!data.success) {
@@ -66,13 +69,43 @@ function HomePageAdmin() {
                 return;
             }
             setWord("");
+            setWordId("");
             setWordTrans("");
             setWordLangID("");
+            setSelectedDictIds([]);
         }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
-        }*/
+        }
     }
+
+    const handleDictCheckboxChange = (dictId) => {
+        setSelectedDictIds(prev => prev.includes(dictId) ? prev.filter(id => id !== dictId) : [...prev, dictId]);
+    };
+
+    const handleAddLanguage = async (e) => {
+        e.preventDefault();
+        try {
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/addLang", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({langname: language})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje jezika.");
+                return;
+            }
+            setLanguage("");
+            await fetchLanguages();
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+
     const handleAddDictionary = async (e) => {
         e.preventDefault();
         if (!dictName || !langID) {
@@ -285,6 +318,7 @@ function HomePageAdmin() {
                             {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                             <li key={dict.dictname}>
                                 <p>{dict.dictname}</p>
+                                <p>{dict.dictdesc}</p>
                             </li>
                             ))}
                         </ul>
@@ -309,15 +343,26 @@ function HomePageAdmin() {
                         <form onSubmit={handleAddWordToDictionary}>
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                             {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                <>
-                                    <input type="checkbox" value={dict.dictName}/>
-                                    <label>{dict.dictName}</label>
-                                </>
-                            
+                                <div key={dict.dictid}>
+                                    <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                    <label>{dict.dictname}</label>
+                                </div>
                             ))}
                             <button type="submit">Dodaj riječ u rječnik</button>
                         </form>
                     </div>
+                </div>
+
+                <div className='add-language'>
+                    <h3>Dodavanje novog jezika</h3>
+                    <div className='adding-section'>
+                        <h3>Dodaj novu jezik</h3>
+                        <form onSubmit={handleAddLanguage}>
+                            <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
+                            <button type="submit">Dodaj jezik</button>
+                        </form>
+                    </div>
+
                 </div>
 
                 {
