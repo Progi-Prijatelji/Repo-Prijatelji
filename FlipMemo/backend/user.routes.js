@@ -47,13 +47,31 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
 
     await updateWords(userid);
 
-    const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation FROM dictword dw 
+    const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation
+                                            FROM dictword dw 
                                             JOIN words w ON w.wordid = dw.wordid
                                             LEFT JOIN words t ON t.wordid = w.translationid 
                                             JOIN userword uw on uw.wordid = dw.wordid
                                             WHERE dw.dictid = $1 and userid = $2 and container <= 5 and method = $3`, [dictid, userid, method]);
   
   res.json({success: true, words: returnWords.rows});     
+  } catch (err) {
+    res.status(500).json({success: false});
+  }
+});
+
+router.post('/demoteWords', verifyToken, async (req, res) =>{
+  const {wordids} = req.body
+
+  try {
+    const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
+    const userid = userResult.rows[0].userid;
+
+    for (const wordid of wordids) {
+      await client.query(`UPDATE userword SET container = container - 1 WHERE userid = $1 AND container > 1 AND wordid = $2`,[userid, wordid]);
+    }
+
+    res.json({success: true});  
   } catch (err) {
     res.status(500).json({success: false});
   }
