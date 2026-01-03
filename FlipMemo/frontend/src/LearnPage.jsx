@@ -30,7 +30,7 @@ function LearnPage() {
         const dictRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendDictList', {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           }
         });
         const dictData = await dictRes.json();
