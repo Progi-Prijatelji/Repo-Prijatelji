@@ -78,4 +78,21 @@ router.post('/demoteWords', verifyToken, async (req, res) =>{
   }
 });
 
+router.post('/checkWrittenWord',  verifyToken, async (req, res) =>{
+  const{written, wordid} = req.body
+
+  try {
+    const correct = await client.query(`select word from words where wordid = $1`, [wordid])
+
+    if(written == correct.rows[0].word){
+      res.json({success: true});  
+    }
+    else{
+      res.json({success: false});  
+    }
+  } catch (err) {
+    res.status(500).json({success: false});
+  }
+});
+
 module.exports = router;

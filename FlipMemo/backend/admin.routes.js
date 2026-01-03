@@ -170,7 +170,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
     const existingTranslation = usedTranslations.rows.find(r => r.word === translation);
 
     if (!existingTranslation) {
-      const usedWordIDs = await client.query(`select wordod from words`);
+      const usedWordIDs = await client.query(`select wordid from words`);
       const existingIDs = usedWordIDs.rows.map(r => r.wordid);
 
       let i = 1;
