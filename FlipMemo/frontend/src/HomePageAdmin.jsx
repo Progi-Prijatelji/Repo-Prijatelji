@@ -19,6 +19,8 @@ function HomePageAdmin() {
     const [wordTrans, setWordTrans] = useState("");
     const [wordLangID, setWordLangID] = useState("");
 
+    const [ID, setID] = useState("");
+
     const [languages, setLanguages] = useState([]);
 
     const handleAddWord = async (e) => {
@@ -33,7 +35,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word,  langname: wordLangID, translation: wordTrans})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans})
             });
             const data = await results.json();
             if (!data.success) {
@@ -83,7 +85,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({name: dictName, langname: langID, desc: dictDesc})
+                body: JSON.stringify({name: dictName, langid: langID, desc: dictDesc})
             });
             const data = await results.json();
             if (!data.success) {
@@ -92,7 +94,6 @@ function HomePageAdmin() {
             }
             await fetchDictionaries();
             setDictName("");
-            //setLangID("");
             setDictDesc("");
         } catch (error) {
             console.error("Greška:", error);
@@ -271,7 +272,7 @@ function HomePageAdmin() {
                             <select value={langID} onChange={(e) => setLangID(e.target.value)}>
                                 <option value="">Jezik</option>
                                 {languages.map((lang) => (
-                                    <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
+                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                 ))}
                             </select>
                             <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
@@ -281,7 +282,7 @@ function HomePageAdmin() {
                     <div className='old-dictionary'>
                         <h2>Postojeći rječnici</h2>
                         <ul>
-                            {dictionaries.map((dict) => (
+                            {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                             <li key={dict.dictname}>
                                 <p>{dict.dictname}</p>
                             </li>
@@ -299,7 +300,7 @@ function HomePageAdmin() {
                             <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                 <option value="">Jezik</option>
                                 {languages.map((lang) => (
-                                    <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
+                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                 ))}
                             </select>
                             <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
@@ -307,8 +308,12 @@ function HomePageAdmin() {
                         </form>
                         <form onSubmit={handleAddWordToDictionary}>
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                            {dictionaries.map((dict) => (
-                                <input type="checkbox" value={dict.dictName}/>
+                            {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                <>
+                                    <input type="checkbox" value={dict.dictName}/>
+                                    <label>{dict.dictName}</label>
+                                </>
+                            
                             ))}
                             <button type="submit">Dodaj riječ u rječnik</button>
                         </form>

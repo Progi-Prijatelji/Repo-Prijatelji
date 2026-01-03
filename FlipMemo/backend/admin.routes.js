@@ -86,7 +86,7 @@ router.post('/removeAdmin', verifyToken, verifyAdmin, async (req, res) =>{
 })
 
 router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
-    const {name, langname, desc} = req.body;
+    const {name, langid, desc} = req.body;
     
     try {
       const usedNames = await client.query(`SELECT dictname FROM dictionaries`);
@@ -104,10 +104,8 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
       while (existingIDs.includes(i)) {
       i++;
       }
-
-      const usedlangid = await client.query(`SELECT langid FROM languages where langname = $1`, [langname]);
-
-      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, usedlangid, desc]);
+      
+      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, langid, desc]);
     
       res.json({ success: true });
     } catch (err) {
@@ -163,10 +161,9 @@ router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
 });
 
 router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
-  const { word, langname, translation } = req.body;
+  const { word, langid, translation } = req.body;
 
   try {
-    const getLangID = await client.query(`select langid from LANGUAGES where langname = $1`, [langname]);
     const usedTranslations = await client.query(`select translationId, word from words`);
 
     let translationId;
@@ -196,7 +193,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       j++;
     }
 
-    await client.query(`insert into words (wordId, word, langid, translationId, audioFile) values ($1, $2, $3, $4, $5)`, [j, word, getLangID.rows[0].langid, translationId, "aaaa"]);  //aaaa je placeholder jer baza ne prima null za audiofile rijeci koja nije na hrvatskom
+    await client.query(`insert into words (wordId, word, langid, translationId, audioFile) values ($1, $2, $3, $4, $5)`, [j, word, langid, translationId, "aaaa"]);  //aaaa je placeholder jer baza ne prima null za audiofile rijeci koja nije na hrvatskom
 
     res.json({ success: true, wordid: j});
 
