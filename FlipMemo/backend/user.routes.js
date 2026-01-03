@@ -35,7 +35,7 @@ function verifyToken(req, res, next) {
 
 async function updateWords(userid) {
   await client.query(`update userword set container = container + 1 
-                      where userid = $1 and added >= NOW() - INTERVAL '1 day'`, [userid])
+                      where userid = $1 and lastTimeDate >= NOW() - INTERVAL '1 day'`, [userid])
 }
 
 router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
@@ -61,7 +61,7 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
 });
 
 router.post('/demoteWords', verifyToken, async (req, res) =>{
-  const {wordids} = req.body
+  const {email, wordids} = req.body
 
   try {
     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
@@ -69,6 +69,7 @@ router.post('/demoteWords', verifyToken, async (req, res) =>{
 
     for (const wordid of wordids) {
       await client.query(`UPDATE userword SET container = container - 1 WHERE userid = $1 AND container > 1 AND wordid = $2`,[userid, wordid]);
+      await client.query(`UPDATE userword SET lastTimeDat = NOW() WHERE userid = $1 AND wordid = $2`,[userid, wordid]);
     }
 
     res.json({success: true});  
