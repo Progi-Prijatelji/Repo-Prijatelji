@@ -35,7 +35,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word,  langname: wordLangID, translation: wordTrans})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans})
             });
             const data = await results.json();
             if (!data.success) {
@@ -300,7 +300,7 @@ function HomePageAdmin() {
                             <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                 <option value="">Jezik</option>
                                 {languages.map((lang) => (
-                                    <option key={lang.langname} value={lang.langname}>{lang.langname}</option>
+                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                 ))}
                             </select>
                             <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
@@ -308,7 +308,7 @@ function HomePageAdmin() {
                         </form>
                         <form onSubmit={handleAddWordToDictionary}>
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                            {dictionaries.filter(dict => dict === wordLangID).map((dict) => (
+                            {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
                                 <>
                                     <input type="checkbox" value={dict.dictName}/>
                                     <label>{dict.dictName}</label>
