@@ -85,7 +85,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({name: dictName, langId: langID, desc: dictDesc})
+                body: JSON.stringify({name: dictName, langid: langID, desc: dictDesc})
             });
             const data = await results.json();
             if (!data.success) {
@@ -272,7 +272,7 @@ function HomePageAdmin() {
                             <select value={langID} onChange={(e) => setLangID(e.target.value)}>
                                 <option value="">Jezik</option>
                                 {languages.map((lang) => (
-                                    <option key={lang.langname} value={lang.langId}>{lang.langname}</option>
+                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                 ))}
                             </select>
                             <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
@@ -282,7 +282,7 @@ function HomePageAdmin() {
                     <div className='old-dictionary'>
                         <h2>Postojeći rječnici</h2>
                         <ul>
-                            {dictionaries.filter(dict => dict.langId === langID).map((dict) => (
+                            {dictionaries.filter(dict => dict.langid === langID).map((dict) => (
                             <li key={dict.dictname}>
                                 <p>{dict.dictname}</p>
                             </li>
@@ -309,8 +309,10 @@ function HomePageAdmin() {
                         <form onSubmit={handleAddWordToDictionary}>
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                             {dictionaries.filter(dict => dict.langname === wordLangID).map((dict) => (
-
-                                <input type="checkbox" value={dict.dictName}/>
+                                <>
+                                    <input type="checkbox" value={dict.dictName}/>
+                                    <label>{dict.dictName}</label>
+                                </>
                             
                             ))}
                             <button type="submit">Dodaj riječ u rječnik</button>
