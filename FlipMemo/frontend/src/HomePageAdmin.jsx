@@ -282,7 +282,7 @@ function HomePageAdmin() {
                     <div className='old-dictionary'>
                         <h2>Postojeći rječnici</h2>
                         <ul>
-                            {dictionaries.filter(dict => dict.langid === langID).map((dict) => (
+                            {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                             <li key={dict.dictname}>
                                 <p>{dict.dictname}</p>
                             </li>
@@ -308,7 +308,7 @@ function HomePageAdmin() {
                         </form>
                         <form onSubmit={handleAddWordToDictionary}>
                             <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                            {dictionaries.filter(dict => dict.langname === wordLangID).map((dict) => (
+                            {dictionaries.filter(dict => dict === wordLangID).map((dict) => (
                                 <>
                                     <input type="checkbox" value={dict.dictName}/>
                                     <label>{dict.dictName}</label>
