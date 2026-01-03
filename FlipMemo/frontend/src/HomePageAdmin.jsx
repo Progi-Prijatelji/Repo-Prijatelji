@@ -311,7 +311,7 @@ function HomePageAdmin() {
                             {dictionaries.filter(dict => dict.langname === wordLangID).map((dict) => (
 
                                 <input type="checkbox" value={dict.dictName}/>
-                                <label>{dict.dictName}</label>
+                            
                             ))}
                             <button type="submit">Dodaj riječ u rječnik</button>
                         </form>
