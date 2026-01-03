@@ -61,9 +61,7 @@ function LearnPage() {
     <>
       <Header />
       <div className="learn-page">
-        <button onClick={() => navigate(-1)}>← Nazad</button>
-        <h1>Učenje - Mod: {mode}</h1>
-        <p>Riječnik: {dictionary}</p>
+        
 
         {mode === 'foreign-to-native' && (
           <ForeighToNative words={words} />

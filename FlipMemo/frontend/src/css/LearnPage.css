@@ -2,6 +2,8 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+
 }
 
 .learn-page{
@@ -72,7 +74,7 @@ html, body, #root {
     height: 24px;
     background: #e0e0e0;
     border-radius: 12px;
-    margin: 0 auto 20px auto;
+    padding-top: 10px;
     overflow: hidden;
     position: relative;
 }
