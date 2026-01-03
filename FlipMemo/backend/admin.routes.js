@@ -86,7 +86,7 @@ router.post('/removeAdmin', verifyToken, verifyAdmin, async (req, res) =>{
 })
 
 router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
-    const {name, langname, desc} = req.body;
+    const {name, langid, desc} = req.body;
     
     try {
       const usedNames = await client.query(`SELECT dictname FROM dictionaries`);
@@ -104,10 +104,8 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
       while (existingIDs.includes(i)) {
       i++;
       }
-
-      const usedlangid = await client.query(`SELECT langid FROM languages where langname = $1`, [langname]);
       
-      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, usedlangid.rows[0].langid, desc]);
+      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, langid, desc]);
     
       res.json({ success: true });
     } catch (err) {
