@@ -106,8 +106,8 @@ router.post('/addDictionary', verifyToken, verifyAdmin, async (req, res) =>{
       }
 
       const usedlangid = await client.query(`SELECT langid FROM languages where langname = $1`, [langname]);
-
-      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, usedlangid, desc]);
+      
+      await client.query(`insert into DICTIONARIES (dictid, dictname, langid, description) values ($1, $2, $3, $4)`, [i, name, usedlangid.rows[0].langid, desc]);
     
       res.json({ success: true });
     } catch (err) {
