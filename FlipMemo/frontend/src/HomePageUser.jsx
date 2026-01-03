@@ -63,7 +63,7 @@ function HomePageUser() {
             onChange={setSelectedLanguage}
           />
           <div className="dictionary-list">
-            {dictionaries
+            {selectedLanguage && dictionaries
               .filter((dict) =>
                 !selectedLanguage || Number(dict.langid) === Number(selectedLanguage.langid)
               )
