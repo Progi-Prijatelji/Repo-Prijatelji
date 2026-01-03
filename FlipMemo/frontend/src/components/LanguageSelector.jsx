@@ -19,7 +19,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
         <option value="" disabled hidden>Odaberi jezik</option>
         {langs.map((lang) => (
           <option key={lang.langid} value={lang.langid}>
-            {lang.langname}
+            {lang.langname.charAt(0).toUpperCase() + lang.langname.slice(1)}
           </option>
         ))}
       </select>
