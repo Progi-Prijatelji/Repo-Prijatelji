@@ -281,7 +281,7 @@ function HomePageAdmin() {
                     <div className='old-dictionary'>
                         <h2>Postojeći rječnici</h2>
                         <ul>
-                            {dictionaries.map((dict) => (
+                            {dictionaries.filter(dict => dict.langname === langID).map((dict) => (
                             <li key={dict.dictname}>
                                 <p>{dict.dictname}</p>
                             </li>
