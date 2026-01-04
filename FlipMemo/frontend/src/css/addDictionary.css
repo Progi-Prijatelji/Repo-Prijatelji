@@ -46,3 +46,7 @@
 .old-dictionary li:hover {
     background-color: #f1f1f1;
 }
+.adding-section {
+    margin-bottom: 30px;
+    width: 80%;
+}

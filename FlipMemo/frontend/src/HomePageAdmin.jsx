@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import logo from './assets/FlipMemo__Logo.png'
 import HeaderAdmin from './components/HeaderAdmin.jsx';
 import './css/homeAdmin.css'
+import './css/addDictionary.css'
 function HomePageAdmin() {
     const [searchQuery, setSearchQuery] = useState('')
     const [searchResults, setSearchResults] = useState([])
@@ -24,6 +25,53 @@ function HomePageAdmin() {
     const [language, setLanguage] = useState("");
 
     const [languages, setLanguages] = useState([]);
+
+    const [openDictId, setOpenDictId] = useState(null);
+    const [wordList, setWordList] = useState([]);
+
+    const showWords = async(id) => {
+        setOpenDictId(prev => prev === id ? null : id);
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/showWords", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({dictid: id})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dodavanje riječi.");
+                return;
+            }
+            setWordList(data.words);
+
+        }catch(error){
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+
+    const deleteWord = async(wordid) => {
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/deleteWord", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({wordid: wordid})
+            });
+            const data = await results.json();  
+            if (!data.success) {
+                alert(data.message || "Neuspješno brisanje riječi.");
+                return;
+            }
+            setWordList(prev => prev.filter(w => w.wordid !== wordid));
+        }catch(error){
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }   
+    }
 
     const handleAddWord = async (e) => {
         e.preventDefault();
@@ -317,8 +365,25 @@ function HomePageAdmin() {
                         <ul>
                             {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                             <li key={dict.dictname}>
-                                <p>{dict.dictname}</p>
-                                <p>{dict.dictdesc}</p>
+                                <div>
+                                    <p>{dict.dictname}</p>
+                                    <p>{dict.description}</p>
+                                    <button onClick={()=> showWords (dict.id)}>...</button>
+                                </div>
+                                {openDictId === dict.id  && (
+                                    <div>
+                                        <h4>Riječi u rječniku:</h4>
+                                        <ul>
+                                            {wordList.map((wordItem) => (
+                                                <li key={wordItem.wordid}>
+                                                    <p>{wordItem.word} - {wordItem.translation}</p>
+                                                    <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                )}
                             </li>
                             ))}
                         </ul>
