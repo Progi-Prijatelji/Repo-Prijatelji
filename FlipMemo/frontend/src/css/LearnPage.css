@@ -85,3 +85,87 @@ html, body, #root {
     background: #4caf50;
     transition: width 0.3s ease;
 }
+
+/* ------------- Writing Section --------------*/
+
+.audio-section{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    
+}
+.audio-section button{
+    background: #f0f0f0;
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+    height: 300px;
+    width: 400px;
+
+}
+
+.ikona{
+    width: 100px;
+    height: 100px;
+}
+
+.audio-section button:hover{
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background: #e0e0e0;
+}
+
+.writing-section{
+    flex: 1;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.writing-section form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.writing-section input{
+    width: 300px;
+    padding: 12px 16px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.writing-section input:focus{
+    border-color: #000000;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+}
+.writing-section button{
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: #5d2e86;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.writing-section button:hover{
+    background: #7d47a8;
+}
+
+
