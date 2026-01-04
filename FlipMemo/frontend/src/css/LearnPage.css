@@ -25,6 +25,7 @@ html, body, #root {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding: 5px;
 }
 
 .question-section{
@@ -70,13 +71,13 @@ html, body, #root {
 }
 
 .progress-bar{
-    width: 80%;
+    width: 100%;
     height: 24px;
     background: #e0e0e0;
     border-radius: 12px;
-    padding-top: 10px;
     overflow: hidden;
     position: relative;
+    text-align: center;
 }
 
 .progress-fill{
