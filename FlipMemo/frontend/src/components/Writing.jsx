@@ -14,10 +14,11 @@ const Writing = ( {words} ) => {
 
   useEffect(() => {
     if(words.length > 0){
-      
       setDictWords(words);
-      
-      
+      // Postavi prvu riječ odmah pri učitavanju
+      const randWord = words[Math.floor(Math.random() * words.length)];
+      setQuestionWord(randWord.word);
+      setWordAudio(randWord.audioFile);
     }
   }, [words]);
 
@@ -27,15 +28,15 @@ const Writing = ( {words} ) => {
       setQuestionWord(randWord.word);
       setWordAudio(randWord.audioFile);
       setInputValue('');
-
     }
-  }, [progress]);
+  }, [progress, dictWords, words.length]);
 
   const handleAudio = () => {
     {/*play audio for the word*/}
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (inputValue.toLowerCase() === questionWord.toLowerCase()) {
       setScore(score + 1);
       alert("Točno!");
@@ -71,14 +72,14 @@ const Writing = ( {words} ) => {
                     </div>
                     
                     <div className="writing-section">
-                        <form action="">
+                        <form action="" onSubmit={handleSubmit}>
                             <input 
                                 type="text" 
                                 value={inputValue} 
                                 onChange={(e) => setInputValue(e.target.value)} 
                                 placeholder="Upišite riječ ovdje"
                             />
-                            <button type="button" onClick={handleSubmit}>Provjeri</button>
+                            <button type="submit">Provjeri</button>
                         </form>
                     </div>
                 </>
