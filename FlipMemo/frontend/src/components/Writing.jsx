@@ -16,8 +16,8 @@ const Writing = ( {words} ) => {
     if(words.length > 0){
       
       setDictWords(words);
-     
-      setAllTranslations(words.map(w => w.translation));
+      
+      
     }
   }, [words]);
 
