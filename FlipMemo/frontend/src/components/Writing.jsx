@@ -50,13 +50,13 @@ const Writing = ( {words} ) => {
 
   return (
     <div className="learn-main-container">
-            {progress < words.length && (
+            {progress >= words.length && (
                 <div className="congrats-message">
                     <h2>Čestitamo! Završili ste lekciju!</h2>
                     <label className="score-lable">Vaš rezultat: {score} / {progress} </label>
                 </div>
             )}
-            {progress >= words.length && (
+            {progress < words.length && (
                 <>  
                     <div className="progress-bar">
                         <p>Napredak: {progress} / {words.length}</p>
