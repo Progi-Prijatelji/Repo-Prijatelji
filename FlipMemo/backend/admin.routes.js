@@ -124,11 +124,11 @@ router.get('/sendDictList', verifyToken, verifyAdmin, async (req, res) =>{
 });
 
 router.post('/addLang', verifyToken, verifyAdmin, async (req, res) =>{
-  const {langname} = req.body
+  const {langname} = req.body;
   try {
     const usedNames = await client.query(`SELECT langname FROM languages`);
 
-      if (usedNames.rows.some(r => r.dictname === langname)) {
+      if (usedNames.rows.some(r => r.langname === langname)) {
         return res.status(403).json({
         success: false,
         message: "Postoji taj jezik."
@@ -139,10 +139,10 @@ router.post('/addLang', verifyToken, verifyAdmin, async (req, res) =>{
       let i = 1;
       const existingIDs = usedLangIDs.rows.map(r => r.langid);
       while (existingIDs.includes(i)) {
-      i++;
+        i++;
       }
 
-      await client.query(`insert into languages values (langid, langname, langImg) `, [i, langname, "aaaa"])
+      await client.query(`insert into languages (langid, langname, langImg) values ($1, $2, $3)`, [i, langname, "aaaa"]);
     
     res.json({success: true});
   } catch (err) {
