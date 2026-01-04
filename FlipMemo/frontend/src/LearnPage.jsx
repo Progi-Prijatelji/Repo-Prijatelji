@@ -61,6 +61,7 @@ function LearnPage() {
     <>
       <Header />
       <div className="learn-page">
+        <button className="back-button" onClick={() => navigate(-1)}>Nazad</button>
         
 
         {mode === 'foreign-to-native' && (
