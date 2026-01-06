@@ -45,6 +45,18 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
     const userid = userResult.rows[0].userid;
 
+    const newUserInDict = await client.query(`SELECT count(wordid) FROM userword WHERE userid = $1`,[userid]);
+
+    const count = Number(newUserInDict.rows[0].count);
+
+    if (count === 0) {
+      const wordsInDict = await client.query(`select wordid from dictword where dictid = $1`, [dictid])
+
+      for (const row of wordsInDict.rows) {
+        await client.query(`INSERT INTO userword (userid, wordid, container, lastTimeDate, method)VALUES ($1, $2, 1, NOW(),$3)`,[userid, row.wordid, method]);
+      }
+    }
+    
     await updateWords(userid);
 
     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation
@@ -52,7 +64,7 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
                                             JOIN words w ON w.wordid = dw.wordid
                                             LEFT JOIN words t ON t.wordid = w.translationid 
                                             JOIN userword uw on uw.wordid = dw.wordid
-                                            WHERE dw.dictid = $1 and userid = $2 and container <= 5 and method = $3`, [dictid, userid, method]);
+                                            WHERE dw.dictid = $1 and uw.userid = $2 and uw.container <= 5 and dw.method = $3`, [dictid, userid, method]);
   
   res.json({success: true, words: returnWords.rows});     
   } catch (err) {
@@ -67,10 +79,7 @@ router.post('/demoteWords', verifyToken, async (req, res) =>{
     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
     const userid = userResult.rows[0].userid;
 
-    for (const wordid of wordids) {
-      await client.query(`UPDATE userword SET container = container - 1 WHERE userid = $1 AND container > 1 AND wordid = $2`,[userid, wordid]);
-      await client.query(`UPDATE userword SET lastTimeDat = NOW() WHERE userid = $1 AND wordid = $2`,[userid, wordid]);
-    }
+    await client.query(`UPDATE userword SET  container = GREATEST(container - 1, 1), lastTimeDate = NOW() WHERE userid = $1 AND wordid = ANY($2)`, [userid, wordids]);
 
     res.json({success: true});  
   } catch (err) {
@@ -84,7 +93,7 @@ router.post('/checkWrittenWord',  verifyToken, async (req, res) =>{
   try {
     const correct = await client.query(`select word from words where wordid = $1`, [wordid])
 
-    if(written == correct.rows[0].word){
+    if (written.trim().toLowerCase() === correct.rows[0].word.toLowerCase()) {
       res.json({success: true});  
     }
     else{
