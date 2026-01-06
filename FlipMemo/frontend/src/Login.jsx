@@ -24,6 +24,7 @@ function Login() {
       if (data.success) {
         alert("Uspješna prijava!");
         localStorage.setItem("jwt", data.token);  
+        localStorage.setItem("email", data.email);
         localStorage.setItem("isAdmin", data.admin);
         localStorage.setItem("isKadmin", data.kadmin);
         if(data.admin){
@@ -54,6 +55,7 @@ function Login() {
 
       if (data.success) {
           localStorage.setItem("jwt", data.token);  
+          localStorage.setItem("email", data.email);
           localStorage.setItem("isAdmin", data.admin);
           localStorage.setItem("isKadmin", data.kadmin);
           

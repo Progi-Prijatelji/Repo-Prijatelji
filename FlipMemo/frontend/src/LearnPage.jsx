@@ -12,18 +12,20 @@ function LearnPage() {
   const [dictionary, setDictionary] = useState('');
   const navigate = useNavigate();
   const [words, setWords] = useState([]);
+  const [wordIds, setWordIds] = useState([]);
+  const [translations, setTranslations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        const response = await fetch('https://fmimage.onrender.com/homeAdmin/showWords', {
+        const response = await fetch('https://fmimage.onrender.com/homeUser/sendWordsInDictForUser', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           },
-          body: JSON.stringify({ dictid: parseInt(dictId) })
+          body: JSON.stringify({ email: localStorage.getItem('email'), dictid: parseInt(dictId), method: mode})
         });
 
 
@@ -41,7 +43,9 @@ function LearnPage() {
 
         const data = await response.json();
         if(data.success){
-          setWords(data.words);
+          setWords(data.words.map(w => w.word));
+          setWordIds(data.words.map(w => w.wordid));
+          setTranslations(data.words.map(w => w.translation));
         }
       } catch (error) {
         console.error('Error fetching words:', error);
@@ -65,11 +69,11 @@ function LearnPage() {
         
 
         {mode === 'foreign-to-native' && (
-          <ForeighToNative words={words} />
+          <ForeighToNative words={words} translations={translations} />
         )}
 
         {mode === 'native-to-foreign' && (
-          <NativeToForeign words={words} />
+          <NativeToForeign words={words} translations={translations} />
         )}
 
         {mode === 'writing' && (
@@ -85,3 +89,25 @@ function LearnPage() {
 }
 
 export default LearnPage;
+
+// router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
+//   const {email, dictid, method} = req.body     
+
+//   try {
+//     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
+//     const userid = userResult.rows[0].userid;
+
+//     await updateWords(userid);
+
+//     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation
+//                                             FROM dictword dw 
+//                                             JOIN words w ON w.wordid = dw.wordid
+//                                             LEFT JOIN words t ON t.wordid = w.translationid 
+//                                             JOIN userword uw on uw.wordid = dw.wordid
+//                                             WHERE dw.dictid = $1 and userid = $2 and container <= 5 and method = $3`, [dictid, userid, method]);
+  
+//   res.json({success: true, words: returnWords.rows});     
+//   } catch (err) {
+//     res.status(500).json({success: false});
+//   }
+// });
