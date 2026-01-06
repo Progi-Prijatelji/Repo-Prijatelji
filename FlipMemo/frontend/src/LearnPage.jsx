@@ -28,6 +28,8 @@ function LearnPage() {
           body: JSON.stringify({ email: localStorage.getItem('email'), dictid: parseInt(dictId), method: mode})
         });
 
+        console.log('sendWordsInDictForUser response status:', response.status);
+
 
         const dictRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendDictList', {
           headers: {
@@ -42,10 +44,15 @@ function LearnPage() {
         }
 
         const data = await response.json();
-        if(data.success){
-          setWords(data.words.map(w => w.word));
-          setWordIds(data.words.map(w => w.wordid));
+        console.log('sendWordsInDictForUser response body:', data);
+        if (data && data.success) {
+          
+          setWords(data.words);
+          
+          setWordIds(data.words.map(w => w.wordID));
           setTranslations(data.words.map(w => w.translation));
+        } else {
+          console.warn('No words returned or request not successful');
         }
       } catch (error) {
         console.error('Error fetching words:', error);
