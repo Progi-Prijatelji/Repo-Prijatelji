@@ -83,16 +83,16 @@ function HomePageUser() {
                 <p><strong>Jezik:</strong> {selectedLanguage?.langname ?? '---'}</p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">
-                  <div className="mod-card" onClick={() => handleModeClick('foreign-to-native')}>
+                  <div className="mod-card" onClick={() => handleModeClick('fton')}>
                     <BookA color="black" size="30"/><p>Strani u materinji</p>
                   </div>
-                  <div className="mod-card" onClick={() => handleModeClick('native-to-foreign')}>
+                  <div className="mod-card" onClick={() => handleModeClick('ntof')}>
                     <Languages color="black" size="30"/><p>Materinji u strani</p>
                   </div>
-                  <div className="mod-card" onClick={() => handleModeClick('writing')}>
+                  <div className="mod-card" onClick={() => handleModeClick('write')}>
                     <Pen color="black" size="30"/><p>Pisanje</p>
                   </div>
-                  <div className="mod-card" onClick={() => handleModeClick('pronunciation')}>
+                  <div className="mod-card" onClick={() => handleModeClick('speak')}>
                     <Mic color="black" size="30"/><p>Izgovor</p>
                   </div>
                 </div>

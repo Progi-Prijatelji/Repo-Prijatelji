@@ -84,19 +84,19 @@ function LearnPage() {
         <button className="back-button" onClick={() => navigate(-1)}>Nazad</button>
         
 
-        {mode === 'foreign-to-native' && (
+        {mode === 'fton' && (
           <ForeighToNative words={words} />
         )}
 
-        {mode === 'native-to-foreign' && (
+        {mode === 'ntof' && (
           <NativeToForeign words={words}/>
         )}
 
-        {mode === 'writing' && (
+        {mode === 'write' && (
           <Writing words={words} />
         )}
 
-        {mode === 'pronunciation' && (
+        {mode === 'speak' && (
           <Pronunciation words={words} />
         )}
       </div>

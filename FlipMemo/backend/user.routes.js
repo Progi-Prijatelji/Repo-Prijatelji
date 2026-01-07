@@ -41,12 +41,10 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
     const userid = userResult.rows[0].userid;
 
     const newUserInDict = await client.query(`SELECT count(wordid) FROM userword WHERE userid = $1`,[userid]); //vidimo dal je osoba vec ucila
-
     const count = Number(newUserInDict.rows[0].count);
 
     if (count === 0) {//ako nije ucila stavljamo u userword, kao lasttimedate stavljam null jer nije zapravo naucila rijec ni jednom
       const wordsInDict = await client.query(`select wordid from dictword where dictid = $1`, [dictid])
-
       for (const row of wordsInDict.rows) {
         await client.query(`INSERT INTO userword (userid, wordid, container, lastTimeDate, method) VALUES ($1, $2, 0, NULL, $3)`,[userid, row.wordid, method]);
       }
@@ -57,13 +55,13 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
                                             JOIN words w ON w.wordid = dw.wordid
                                             LEFT JOIN words t ON t.wordid = w.translationid 
                                             JOIN userword uw on uw.wordid = dw.wordid
-                                            WHERE dw.dictid = $1 and uw.userid = $2 and uw.container <= 5 and dw.method = $3
-                                            and (lastTimeDate = NULL and container = 0
-                                            or lastTimeDate >= NOW() - '1 day'::interval and container = 1
-                                            or lastTimeDate >= NOW() - '2 day'::interval and container = 2
-                                            or lastTimeDate >= NOW() - '3 day'::interval and container = 3
-                                            or lastTimeDate >= NOW() - '4 day'::interval and container = 4
-                                            or lastTimeDate >= NOW() - '5 day'::interval and container = 5) `, [dictid, userid, method]);
+                                            WHERE dw.dictid = $1 and uw.userid = $2 and uw.container <= 5 and uw.method = $3
+                                            and ((lastTimeDate IS NULL and container = 0)
+                                            or (lastTimeDate >= NOW() - '1 day'::interval and container = 1)
+                                            or (lastTimeDate >= NOW() - '2 day'::interval and container = 2)
+                                            or (lastTimeDate >= NOW() - '3 day'::interval and container = 3)
+                                            or (lastTimeDate >= NOW() - '4 day'::interval and container = 4)
+                                            or (lastTimeDate >= NOW() - '5 day'::interval and container = 5)) `, [dictid, userid, method]);
   
   res.json({success: true, words: returnWords.rows});     
   } catch (err) {
