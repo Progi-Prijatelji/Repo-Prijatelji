@@ -40,13 +40,16 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
     const userid = userResult.rows[0].userid;
 
-    const newUserInDict = await client.query(`SELECT count(wordid) FROM userword WHERE userid = $1`,[userid]); //vidimo dal je osoba vec ucila
-    const count = Number(newUserInDict.rows[0].count);
+    const newUserInDict = await client.query(`SELECT count(uw.wordid) learning, count(dw.wordid) all FROM userword uw RIGHT JOIN dictword dw ON uw.wordid = dw.wordid AND uw.userid = $1 AND uw.method = $2 WHERE dw.dictid = $3`,[userid, method, dictid]); //vidimo dal je osoba vec ucila
+    const learning = Number(newUserInDict.rows[0].learning);
+    const countInDict = Number(newUserInDict.rows[0].all);
 
-    if (count === 0) {//ako nije ucila stavljamo u userword, kao lasttimedate stavljam null jer nije zapravo naucila rijec ni jednom
+    if (learning < countInDict) {//ako nije ucila stavljamo u userword, kao lasttimedate stavljam null jer nije zapravo naucila rijec ni jednom
       const wordsInDict = await client.query(`select wordid from dictword where dictid = $1`, [dictid])
       for (const row of wordsInDict.rows) {
-        await client.query(`INSERT INTO userword (userid, wordid, container, lastTimeDate, method) VALUES ($1, $2, 0, NULL, $3)`,[userid, row.wordid, method]);
+        if (await client.query(`select case when exists (select * from userword where userid=$1 and wordid=$2 and method=$3) then cast(1 as bit) else cast(0 as bit) end`, [userid, row.wordid, method])){
+          await client.query(`INSERT INTO userword (userid, wordid, container, lastTimeDate, method) VALUES ($1, $2, 0, NULL, $3)`,[userid, row.wordid, method]);
+        }
       }
     }  
       //sve riejci koje se mogu uciti, ili rijeci koje se nikada nisu ucile do sad ili rijeci koje su u pripadajucem konatineru dovoljno vremena
