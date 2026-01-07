@@ -46,6 +46,7 @@ const Writing = ( {words} ) => {
     }
     setProgress(progress + 1);
     setInputValue('');
+    setDictWords(dictWords.filter(w => w.word !== questionWord))
   };
 
 

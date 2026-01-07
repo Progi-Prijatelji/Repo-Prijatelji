@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 
 
 
-const ForeignToNative = ( { words, translations } ) => {
+const ForeignToNative = ( { words } ) => {
 
-    const [dictWords, setDictWords] = useState([]);// hrvatska rijeci iz rjecnika
+    const [dictWords, setDictWords] = useState([]);// hrvatske rijeci iz rjecnika
     const [allTranslations, setAllTranslations] = useState([]); //engleske rijeci
     const [questionWord, setQuestionWord] = useState('');
     const [options, setOptions] = useState([]);
@@ -16,11 +16,11 @@ const ForeignToNative = ( { words, translations } ) => {
     useEffect(() => {
         if( words.length > 0 ) {
         
-            setDictWords(translations);
+            setDictWords(words);
          
-            setAllTranslations(words);
+            setAllTranslations(words.map( w => w.word ));
         }
-    }, [words, translations]);
+    }, [words]);
 
     useEffect(() => {
         if (dictWords.length > 0 && allTranslations.length > 0 && progress === 0) {

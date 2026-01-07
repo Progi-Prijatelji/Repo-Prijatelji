@@ -16,6 +16,15 @@ function LearnPage() {
   const [translations, setTranslations] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const wordsMock = [
+    { word: 'apple', translation: 'jabuka', audioFile: 'apple.mp3' },
+    { word: 'pear', translation: 'kruška', audioFile: 'pear.mp3' },
+    { word: 'banana', translation: 'banana', audioFile: 'banana.mp3' },
+    { word: 'grape', translation: 'grožđe', audioFile: 'grape.mp3' },
+    { word: 'orange', translation: 'naranča', audioFile: 'orange.mp3' },
+    
+  ];
+
   useEffect(() => {
     const fetchWords = async () => {
       try {
@@ -76,11 +85,11 @@ function LearnPage() {
         
 
         {mode === 'foreign-to-native' && (
-          <ForeighToNative words={words} translations={translations} />
+          <ForeighToNative words={words} />
         )}
 
         {mode === 'native-to-foreign' && (
-          <NativeToForeign words={words} translations={translations} />
+          <NativeToForeign words={words}/>
         )}
 
         {mode === 'writing' && (
@@ -104,14 +113,30 @@ export default LearnPage;
 //     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
 //     const userid = userResult.rows[0].userid;
 
-//     await updateWords(userid);
+//     const newUserInDict = await client.query(`SELECT count(wordid) FROM userword WHERE userid = $1`,[userid]); //vidimo dal je osoba vec ucila
 
-//     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation
+//     const count = Number(newUserInDict.rows[0].count);
+
+//     if (count === 0) {//ako nije ucila stavljamo u userword, kao lasttimedate stavljam null jer nije zapravo naucila rijec ni jednom
+//       const wordsInDict = await client.query(`select wordid from dictword where dictid = $1`, [dictid])
+
+//       for (const row of wordsInDict.rows) {
+//         await client.query(`INSERT INTO userword (userid, wordid, container, lastTimeDate, method) VALUES ($1, $2, 0, NULL, $3)`,[userid, row.wordid, method]);
+//       }
+//     }  
+//       //sve riejci koje se mogu uciti, ili rijeci koje se nikada nisu ucile do sad ili rijeci koje su u pripadajucem konatineru dovoljno vremena
+//     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation 
 //                                             FROM dictword dw 
 //                                             JOIN words w ON w.wordid = dw.wordid
 //                                             LEFT JOIN words t ON t.wordid = w.translationid 
 //                                             JOIN userword uw on uw.wordid = dw.wordid
-//                                             WHERE dw.dictid = $1 and userid = $2 and container <= 5 and method = $3`, [dictid, userid, method]);
+//                                             WHERE dw.dictid = $1 and uw.userid = $2 and uw.container <= 5 and dw.method = $3
+//                                             and (lastTimeDate = NULL and container = 0
+//                                             or lastTimeDate >= NOW() - '1 day'::interval and container = 1
+//                                             or lastTimeDate >= NOW() - '2 day'::interval and container = 2
+//                                             or lastTimeDate >= NOW() - '3 day'::interval and container = 3
+//                                             or lastTimeDate >= NOW() - '4 day'::interval and container = 4
+//                                             or lastTimeDate >= NOW() - '5 day'::interval and container = 5) `, [dictid, userid, method]);
   
 //   res.json({success: true, words: returnWords.rows});     
 //   } catch (err) {
