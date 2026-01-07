@@ -47,7 +47,9 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
     if (learning < countInDict) {//ako nije ucila stavljamo u userword, kao lasttimedate stavljam null jer nije zapravo naucila rijec ni jednom
       const wordsInDict = await client.query(`select wordid from dictword where dictid = $1`, [dictid])
       for (const row of wordsInDict.rows) {
-        if (await client.query(`select case when not exists (select * from userword where userid=$1 and wordid=$2 and method=$3) then cast(1 as bit) else cast(0 as bit) end`, [userid, row.wordid, method])){
+        const userWordMethod = await client.query(`select case when not exists (select * from userword where userid=$1 and wordid=$2 and method=$3) then cast(1 as bit) else cast(0 as bit) end`, [userid, row.wordid, method]);
+        const exists = Number(userWordMethod.rows[0].case)
+        if (exists){
           await client.query(`INSERT INTO userword (userid, wordid, container, lastTimeDate, method) VALUES ($1, $2, 0, NULL, $3)`,[userid, row.wordid, method]);
         }
       }
