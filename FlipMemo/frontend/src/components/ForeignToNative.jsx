@@ -13,10 +13,10 @@ const ForeignToNative = ({ words }) => {
 
     useEffect(() => {
         if (words.length > 0) {
-        
-            setDictWords(words);
-         
-            setAllTranslations(words.map(w => w.translation));
+            
+            const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+            setDictWords(normalized);
+            setAllTranslations(normalized.map(w => w.translation));
         }
     }, [words]);
 
@@ -47,9 +47,9 @@ const ForeignToNative = ({ words }) => {
         const allOptions = [correctTranslation, ...wrongAnswers]
             .sort(() => Math.random() - 0.5);
 
-            
+
         setQuestionWord(randWord.word);
-        setCurrentWordId(randWord.wordID );
+        setCurrentWordId(randWord.wordid); 
         setOptions(allOptions);
     };
 
@@ -63,7 +63,7 @@ const ForeignToNative = ({ words }) => {
                 },
                 body: JSON.stringify({
                     email: localStorage.getItem('email'),
-                    wordid: currentWordId, // koristimo spremljeni ID
+                    wordid: currentWordId ?? randWord?.wordid, 
                     correction: option === currentCorrectWord,
                     method: 'fton'
                 })
@@ -84,8 +84,8 @@ const ForeignToNative = ({ words }) => {
                 console.error("Doslo je do pogreske pri azuriranju rijeci.");
             }
         } catch (error) {
-            console.error("Krivo implementirana funkcija handleClick:", error);
-        }
+            console.error("handleClick error, currentWordId=", currentWordId, error);
+        } 
         
     };
 
