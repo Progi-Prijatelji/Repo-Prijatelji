@@ -46,7 +46,8 @@ const Writing = ( {words} ) => {
         body: JSON.stringify({
             email: localStorage.getItem('email'),
             wordid: dictWords.find(w => w.word === questionWord).wordID,
-            correction: inputValue.toLowerCase() === questionWord.toLowerCase()
+            correction: inputValue.toLowerCase() === questionWord.toLowerCase(),
+            method: "write"
         })
       })
       const data = await response.json();
