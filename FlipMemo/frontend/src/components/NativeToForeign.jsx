@@ -66,7 +66,7 @@ const ForeignToNative = ( { words } ) => {
                     email: localStorage.getItem('email'),
                     wordid: words.find(w => w.translation === questionWord).wordID,
                     correction: option === currentCorrectWord,
-                    method: 'fton'
+                    method: 'ntof'
                 })
             });
             

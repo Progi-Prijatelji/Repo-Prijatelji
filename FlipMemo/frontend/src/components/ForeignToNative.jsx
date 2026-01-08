@@ -7,6 +7,7 @@ const ForeignToNative = ({ words }) => {
     const [questionWord, setQuestionWord] = useState('');
     const [options, setOptions] = useState([]);
     const [currentCorrectWord, setCurrentCorrectWord] = useState(null);
+    const [currentWordId, setCurrentWordId] = useState(null); // ID aktivne riječi
     const [progress, setProgress] = useState(0);
     const [score, setScore] = useState(0);
 
@@ -35,7 +36,7 @@ const ForeignToNative = ({ words }) => {
         const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
         const correctTranslation = randWord.translation;
         setCurrentCorrectWord(correctTranslation);
-
+        
   
         const wrongAnswers = allTranslations
             .filter(t => t !== correctTranslation)
@@ -46,7 +47,9 @@ const ForeignToNative = ({ words }) => {
         const allOptions = [correctTranslation, ...wrongAnswers]
             .sort(() => Math.random() - 0.5);
 
+            
         setQuestionWord(randWord.word);
+        setCurrentWordId(randWord.wordID );
         setOptions(allOptions);
     };
 
@@ -60,7 +63,7 @@ const ForeignToNative = ({ words }) => {
                 },
                 body: JSON.stringify({
                     email: localStorage.getItem('email'),
-                    wordid: words.find(w => w.word === questionWord).wordID,
+                    wordid: currentWordId, // koristimo spremljeni ID
                     correction: option === currentCorrectWord,
                     method: 'fton'
                 })
