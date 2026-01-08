@@ -31,6 +31,7 @@ function HomePageAdmin() {
 
     const showWords = async(id) => {
         setOpenDictId(prev => prev === id ? null : id);
+        
         try{
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/showWords", {
                 method: "POST",
@@ -364,13 +365,13 @@ function HomePageAdmin() {
                         <h2>Postojeći rječnici</h2>
                         <ul>
                             {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
-                            <li key={dict.dictname}>
+                            <li key={dict.dictid}>
                                 <div>
                                     <p>{dict.dictname}</p>
                                     <p>{dict.description}</p>
-                                    <button onClick={()=> showWords (dict.id)}>...</button>
+                                    <button onClick={()=> showWords (dict.dictid)}>...</button>
                                 </div>
-                                {openDictId === dict.id  && (
+                                {openDictId === dict.dictid  && (
                                     <div>
                                         <h4>Riječi u rječniku:</h4>
                                         <ul>
@@ -382,7 +383,6 @@ function HomePageAdmin() {
                                             ))}
                                         </ul>
                                     </div>
-
                                 )}
                             </li>
                             ))}
