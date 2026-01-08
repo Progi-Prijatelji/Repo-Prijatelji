@@ -62,11 +62,11 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
                                             JOIN userword uw on uw.wordid = dw.wordid
                                             WHERE dw.dictid = $1 and uw.userid = $2 and uw.container <= 5 and uw.method = $3
                                             and ((lastTimeDate IS NULL and container = 0)
-                                            or (lastTimeDate >= NOW() - '1 day'::interval and container = 1)
-                                            or (lastTimeDate >= NOW() - '2 day'::interval and container = 2)
-                                            or (lastTimeDate >= NOW() - '3 day'::interval and container = 3)
-                                            or (lastTimeDate >= NOW() - '4 day'::interval and container = 4)
-                                            or (lastTimeDate >= NOW() - '5 day'::interval and container = 5)) `, [dictid, userid, method]);
+                                            or (lastTimeDate <= NOW() - '1 day'::interval and container = 1)
+                                            or (lastTimeDate <= NOW() - '2 day'::interval and container = 2)
+                                            or (lastTimeDate <= NOW() - '3 day'::interval and container = 3)
+                                            or (lastTimeDate <= NOW() - '4 day'::interval and container = 4)
+                                            or (lastTimeDate <= NOW() - '5 day'::interval and container = 5)) `, [dictid, userid, method]);
   
   res.json({success: true, words: returnWords.rows});     
   } catch (err) {
@@ -75,16 +75,16 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
 });
 
 router.post('/updateWord', verifyToken, async (req, res) =>{
-  const {email, wordid, correction} = req.body
-
+  const {email, wordid, correction, method} = req.body;
+  console.log(email, wordid, correction, method);
   try {
     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
     const userid = userResult.rows[0].userid;
-
+    console.log(userid);
     if(correction){
-      await client.query(`UPDATE userword SET lastTimeDate = NOW(), container = container + 1 WHERE userid = $1 AND wordid = $2)`, [userid, wordid]);
+      await client.query(`UPDATE userword SET lastTimeDate = NOW(), container = (CASE WHEN container = 0 THEN 2 ELSE container + 1 END) WHERE userid = $1 AND wordid = $2 AND method = $3`, [userid, wordid, method]);
     } else{
-      await client.query(`UPDATE userword SET container = GREATEST(container - 1, 1), lastTimeDate = NOW() WHERE userid = $1 AND wordid = $2`, [userid, wordid]);
+      await client.query(`UPDATE userword SET container = 1, lastTimeDate = NOW() WHERE userid = $1 AND wordid = $2 AND method = $3`, [userid, wordid, method]);
     }
 
     res.json({success: true});  
