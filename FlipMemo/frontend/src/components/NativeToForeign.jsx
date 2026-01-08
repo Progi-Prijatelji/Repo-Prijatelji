@@ -54,16 +54,38 @@ const ForeignToNative = ( { words } ) => {
     }
  
 
-    const handleClick = (option) => {
-        if (option === currentCorrectWord) {
-            setScore(score + 1);
-            alert("Točno!");
-        } else {
-            alert("Pogrešno! Točan odgovor: " + currentCorrectWord);
+    const handleClick = async (option) => {
+        try{
+            const response = await fetch("https://fmimage.onrender.com/homeUser/updateWord", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify({
+                    email: localStorage.getItem('email'),
+                    wordid: words.find(w => w.translation === questionWord).wordID,
+                    correction: option === currentCorrectWord
+                })
+            });
+            
+            const data = await response.json();
+            if(data.success){
+                if (option === currentCorrectWord) {
+                    setScore(score + 1);
+                    alert("Točno!");
+                } else {
+                    alert("Pogrešno! Točan odgovor: " + currentCorrectWord);
+                }
+                setProgress(progress + 1);
+                setDictWords(dictWords.filter(w => w.translation !== questionWord));
+            }
+            else {
+                console.error("Doslo je do pogreske pri azuriranju rijeci.");
+            }
+        } catch (error) {
+            console.error("Krivo implementirana funkcija handleClick:", error);
         }
-        
-        setProgress(progress + 1);
-        setDictWords(dictWords.filter(w => w.word !== questionWord));
     };
 
     if (words.length === 0) {

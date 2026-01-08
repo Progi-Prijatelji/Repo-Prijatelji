@@ -50,16 +50,39 @@ const ForeignToNative = ({ words }) => {
         setOptions(allOptions);
     };
 
-    const handleClick = (option) => {
-        if (option === currentCorrectWord) {
-            setScore(score + 1);
-            alert("Točno!");
-        } else {
-            alert("Pogrešno! Točan odgovor: " + currentCorrectWord);
+    const handleClick = async (option) => {
+        try{
+            const response = await fetch("https://fmimage.onrender.com/homeUser/updateWord", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify({
+                    email: localStorage.getItem('email'),
+                    wordid: words.find(w => w.word === questionWord).wordID,
+                    correction: option === currentCorrectWord
+                })
+            });
+            
+            const data = await response.json();
+            if(data.success){
+                if (option === currentCorrectWord) {
+                    setScore(score + 1);
+                    alert("Točno!");
+                } else {
+                    alert("Pogrešno! Točan odgovor: " + currentCorrectWord);
+                }
+                setProgress(progress + 1);
+                setDictWords(dictWords.filter(w => w.word !== questionWord));
+            }
+            else {
+                console.error("Doslo je do pogreske pri azuriranju rijeci.");
+            }
+        } catch (error) {
+            console.error("Krivo implementirana funkcija handleClick:", error);
         }
         
-        setProgress(progress + 1);
-        setDictWords(dictWords.filter(w => w.word !== questionWord));
     };
 
     if (words.length === 0) {
@@ -102,3 +125,23 @@ const ForeignToNative = ({ words }) => {
 };
 
 export default ForeignToNative;
+
+
+// router.post('/updateWord', verifyToken, async (req, res) =>{
+//   const {email, wordid, correction} = req.body
+
+//   try {
+//     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
+//     const userid = userResult.rows[0].userid;
+
+//     if(correction){
+//       await client.query(`UPDATE userword SET lastTimeDate = NOW(), container = container + 1 WHERE userid = $1 AND wordid = $2)`, [userid, wordid]);
+//     } else{
+//       await client.query(`UPDATE userword SET container = GREATEST(container - 1, 1), lastTimeDate = NOW() WHERE userid = $1 AND wordid = $2`, [userid, wordid]);
+//     }
+
+//     res.json({success: true});  
+//   } catch (err) {
+//     res.status(500).json({success: false});
+//   }
+// });

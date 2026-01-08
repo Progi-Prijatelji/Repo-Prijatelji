@@ -35,18 +35,39 @@ const Writing = ( {words} ) => {
     {/*play audio for the word*/}
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (inputValue.toLowerCase() === questionWord.toLowerCase()) {
-      setScore(score + 1);
-      alert("Točno!");
+  const handleSubmit = async (e) => {
+    try{
+      const response = await fetch("https://fmimage.onrender.com/homeUser/updateWord", {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        },
+        body: JSON.stringify({
+            email: localStorage.getItem('email'),
+            wordid: dictWords.find(w => w.word === questionWord).wordID,
+            correction: inputValue.toLowerCase() === questionWord.toLowerCase()
+        })
+      })
+      const data = await response.json();
+      if(data.success){
+        e.preventDefault();
+        if (inputValue.toLowerCase() === questionWord.toLowerCase()) {
+          setScore(score + 1);
+          alert("Točno!");
 
-    } else{
-      alert("Pogrešno! Točan odgovor: " + questionWord);
+        } else{
+          alert("Pogrešno! Točan odgovor: " + questionWord);
+        }
+        setProgress(progress + 1);
+        setInputValue('');
+        setDictWords(dictWords.filter(w => w.word !== questionWord))
+      }
+
+    }catch(err){
+      console.error("Error checking written word:", err);
     }
-    setProgress(progress + 1);
-    setInputValue('');
-    setDictWords(dictWords.filter(w => w.word !== questionWord))
+    
   };
 
 
@@ -91,22 +112,21 @@ const Writing = ( {words} ) => {
 
 export default Writing;
 
-
-// router.post('/checkWrittenWord',  verifyToken, async (req, res) =>{
-//   const{written, wordid} = req.body
+// router.post('/updateWord', verifyToken, async (req, res) =>{
+//   const {email, wordid, correction} = req.body
 
 //   try {
-//     const correct = await client.query(`select word from words where wordid = $1`, [wordid])
+//     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
+//     const userid = userResult.rows[0].userid;
 
-//     if(written == correct.rows[0].word){
-//       res.json({success: true});  
+//     if(correction){
+//       await client.query(`UPDATE userword SET lastTimeDate = NOW(), container = container + 1 WHERE userid = $1 AND wordid = $2)`, [userid, wordid]);
+//     } else{
+//       await client.query(`UPDATE userword SET container = GREATEST(container - 1, 1), lastTimeDate = NOW() WHERE userid = $1 AND wordid = $2`, [userid, wordid]);
 //     }
-//     else{
-//       res.json({success: false});  
-//     }
+
+//     res.json({success: true});  
 //   } catch (err) {
 //     res.status(500).json({success: false});
 //   }
 // });
-
-// module.exports = router;
