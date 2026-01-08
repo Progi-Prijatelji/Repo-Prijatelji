@@ -15,10 +15,9 @@ const ForeignToNative = ( { words } ) => {
 
     useEffect(() => {
         if( words.length > 0 ) {
-        
-            setDictWords(words);
-         
-            setAllTranslations(words.map( w => w.word ));
+            const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+            setDictWords(normalized);
+            setAllTranslations(normalized.map( w => w.word ));
         }
     }, [words]);
 
@@ -64,7 +63,7 @@ const ForeignToNative = ( { words } ) => {
                 },
                 body: JSON.stringify({
                     email: localStorage.getItem('email'),
-                    wordid: words.find(w => w.translation === questionWord).wordID,
+                    wordid: dictWords.find(w => w.translation === questionWord)?.wordid,
                     correction: option === currentCorrectWord,
                     method: 'ntof'
                 })

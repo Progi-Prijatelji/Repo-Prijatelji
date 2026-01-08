@@ -14,9 +14,10 @@ const Writing = ( {words} ) => {
 
   useEffect(() => {
     if(words.length > 0){
-      setDictWords(words);
+      const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+      setDictWords(normalized);
       // Postavi prvu riječ odmah pri učitavanju
-      const randWord = words[Math.floor(Math.random() * words.length)];
+      const randWord = normalized[Math.floor(Math.random() * normalized.length)];
       setQuestionWord(randWord.word);
       setWordAudio(randWord.audioFile);
     }
@@ -45,7 +46,7 @@ const Writing = ( {words} ) => {
         },
         body: JSON.stringify({
             email: localStorage.getItem('email'),
-            wordid: dictWords.find(w => w.word === questionWord).wordID,
+            wordid: dictWords.find(w => w.word === questionWord)?.wordid,
             correction: inputValue.toLowerCase() === questionWord.toLowerCase(),
             method: "write"
         })
