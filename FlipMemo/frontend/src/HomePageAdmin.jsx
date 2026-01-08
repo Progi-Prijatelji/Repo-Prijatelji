@@ -345,89 +345,91 @@ function HomePageAdmin() {
         <>
         <HeaderAdmin />
             <div className="admin-page">
-                <div className='add-dictionary'>
-                    <h2>Dodavanje rječnika</h2>
-                    <div className='adding-section'>
-                        <h3>Dodaj novi rječnik</h3>
-                        <form onSubmit={handleAddDictionary}>
-                            <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
-                            <select value={langID} onChange={(e) => setLangID(e.target.value)}>
-                                <option value="">Jezik</option>
-                                {languages.map((lang) => (
-                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
-                                ))}
-                            </select>
-                            <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
-                            <button type="submit">Dodaj rječnik</button>
-                        </form>
-                    </div>
-                    <div className='old-dictionary'>
-                        <h2>Postojeći rječnici</h2>
-                        <ul>
-                            {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
-                            <li key={dict.dictid}>
-                                <div>
-                                    <p>{dict.dictname}</p>
-                                    <p>{dict.description}</p>
-                                    <button onClick={()=> showWords (dict.dictid)}>...</button>
-                                </div>
-                                {openDictId === dict.dictid  && (
+                <div className='adding'>
+                    <div className='add-dictionary adding-part'>
+                        <h2>Dodavanje rječnika</h2>
+                        <div className='adding-section'>
+                            <h3>Dodaj novi rječnik</h3>
+                            <form onSubmit={handleAddDictionary}>
+                                <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
+                                <select value={langID} onChange={(e) => setLangID(e.target.value)}>
+                                    <option value="">Jezik</option>
+                                    {languages.map((lang) => (
+                                        <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                    ))}
+                                </select>
+                                <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
+                                <button type="submit">Dodaj rječnik</button>
+                            </form>
+                        </div>
+                        <div className='old-dictionary'>
+                            <h2>Postojeći rječnici</h2>
+                            <ul>
+                                {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
+                                <li key={dict.dictid}>
                                     <div>
-                                        <h4>Riječi u rječniku:</h4>
-                                        <ul>
-                                            {wordList.map((wordItem) => (
-                                                <li key={wordItem.wordid}>
-                                                    <p>{wordItem.word} - {wordItem.translation}</p>
-                                                    <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <p>{dict.dictname}</p>
+                                        <p>{dict.description}</p>
+                                        <button onClick={()=> showWords (dict.dictid)}>...</button>
                                     </div>
-                                )}
-                            </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-
-                <div className='add-word'>
-                    <h2>Dodavanje riječi</h2>
-                    <div className='adding-section'>
-                        <h3>Dodaj novu riječ</h3>
-                        <form onSubmit={handleAddWord}>
-                            <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
-                            <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
-                                <option value="">Jezik</option>
-                                {languages.map((lang) => (
-                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                    {openDictId === dict.dictid  && (
+                                        <div>
+                                            <h4>Riječi u rječniku:</h4>
+                                            <ul>
+                                                {wordList.map((wordItem) => (
+                                                    <li key={wordItem.wordid}>
+                                                        <p>{wordItem.word} - {wordItem.translation}</p>
+                                                        <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </li>
                                 ))}
-                            </select>
-                            <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
-                            <button type="submit">Dodaj riječ</button>
-                        </form>
-                        <form onSubmit={handleAddWordToDictionary}>
-                            <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                            {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                <div key={dict.dictid}>
-                                    <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                    <label>{dict.dictname}</label>
-                                </div>
-                            ))}
-                            <button type="submit">Dodaj riječ u rječnik</button>
-                        </form>
-                    </div>
-                </div>
-
-                <div className='add-language'>
-                    <h3>Dodavanje novog jezika</h3>
-                    <div className='adding-section'>
-                        <h3>Dodaj novu jezik</h3>
-                        <form onSubmit={handleAddLanguage}>
-                            <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
-                            <button type="submit">Dodaj jezik</button>
-                        </form>
+                            </ul>
+                        </div>
                     </div>
 
+                    <div className='add-word adding-part'>
+                        <h2>Dodavanje riječi</h2>
+                        <div className='adding-section'>
+                            <h3>Dodaj novu riječ</h3>
+                            <form onSubmit={handleAddWord}>
+                                <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
+                                <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
+                                    <option value="">Jezik</option>
+                                    {languages.map((lang) => (
+                                        <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                    ))}
+                                </select>
+                                <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
+                                <button type="submit">Dodaj riječ</button>
+                            </form>
+                            <form onSubmit={handleAddWordToDictionary}>
+                                <label>Odaberi rječnik u koji želiš dodati riječ:</label>
+                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                    <div key={dict.dictid}>
+                                        <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                        <label>{dict.dictname}</label>
+                                    </div>
+                                ))}
+                                <button type="submit">Dodaj riječ u rječnik</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div className='add-language adding-part'>
+                        <h3>Dodavanje novog jezika</h3>
+                        <div className='adding-section'>
+                            <h3>Dodaj novu jezik</h3>
+                            <form onSubmit={handleAddLanguage}>
+                                <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
+                                <button type="submit">Dodaj jezik</button>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
 
                 {

@@ -1,52 +1,31 @@
-.add-dictionary {
+.adding{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
+    gap: 40px;
 }
-.add-dictionary form {
+.adding-part{
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.adding-section{
     display: flex;
     flex-direction: column;
-    width: 300px;
+    gap: 15px;
+    margin-top: 15px;
 }
-.add-dictionary input, .add-dictionary textarea {
-    margin-bottom: 10px;
+
+.adding-section label{
+    font-weight: bold;
+}
+
+.adding-section input, .adding-section select{
     padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     font-size: 16px;
-}
-.add-dictionary button {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #5d2e86;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-.add-dictionary button:hover {
-    background-color: #5d2e86;
-}
-.old-dictionary {
-    margin-top: 40px;
-    width: 80%;
-}
-.old-dictionary h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-.old-dictionary ul {
-    list-style-type: none;
-    padding: 0;
-}
-.old-dictionary li {
-    background-color: #f9f9f9;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-}
-.old-dictionary li:hover {
-    background-color: #f1f1f1;
-}
-.adding-section {
-    margin-bottom: 30px;
-    width: 80%;
-}
+}   
