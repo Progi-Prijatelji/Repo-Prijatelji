@@ -244,7 +244,7 @@ router.get('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
 
 router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   try {
-    const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordid, t.word AS translation, l.langname AS langname 
+    const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordid, t.word AS translation, l.langname AS langname, l.langid AS langid
                                             FROM languages l JOIN words w ON l.langid = w.langid LEFT JOIN words t ON t.wordid = w.translationid`);
 
     res.json({success: true, words: returnWords.rows});
