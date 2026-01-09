@@ -263,7 +263,7 @@ router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
     res.json({ success: true });
    } catch (err) {
     console.error(err);
-    res.status(500).e({ success: false });
+    res.status(500).json({ success: false });
    }
 });
 
