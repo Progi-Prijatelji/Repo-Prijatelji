@@ -30,6 +30,7 @@ function HomePageAdmin() {
     const [wordList, setWordList] = useState([]);
 
     const [allWordList, setAllWordList] = useState([]);
+    const [languageFilter, setLanguageFilter] = useState("");
 
     const fetchWords = async() => {
         try { 
@@ -460,8 +461,14 @@ function HomePageAdmin() {
                     <div className='remove-words adding-part'>
                         <h3>Brisanje riječi</h3>
                         <div className='adding-section'>
+                            <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
+                                <option value="">Jezik</option>
+                                    {languages.map((lang) => (
+                                        <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                    ))}
+                            </select>
                             <ul>
-                                {allWordList.map((wordItem) => (
+                                {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                     <li key={wordItem.wordid}>
                                         <p>{wordItem.word} - {wordItem.translation}</p>
                                         <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
