@@ -29,6 +29,33 @@ function HomePageAdmin() {
     const [openDictId, setOpenDictId] = useState(null);
     const [wordList, setWordList] = useState([]);
 
+    const [allWordList, setAllWordList] = useState([]);
+
+    const fetchWords = async() => {
+        try { 
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/showAllWords", {
+                method: "GET",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+            credentials: "include"  
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Nemate pravo pristupa.");
+                return;
+            }
+            setAllWordList(data.words || []);
+            
+        } catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+            
+        }
+    }
+
+    
+
     const showWords = async(id) => {
         setOpenDictId(prev => prev === id ? null : id);
         
@@ -42,7 +69,7 @@ function HomePageAdmin() {
             });
             const data = await results.json();
             if (!data.success) {
-                alert(data.message || "Neuspješno dodavanje riječi.");
+                alert(data.message || "Neuspješno ucitavanje riječi.");
                 return;
             }
             setWordList(data.words);
@@ -250,6 +277,7 @@ function HomePageAdmin() {
         fetchLanguages();
         fetchDictionaries();
         fetchAdmin();
+        fetchWords();
     }, []);
     
     const handleSearch = async(e) => {
@@ -370,9 +398,9 @@ function HomePageAdmin() {
                                     <div>
                                         <p>{dict.dictname}</p>
                                         <p>{dict.description}</p>
-                                        <button onClick={()=> showWords (dict.dictid)}>...</button>
+                                        {/*<button onClick={()=> showWords (dict.dictid)}>...</button>*/}
                                     </div>
-                                    {openDictId === dict.dictid  && (
+                                    {/*{openDictId === dict.dictid  && (
                                         <div>
                                             <h4>Riječi u rječniku:</h4>
                                             <ul>
@@ -384,7 +412,7 @@ function HomePageAdmin() {
                                                 ))}
                                             </ul>
                                         </div>
-                                    )}
+                                    )}*/}
                                 </li>
                                 ))}
                             </ul>
@@ -427,6 +455,20 @@ function HomePageAdmin() {
                                 <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
                                 <button type="submit">Dodaj jezik</button>
                             </form>
+                        </div>
+                    </div>
+                    <div className='remove-words adding-part'>
+                        <h3>Brisanje riječi</h3>
+                        <div className='adding-section'>
+                            <ul>
+                                {allWordList.map((wordItem) => (
+                                    <li key={wordItem.wordid}>
+                                        <p>{wordItem.word} - {wordItem.translation}</p>
+                                        <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                    </li>
+                                ))}
+                            </ul>
+
                         </div>
 
                     </div>
