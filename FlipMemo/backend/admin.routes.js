@@ -186,7 +186,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
         i++;
       }
 
-      await client.query(`insert into words (wordid, word, langid, translationid, audioFile) values ($1, $2, $3, $4, $5)`,[i, translation, 1, null, "aaaa"]);
+      await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, NULL, NULL, $3, NULL)`,[i, translation, 1]);
 
       translationId = i;
     } else {
@@ -201,7 +201,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       j++;
     }
 
-    await client.query(`insert into words (wordId, word, langid, translationid, audioFile) values ($1, $2, $3, $4, $5)`, [j, word, langid, translationId, "aaaa"]);  //aaaa je placeholder jer baza ne prima null za audiofile rijeci koja nije na hrvatskom
+    await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, NULL, NULL, $3, $4)`, [j, word, langid, translationId]);  //aaaa je placeholder jer baza ne prima null za audiofile rijeci koja nije na hrvatskom
 
     res.json({ success: true, wordid: j});
 
@@ -228,7 +228,7 @@ router.post('/addWordToDicts', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
-router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
+router.get('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   const {dictid} = req.body
 
   try {
@@ -242,7 +242,7 @@ router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
-router.post('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
+router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   try {
     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordid, t.word AS translation, l.langname AS langname 
                                             FROM languages l JOIN words w ON l.langid = w.langid LEFT JOIN words t ON t.wordid = w.translationid`);
