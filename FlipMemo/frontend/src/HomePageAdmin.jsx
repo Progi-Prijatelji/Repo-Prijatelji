@@ -480,7 +480,6 @@ function HomePageAdmin() {
 
                     </div>
                 </div>
-
                 {
                     kadmin === "true" &&(
 
@@ -533,6 +532,7 @@ function HomePageAdmin() {
                 </div>
                     )
                 }
+
 
             </div>
         </>
