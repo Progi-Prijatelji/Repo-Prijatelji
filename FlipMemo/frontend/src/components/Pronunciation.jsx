@@ -42,7 +42,7 @@ const Pronunciation = ({ words = [] }) => {
             setRecordedURL(url);
 
             chunks.current = [];
-            clearTimeout(timer);
+            clearInterval(timer);
         }
 
         mediaRecorder.current.start();
@@ -137,7 +137,7 @@ const Pronunciation = ({ words = [] }) => {
                 className="mic-button recording"
                 aria-label="Stop microphone"
                 style={{width: 72, height: 72, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-                onClick={() => {stopRecording}}
+                onClick={stopRecording}
               >
                 <CircleStop />
               </button>
@@ -147,7 +147,7 @@ const Pronunciation = ({ words = [] }) => {
                 className="mic-button"
                 aria-label="Start microphone (disabled)"
                 style={{width: 72, height: 72, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}
-                onClick={() => {startRecording}}
+                onClick={startRecording}
               >
                 <Mic />
               </button>
