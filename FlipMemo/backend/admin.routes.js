@@ -255,6 +255,19 @@ router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
+router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
+   const {wordid, newWord} = req.body;
+
+   try {
+    await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
+
+    res.json({ success: true });
+   } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+   }
+});
+
 router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
    const {wordid} = req.body;
 
