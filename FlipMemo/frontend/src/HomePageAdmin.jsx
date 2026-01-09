@@ -61,7 +61,7 @@ function HomePageAdmin() {
         
         try{
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/showWords", {
-                method: "POST",
+                method: "GET",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
@@ -94,7 +94,7 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno brisanje riječi.");
                 return;
             }
-            showWords(openDictId);
+            await fetchWords();
         }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
