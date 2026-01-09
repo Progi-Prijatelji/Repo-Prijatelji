@@ -67,7 +67,7 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno brisanje riječi.");
                 return;
             }
-            setWordList(prev => prev.filter(w => w.wordid !== wordid));
+            showWords(openDictId);
         }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
