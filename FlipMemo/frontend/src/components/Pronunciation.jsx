@@ -101,6 +101,9 @@ const Pronunciation = ({ words = [] }) => {
     }
     setQuestionWord(next.word);
     setProgress(progress + 1);
+    setRecordedURL('');
+    setSeconds(0);
+    setIsRecording(false);
   };
 
   
