@@ -234,6 +234,18 @@ router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
+router.post('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
+  try {
+    const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordid, t.word AS translation, l.langname AS langname 
+                                            FROM languages l JOIN words w ON l.langid = w.langid LEFT JOIN words t ON t.wordid = w.translationid`);
+
+    res.json({success: true, words: returnWords.rows});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
+
 router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
    const {wordid} = req.body;
 
