@@ -32,6 +32,9 @@ function HomePageAdmin() {
     const [allWordList, setAllWordList] = useState([]);
     const [languageFilter, setLanguageFilter] = useState("");
 
+    const apiLanguageIds = new Map();
+    apiLanguageIds.set('afrikaans', '1'); apiLanguageIds.set('arapski', '2'); apiLanguageIds.set('bengalski', '4'); apiLanguageIds.set('bugarski', '6'); apiLanguageIds.set('katalonski', '7'); apiLanguageIds.set('češki', '8'); apiLanguageIds.set('danski', '9'); apiLanguageIds.set('nizozemski', '11'); apiLanguageIds.set('engleski', '22'); apiLanguageIds.set('filipnski', '23'); apiLanguageIds.set('finski', '25'); apiLanguageIds.set('francuski', '28'); apiLanguageIds.set('njemački', '30'); apiLanguageIds.set('grčki', '32'); apiLanguageIds.set('gudžaratski', '33'); apiLanguageIds.set('hindi', '35'); apiLanguageIds.set('mađarski', '37'); apiLanguageIds.set('islandski', '38'); apiLanguageIds.set('indonezijski', '39'); apiLanguageIds.set('talijanski', '41'); apiLanguageIds.set('kanadski', '43'); apiLanguageIds.set('korejski', '45'); apiLanguageIds.set('latvijski', '47'); apiLanguageIds.set('malajski', '48'); apiLanguageIds.set('malajalam', '50'); apiLanguageIds.set('norveški', '52'); apiLanguageIds.set('poljski', '54'); apiLanguageIds.set('portugalski', '56'); apiLanguageIds.set('pandžapski', '58'); apiLanguageIds.set('rumunjski', '60'); apiLanguageIds.set('ruski', '61'); apiLanguageIds.set('srpski', '63'); apiLanguageIds.set('slovački', '64'); apiLanguageIds.set('španjolski', '65'); apiLanguageIds.set('švedski', '69'); apiLanguageIds.set('tamilski', '71'); apiLanguageIds.set('telugu', '74'); apiLanguageIds.set('tajlandski', '75'); apiLanguageIds.set('turski', '76'); apiLanguageIds.set('ukrajinski', '78'); apiLanguageIds.set('vijetnamski', '80');
+
     const fetchWords = async() => {
         try { 
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/showAllWords", {
@@ -109,12 +112,29 @@ function HomePageAdmin() {
             return;
         }
         try{
+            let audioFile = "";
+            let audioPostId = "";
+            const lang = languages.find(l => l.langid===Number(wordLangID));
+            if (apiLanguageIds.get(lang.langname)) {
+                const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
+                    method: "POST",
+                    headers: { 
+                        'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
+                        'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
+                        'Content-Type': 'application/json'
+                 },
+                    body: JSON.stringify({post_language_id: apiLanguageIds.get(lang.langname),  post_title: word, post_content: word})
+                });
+                const audioData = await audioResults.json();
+                audioFile = audioData.ai_reading;
+                audioPostId = audioData.post_id;
+            }
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWord", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId})
             });
             const data = await results.json();
             if (!data.success) {

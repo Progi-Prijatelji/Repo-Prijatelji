@@ -76,11 +76,9 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
 
 router.post('/updateWord', verifyToken, async (req, res) =>{
   const {email, wordid, correction, method} = req.body;
-  console.log(email, wordid, correction, method);
   try {
     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
     const userid = userResult.rows[0].userid;
-    console.log(userid);
     if(correction){
       await client.query(`UPDATE userword SET lastTimeDate = NOW(), container = (CASE WHEN container = 0 THEN 2 ELSE container + 1 END) WHERE userid = $1 AND wordid = $2 AND method = $3`, [userid, wordid, method]);
     } else{
