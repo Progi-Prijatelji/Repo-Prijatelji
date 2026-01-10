@@ -3,6 +3,8 @@ const router = express.Router();
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
 
+const fetch = require('node-fetch');
+
 const JWT_SECRET = process.env.JWT_SECRET;
 const DATABASE_HOSTNAME = process.env.DATABASE_HOSTNAME;
 const DATABASE_USER = process.env.DATABASE_USER;
@@ -112,7 +114,7 @@ router.post('/checkWrittenWord', verifyToken, async (req, res) =>{
 //----------------------PROXY (MOZDA NECE RADIT VIDIT CEMO) ----------------------
 //-----------------------------------------------------------------------------------
 
-router.get('/proxyAudio', verifyToken, async (req, res) =>{
+router.get('/proxyAudio', async (req, res) =>{
   try{
     const { url } = req.query;
     if(!url) return res.status(400).json({ error: "URL is required" });
@@ -122,7 +124,8 @@ router.get('/proxyAudio', verifyToken, async (req, res) =>{
 
     res.setHeader('Content-Type', 'audio/mp3');
     res.setHeader('Access-Control-Allow-Origin', '*');
-    audioResponse.body.pipeThrough(res);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    audioResponse.body.pipe(res);
   }catch (err){
     console.error(err);
     res.status(500).json({ error: "Proxy error" });
