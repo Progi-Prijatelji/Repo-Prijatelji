@@ -21,9 +21,13 @@ const Writing = ( {words} ) => {
   useEffect(() => {
     if (audioRef.current && wordAudio) {
       console.log('Ovo je URL: ', wordAudio);
-
-
-      audioRef.current.src = wordAudio;
+      //----------------------------PROXY ZA AUDIO------------------------------
+      //------------------------------------------------------------------------
+      const proxiedUrl = `https://fmimage.onrender.com/homeUser/proxyAudio?url=${encodeURIComponent(wordAudio)}`;
+      audioRef.current.src = proxiedUrl;
+      //------------------------------------------------------------------------
+      //--------------------------------------------------------------------------
+      //audioRef.current.src = wordAudio; --- IGNORE ---
       audioRef.current.load();
       setAudioReady(false);
     }
@@ -64,7 +68,10 @@ const Writing = ( {words} ) => {
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try{
+      const isCorrect = inputValue.toLowerCase() === questionWord.toLowerCase();
+
       const response = await fetch("https://fmimage.onrender.com/homeUser/updateWord", {
         method: "POST",
         headers: { 
@@ -74,23 +81,25 @@ const Writing = ( {words} ) => {
         body: JSON.stringify({
             email: localStorage.getItem('email'),
             wordid: dictWords.find(w => w.word === questionWord)?.wordid,
-            correction: inputValue.toLowerCase() === questionWord.toLowerCase(),
+            correction: isCorrect,
             method: "write"
         })
       })
       const data = await response.json();
       if(data.success){
-        e.preventDefault();
-        if (inputValue.toLowerCase() === questionWord.toLowerCase()) {
+        
+        if (isCorrect) {
           setScore(score + 1);
           alert("Točno!");
 
         } else{
           alert("Pogrešno! Točan odgovor: " + questionWord);
         }
-        setProgress(progress + 1);
         setInputValue('');
-        setDictWords(dictWords.filter(w => w.word !== questionWord))
+        setDictWords(dictWords.filter(w => w.word !== questionWord));
+
+
+        setProgress(progress + 1);
       }
 
     }catch(err){
