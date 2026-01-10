@@ -287,6 +287,7 @@ router.post('askForPhrases', verifyToken, verifyAdmin, async (req, res)=>{
                     };
     try {
       const response = await fetch(url, options);
+      console.log(response.json())
       res.json({response: response.json()})
     } catch (error) {
       console.error(error);
