@@ -23,7 +23,7 @@ const Writing = ( {words} ) => {
       console.log('Ovo je URL: ', wordAudio);
       //----------------------------PROXY ZA AUDIO------------------------------
       //------------------------------------------------------------------------
-      const proxiedUrl = `https://fmimage.onrender.com/homeUser/proxyAudio?url=${encodeURIComponent(wordAudio)}`;
+      const proxiedUrl = `https://fmimage.onrender.com/homeUser/proxyAudio?url=${wordAudio}`;
       audioRef.current.src = proxiedUrl;
       //------------------------------------------------------------------------
       //--------------------------------------------------------------------------

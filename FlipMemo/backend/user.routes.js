@@ -114,23 +114,31 @@ router.post('/checkWrittenWord', verifyToken, async (req, res) =>{
 //----------------------PROXY (MOZDA NECE RADIT VIDIT CEMO) ----------------------
 //-----------------------------------------------------------------------------------
 
-router.get('/proxyAudio', async (req, res) =>{
-  try{
+router.get('/proxyAudio', async (req, res) => {
+  try {
     const { url } = req.query;
-    if(!url) return res.status(400).json({ error: "URL is required" });
+    console.log('Proxy URL received:', url); // Log primljeni URL
+    
+    if (!url) return res.status(400).json({ error: "URL is required" });
 
     const audioResponse = await fetch(url);
-    if(!audioResponse.ok) return res.status(400).json({ error: "Audio not found"});
+    console.log('Fetch status:', audioResponse.status); // Log status
+    
+    if (!audioResponse.ok) {
+      console.error('Audio fetch failed:', audioResponse.statusText);
+      return res.status(404).json({ error: "Audio not found" });
+    }
 
-    res.setHeader('Content-Type', 'audio/mp3');
+    res.setHeader('Content-Type', 'audio/mpeg');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 'public, max-age=3600');
+    
     audioResponse.body.pipe(res);
-  }catch (err){
-    console.error(err);
-    res.status(500).json({ error: "Proxy error" });
+    
+  } catch (err) {
+    console.error('Proxy error details:', err.message, err.stack); // Detaljniji error log
+    res.status(500).json({ error: "Proxy error", details: err.message });
   }
-  
 });
 
 //-----------------------------------------------------------------------------------
