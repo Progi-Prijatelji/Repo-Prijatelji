@@ -1,5 +1,5 @@
 import { WORDS } from '../mockData.js';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {Mic} from 'lucide-react'
 
 
@@ -12,6 +12,17 @@ const Writing = ( {words} ) => {
   const [progress, setProgress] = useState(0);
   const [score, setScore] = useState(0);
 
+
+  const audioRef = useRef(null);
+
+
+  useEffect(() => {
+    if (audioRef.current && wordAudio) {
+      audioRef.current.src = wordAudio;
+      audioRef.current.load();
+    }
+  }, [wordAudio]);
+
   useEffect(() => {
     if(words.length > 0){
       const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
@@ -19,7 +30,7 @@ const Writing = ( {words} ) => {
       // Postavi prvu riječ odmah pri učitavanju
       const randWord = normalized[Math.floor(Math.random() * normalized.length)];
       setQuestionWord(randWord.word);
-      setWordAudio(randWord.audioFile);
+      setWordAudio(randWord.audiofile);
     }
   }, [words]);
 
@@ -33,8 +44,14 @@ const Writing = ( {words} ) => {
   }, [progress, dictWords, words.length]);
 
   const handleAudio = () => {
-    {/*play audio for the word*/}
-  }
+    if (!wordAudio || !audioRef.current) return;
+    try {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    } catch (err) {
+      console.error('Audio play failed:', err);
+    }
+  };
 
   const handleSubmit = async (e) => {
     try{
@@ -89,10 +106,18 @@ const Writing = ( {words} ) => {
                     </div>
                     {questionWord}
                     <div className="audio-section">
-                        <button
-                          onClick={() => handleAudio()}>
-                            <Mic className="ikona"/>
-                          </button>
+                        <button onClick={handleAudio} disabled={!wordAudio}>
+                          <Mic className="ikona"/>
+                        </button>
+                        <audio 
+                          ref={audioRef}
+                          src={wordAudio || undefined}
+                          preload="auto"
+                          crossOrigin="anonymous"
+                          style={{ display: 'none' }}
+                          >
+                        </audio>
+
                     </div>
                     
                     <div className="writing-section">

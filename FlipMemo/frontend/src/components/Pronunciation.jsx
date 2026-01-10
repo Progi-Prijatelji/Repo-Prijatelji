@@ -130,7 +130,7 @@ const Pronunciation = ({ words = [] }) => {
 
   const scoring = async () => {
     //TREBA NAPRAVITI UPLOAD AUDIO NA JAVNI URL PRVO
-    //NEKAKO KORISTITI FILE UPLOAD SERVICE ILI SLICNO
+    //BLOB SE NE MOZE POSLATI NA API, TREBA UPLOADATI U SERVER 
     const url = `https://thefluentme.p.rapidapi.com/score/${questionWord.audiopostid}?100`;
     const options = {
       method: 'POST',
