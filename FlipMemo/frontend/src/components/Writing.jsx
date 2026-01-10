@@ -12,6 +12,8 @@ const Writing = ( {words} ) => {
   const [progress, setProgress] = useState(0);
   const [score, setScore] = useState(0);
 
+  const [audioReady, setAudioReady] = useState(false);
+
 
   const audioRef = useRef(null);
 
@@ -20,6 +22,7 @@ const Writing = ( {words} ) => {
     if (audioRef.current && wordAudio) {
       audioRef.current.src = wordAudio;
       audioRef.current.load();
+      setAudioReady(false);
     }
   }, [wordAudio]);
 
@@ -27,7 +30,7 @@ const Writing = ( {words} ) => {
     if(words.length > 0){
       const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
       setDictWords(normalized);
-      // Postavi prvu riječ odmah pri učitavanju
+      
       const randWord = normalized[Math.floor(Math.random() * normalized.length)];
       setQuestionWord(randWord.word);
       setWordAudio(randWord.audiofile);
@@ -44,10 +47,13 @@ const Writing = ( {words} ) => {
   }, [progress, dictWords, words.length]);
 
   const handleAudio = () => {
-    if (!wordAudio || !audioRef.current) return;
+    if (!wordAudio || !audioRef.current) {
+      console.log('Audio nije dostupan:', wordAudio);
+      return;
+    }
     try {
       audioRef.current.currentTime = 0;
-      audioRef.current.play();
+      audioRef.current.play().catch(err => console.error('Play failed:', err));
     } catch (err) {
       console.error('Audio play failed:', err);
     }
@@ -106,17 +112,17 @@ const Writing = ( {words} ) => {
                     </div>
                     {questionWord}
                     <div className="audio-section">
-                        <button onClick={handleAudio} disabled={!wordAudio}>
+                        <button onClick={handleAudio} disabled={!wordAudio || !audioReady}>
                           <Mic className="ikona"/>
                         </button>
                         <audio 
                           ref={audioRef}
-                          src={wordAudio || undefined}
+                          onCanPlay={() => setAudioReady(true)}
+                          onError={(e) => console.error('Audio error:', e)}
                           preload="auto"
                           crossOrigin="anonymous"
                           style={{ display: 'none' }}
-                          >
-                        </audio>
+                          />
 
                     </div>
                     
