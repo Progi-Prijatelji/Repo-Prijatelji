@@ -35,6 +35,38 @@ function HomePageAdmin() {
     const apiLanguageIds = new Map();
     apiLanguageIds.set('afrikaans', '1'); apiLanguageIds.set('arapski', '2'); apiLanguageIds.set('bengalski', '4'); apiLanguageIds.set('bugarski', '6'); apiLanguageIds.set('katalonski', '7'); apiLanguageIds.set('češki', '8'); apiLanguageIds.set('danski', '9'); apiLanguageIds.set('nizozemski', '11'); apiLanguageIds.set('engleski', '22'); apiLanguageIds.set('filipnski', '23'); apiLanguageIds.set('finski', '25'); apiLanguageIds.set('francuski', '28'); apiLanguageIds.set('njemački', '30'); apiLanguageIds.set('grčki', '32'); apiLanguageIds.set('gudžaratski', '33'); apiLanguageIds.set('hindi', '35'); apiLanguageIds.set('mađarski', '37'); apiLanguageIds.set('islandski', '38'); apiLanguageIds.set('indonezijski', '39'); apiLanguageIds.set('talijanski', '41'); apiLanguageIds.set('kanadski', '43'); apiLanguageIds.set('korejski', '45'); apiLanguageIds.set('latvijski', '47'); apiLanguageIds.set('malajski', '48'); apiLanguageIds.set('malajalam', '50'); apiLanguageIds.set('norveški', '52'); apiLanguageIds.set('poljski', '54'); apiLanguageIds.set('portugalski', '56'); apiLanguageIds.set('pandžapski', '58'); apiLanguageIds.set('rumunjski', '60'); apiLanguageIds.set('ruski', '61'); apiLanguageIds.set('srpski', '63'); apiLanguageIds.set('slovački', '64'); apiLanguageIds.set('španjolski', '65'); apiLanguageIds.set('švedski', '69'); apiLanguageIds.set('tamilski', '71'); apiLanguageIds.set('telugu', '74'); apiLanguageIds.set('tajlandski', '75'); apiLanguageIds.set('turski', '76'); apiLanguageIds.set('ukrajinski', '78'); apiLanguageIds.set('vijetnamski', '80');
 
+    const [wordToEdit, setWordToEdit] = useState(null);
+    const [changedWord, setChangedWord] = useState("");
+    const changeWord = async(originalWord, newWord) => {
+        if (!newWord || newWord===originalWord.word) {
+            alert("Unesite novu riječ.");
+            return;
+        }
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/changeWord", {
+                method: "POST", 
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                },
+                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno mijenjanje riječi.");
+                return;
+            }
+            setWordToEdit(null);
+            setChangedWord("");
+            await fetchWords();
+        }catch(error){
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+    const editWord = async(wordid) => {
+        setWordToEdit(wordid);
+        setChangedWord("");
+    }
     const fetchWords = async() => {
         try { 
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/showAllWords", {
@@ -479,7 +511,7 @@ function HomePageAdmin() {
                         </div>
                     </div>
                     <div className='remove-words adding-part'>
-                        <h3>Brisanje riječi</h3>
+                        <h3>Uređivanje riječi</h3>
                         <div className='adding-section'>
                             <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
                                 <option value="">Jezik</option>
@@ -492,6 +524,14 @@ function HomePageAdmin() {
                                     <li key={wordItem.wordid}>
                                         <p>{wordItem.word} - {wordItem.translation}</p>
                                         <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                        <button onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
+                                        { wordToEdit === wordItem.wordid &&(
+                                            <form onSubmit={(e)=>{e.preventDefault();
+                                            changeWord(wordItem, changedWord)}}>
+                                                <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                <button type="submit">Spremi</button>
+                                            </form>
+                                        ) }
                                     </li>
                                 ))}
                             </ul>
