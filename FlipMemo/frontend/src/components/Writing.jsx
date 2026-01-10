@@ -27,7 +27,7 @@ const Writing = ( {words} ) => {
     if (progress > 0 && progress < words.length && dictWords.length > 0) {
       const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
       setQuestionWord(randWord.word);
-      setWordAudio(randWord.audioFile);
+      setWordAudio(randWord.audiofile);
       setInputValue('');
     }
   }, [progress, dictWords, words.length]);

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function Signup() {
   const [email, setEmail] = useState('')
@@ -27,6 +27,30 @@ function Signup() {
       alert("Greška u povezivanju s poslužiteljem.");
     }
 
+  }
+
+  useEffect(() => { 
+    fetchLanguages();
+  }, []);
+
+  const fetchLanguages = async () => {
+    const url = 'https://thefluentme.p.rapidapi.com/language';
+    const options = {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
+        'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
+        'Content-Type': 'application/json'
+      }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
   }
 
   return (
