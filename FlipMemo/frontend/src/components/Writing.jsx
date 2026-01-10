@@ -20,6 +20,9 @@ const Writing = ( {words} ) => {
 
   useEffect(() => {
     if (audioRef.current && wordAudio) {
+      console.log('Ovo je URL: ', wordAudio);
+
+
       audioRef.current.src = wordAudio;
       audioRef.current.load();
       setAudioReady(false);
@@ -33,6 +36,7 @@ const Writing = ( {words} ) => {
       
       const randWord = normalized[Math.floor(Math.random() * normalized.length)];
       setQuestionWord(randWord.word);
+      
       setWordAudio(randWord.audiofile);
     }
   }, [words]);
