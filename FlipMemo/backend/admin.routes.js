@@ -268,6 +268,31 @@ router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
+router.post('askForPhrases', verifyToken, verifyAdmin, async (req, res)=>{
+  const {word, wordTrans} = req.body;
+  
+  const url = `https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?to=${lang}&from=hr&api-version=3.0`;
+    const options = {method: 'POST',
+                      headers: {
+                        'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
+                        'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
+                        'Content-Type': 'application/json'
+                      },
+                      body: [
+                        {
+                        Text: word,
+                        Translation: wordTrans 
+                        }
+                      ]
+                    };
+    try {
+      const response = await fetch(url, options);
+      res.json({response: response.json()})
+    } catch (error) {
+      console.error(error);
+    }
+});
+
 router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
    const {wordid, newWord} = req.body;
 
