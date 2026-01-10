@@ -192,7 +192,8 @@ function HomePageAdmin() {
         }
         
     }
-    const fetchExamples = async () => {
+   /* ovo bi trebala copypastat u admin routes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+   const fetchExamples = async () => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
         if (apiLanguageAcros.get(lang.langname)) {
             const url = 'https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?api-version=3.0';
@@ -205,19 +206,19 @@ function HomePageAdmin() {
                 },
                 body: [
                     {
-                    Text: word,
-                    Translation: wordTrans
+                    Text: word, ¸¸¸¸¸¸ovo dvoje cu ti posalt ko argumente!!!!!!!!!!!!!!!!!!!!!!!!!
+                    Translation: wordTrans 
                     }
                 ]
             };
             try {
                 const response = await fetch(url, options);
-                setPhraseToAdd(response.examples || []);
+                 a ti meni vrati ovo  response kao json samo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             } catch (error) {
                 console.error(error);
             }
         }
-    };
+    };*/
     const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
         setPhrasesForeign(prev => {
             if (prev.includes(sourceSentence)) {
