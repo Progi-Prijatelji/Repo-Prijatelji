@@ -3,7 +3,7 @@ const router = express.Router();
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
 
-const fetch = require('node-fetch');
+
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const DATABASE_HOSTNAME = process.env.DATABASE_HOSTNAME;
