@@ -221,14 +221,14 @@ function HomePageAdmin() {
 
     const askForPhrases = async () => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
-        const acro = apiLanguageAcros.get(lang.langname);
+        let acro = apiLanguageAcros.get(lang.langname);
         try{
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/fetchExamples", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",  
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word, translation: wordTrans, lang: acro})      
+                body: JSON.stringify({word: word, translation: wordTrans, lang: apiLanguageAcros.get(lang.langname)})      
             });
             const data = await results.json();
             if (!data.success) {

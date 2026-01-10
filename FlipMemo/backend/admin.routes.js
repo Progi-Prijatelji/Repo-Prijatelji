@@ -268,8 +268,8 @@ router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
-router.post('askForPhrases', verifyToken, verifyAdmin, async (req, res)=>{
-  const {word, wordTrans} = req.body;
+router.post('/fetchExamples', verifyToken, verifyAdmin, async (req, res)=>{
+  const {word, wordTrans, lang} = req.body;
   
   const url = `https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?to=${lang}&from=hr&api-version=3.0`;
     const options = {method: 'POST',
@@ -280,8 +280,8 @@ router.post('askForPhrases', verifyToken, verifyAdmin, async (req, res)=>{
                       },
                       body: [
                         {
-                        Text: word,
-                        Translation: wordTrans 
+                        Text: wordTrans,
+                        Translation: word 
                         }
                       ]
                     };

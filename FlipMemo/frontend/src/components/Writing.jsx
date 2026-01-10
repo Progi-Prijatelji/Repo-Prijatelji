@@ -14,24 +14,7 @@ const Writing = ( {words} ) => {
 
   const [audioReady, setAudioReady] = useState(false);
 
-
   const audioRef = useRef(null);
-
-
-  useEffect(() => {
-    if (audioRef.current && wordAudio) {
-      console.log('Ovo je URL: ', wordAudio);
-      //----------------------------PROXY ZA AUDIO------------------------------
-      //------------------------------------------------------------------------
-      const proxiedUrl = `https://fmimage.onrender.com/homeUser/proxyAudio?url=${wordAudio}`;
-      audioRef.current.src = proxiedUrl;
-      //------------------------------------------------------------------------
-      //--------------------------------------------------------------------------
-      //audioRef.current.src = wordAudio; --- IGNORE ---
-      audioRef.current.load();
-      setAudioReady(false);
-    }
-  }, [wordAudio]);
 
   useEffect(() => {
     if(words.length > 0){
@@ -54,6 +37,14 @@ const Writing = ( {words} ) => {
     }
   }, [progress, dictWords, words.length]);
 
+  useEffect(() => {
+    if (audioRef.current && wordAudio) {
+      audioRef.current.src = wordAudio;
+      audioRef.current.load();
+      setAudioReady(false);
+    }
+  }, [wordAudio]);
+
   const handleAudio = () => {
     if (!wordAudio || !audioRef.current) {
       console.log('Audio nije dostupan:', wordAudio);
@@ -61,7 +52,7 @@ const Writing = ( {words} ) => {
     }
     try {
       audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(err => console.error('Play failed:', err));
+      audioRef.current.play();
     } catch (err) {
       console.error('Audio play failed:', err);
     }
@@ -129,7 +120,7 @@ const Writing = ( {words} ) => {
                     </div>
                     {questionWord}
                     <div className="audio-section">
-                        <button onClick={handleAudio} disabled={!wordAudio || !audioReady}>
+                        <button onClick={handleAudio} disabled={!audioReady}>
                           <Mic className="ikona"/>
                         </button>
                         <audio 
@@ -137,7 +128,7 @@ const Writing = ( {words} ) => {
                           onCanPlay={() => setAudioReady(true)}
                           onError={(e) => console.error('Audio error:', e)}
                           preload="auto"
-                          crossOrigin="anonymous"
+                          playsInline
                           style={{ display: 'none' }}
                           />
 
