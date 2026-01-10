@@ -117,12 +117,12 @@ router.post('/checkWrittenWord', verifyToken, async (req, res) =>{
 router.get('/proxyAudio', async (req, res) => {
   try {
     const { url } = req.query;
-    console.log('Proxy URL received:', url); // Log primljeni URL
+    console.log('Proxy URL received:', url);
     
     if (!url) return res.status(400).json({ error: "URL is required" });
 
     const audioResponse = await fetch(url);
-    console.log('Fetch status:', audioResponse.status); // Log status
+    console.log('Fetch status:', audioResponse.status);
     
     if (!audioResponse.ok) {
       console.error('Audio fetch failed:', audioResponse.statusText);
@@ -133,10 +133,12 @@ router.get('/proxyAudio', async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Cache-Control', 'public, max-age=3600');
     
-    audioResponse.body.pipe(res);
+    
+    const buffer = await audioResponse.arrayBuffer();
+    res.send(buffer);
     
   } catch (err) {
-    console.error('Proxy error details:', err.message, err.stack); // Detaljniji error log
+    console.error('Proxy error details:', err.message, err.stack);
     res.status(500).json({ error: "Proxy error", details: err.message });
   }
 });

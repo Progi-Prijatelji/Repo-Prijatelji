@@ -69,6 +69,12 @@ const Writing = ( {words} ) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!inputValue.trim()) {
+      alert("Unesite riječ!");
+      return;
+    }
+
     try{
       const isCorrect = inputValue.toLowerCase() === questionWord.toLowerCase();
 
@@ -87,25 +93,23 @@ const Writing = ( {words} ) => {
       })
       const data = await response.json();
       if(data.success){
-        
         if (isCorrect) {
           setScore(score + 1);
           alert("Točno!");
-
         } else{
           alert("Pogrešno! Točan odgovor: " + questionWord);
         }
+        
+        const remainingWords = dictWords.filter(w => w.word !== questionWord);
+        setDictWords(remainingWords);
         setInputValue('');
-        setDictWords(dictWords.filter(w => w.word !== questionWord));
-
-
         setProgress(progress + 1);
       }
 
     }catch(err){
       console.error("Error checking written word:", err);
+      alert("Greška pri provjeri odgovora");
     }
-    
   };
 
 
