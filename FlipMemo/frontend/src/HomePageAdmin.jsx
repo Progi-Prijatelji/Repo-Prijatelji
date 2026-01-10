@@ -192,11 +192,10 @@ function HomePageAdmin() {
         }
         
     }
-   /* ovo bi trebala copypastat u admin routes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1*/
-   const fetchExamples = async () => {
-        const lang = languages.find(l => l.langid===Number(wordLangID));
-        if (apiLanguageAcros.get(lang.langname)) {
-            const url = `https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?to=${apiLanguageAcros.get(lang.langname)}&from=hr&api-version=3.0`;
+   /* ovo bi trebala copypastat u admin routes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+   u askForPhrases ti to saljem pa si pogledaj ak trebas jos nesto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    {poslat cu ti i jezik za ovo lang u linku!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            const url = `https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?to=${lang}&from=hr&api-version=3.0`;
             const options = {
                 method: 'POST',
                 headers: {
@@ -206,29 +205,30 @@ function HomePageAdmin() {
                 },
                 body: [
                     {
-                    Text: word, /*¸¸¸¸¸¸ovo dvoje cu ti posalt ko argumente!!!!!!!!!!!!!!!!!!!!!!!!!*/
+                    Text: word, ¸¸¸¸¸¸ovo dvoje cu ti posalt ko argumente!!!!!!!!!!!!!!!!!!!!!!!!!
                     Translation: wordTrans 
                     }
                 ]
             };
             try {
                 const response = await fetch(url, options);
-                /* a ti meni vrati ovo  response kao json samo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+                 a ti meni vrati ovo  response kao json samo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             } catch (error) {
                 console.error(error);
             }
         }
-    };
+    };*/
 
-    /*const askForPhrases = async () => {
+    const askForPhrases = async () => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
+        const acro = apiLanguageAcros.get(lang.langname);
         try{
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/fetchExamples", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",  
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({word: word, translation: wordTrans, langid: wordLangID})      
+                body: JSON.stringify({word: word, translation: wordTrans, lang: acro})      
             });
             const data = await results.json();
             if (!data.success) {
@@ -240,7 +240,7 @@ function HomePageAdmin() {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
-    }*/
+    }
     const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
         setPhrasesForeign(prev => {
             if (prev.includes(sourceSentence)) {
@@ -563,7 +563,7 @@ function HomePageAdmin() {
                                     ))}
                                 </select>
                                 <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
-                                <button type="button" onClick={fetchExamples}>Dohvati primjere rečenica</button>
+                                <button type="button" onClick={askForPhrases}>Dohvati primjere rečenica</button>
 
                                 {phraseToAdd.map((phrase, index) => {
                                     const sourceSentence =
