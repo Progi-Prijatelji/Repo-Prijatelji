@@ -192,11 +192,11 @@ function HomePageAdmin() {
         }
         
     }
-   /* ovo bi trebala copypastat u admin routes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+   /* ovo bi trebala copypastat u admin routes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1*/
    const fetchExamples = async () => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
         if (apiLanguageAcros.get(lang.langname)) {
-            const url = 'https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?api-version=3.0';
+            const url = `https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?to=${apiLanguageAcros.get(lang.langname)}&from=hr&api-version=3.0`;
             const options = {
                 method: 'POST',
                 headers: {
@@ -206,19 +206,41 @@ function HomePageAdmin() {
                 },
                 body: [
                     {
-                    Text: word, ¸¸¸¸¸¸ovo dvoje cu ti posalt ko argumente!!!!!!!!!!!!!!!!!!!!!!!!!
+                    Text: word, /*¸¸¸¸¸¸ovo dvoje cu ti posalt ko argumente!!!!!!!!!!!!!!!!!!!!!!!!!*/
                     Translation: wordTrans 
                     }
                 ]
             };
             try {
                 const response = await fetch(url, options);
-                 a ti meni vrati ovo  response kao json samo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                /* a ti meni vrati ovo  response kao json samo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
             } catch (error) {
                 console.error(error);
             }
         }
-    };*/
+    };
+
+    /*const askForPhrases = async () => {
+        const lang = languages.find(l => l.langid===Number(wordLangID));
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/fetchExamples", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",  
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+             },
+                body: JSON.stringify({word: word, translation: wordTrans, langid: wordLangID})      
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno dohvaćanje primjera rečenica.");
+                return;
+            }
+
+        }catch(error){
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }*/
     const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
         setPhrasesForeign(prev => {
             if (prev.includes(sourceSentence)) {
