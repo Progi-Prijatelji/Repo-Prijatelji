@@ -34,9 +34,20 @@ function HomePageAdmin() {
 
     const apiLanguageIds = new Map();
     apiLanguageIds.set('afrikaans', '1'); apiLanguageIds.set('arapski', '2'); apiLanguageIds.set('bengalski', '4'); apiLanguageIds.set('bugarski', '6'); apiLanguageIds.set('katalonski', '7'); apiLanguageIds.set('češki', '8'); apiLanguageIds.set('danski', '9'); apiLanguageIds.set('nizozemski', '11'); apiLanguageIds.set('engleski', '22'); apiLanguageIds.set('filipnski', '23'); apiLanguageIds.set('finski', '25'); apiLanguageIds.set('francuski', '28'); apiLanguageIds.set('njemački', '30'); apiLanguageIds.set('grčki', '32'); apiLanguageIds.set('gudžaratski', '33'); apiLanguageIds.set('hindi', '35'); apiLanguageIds.set('mađarski', '37'); apiLanguageIds.set('islandski', '38'); apiLanguageIds.set('indonezijski', '39'); apiLanguageIds.set('talijanski', '41'); apiLanguageIds.set('kanadski', '43'); apiLanguageIds.set('korejski', '45'); apiLanguageIds.set('latvijski', '47'); apiLanguageIds.set('malajski', '48'); apiLanguageIds.set('malajalam', '50'); apiLanguageIds.set('norveški', '52'); apiLanguageIds.set('poljski', '54'); apiLanguageIds.set('portugalski', '56'); apiLanguageIds.set('pandžapski', '58'); apiLanguageIds.set('rumunjski', '60'); apiLanguageIds.set('ruski', '61'); apiLanguageIds.set('srpski', '63'); apiLanguageIds.set('slovački', '64'); apiLanguageIds.set('španjolski', '65'); apiLanguageIds.set('švedski', '69'); apiLanguageIds.set('tamilski', '71'); apiLanguageIds.set('telugu', '74'); apiLanguageIds.set('tajlandski', '75'); apiLanguageIds.set('turski', '76'); apiLanguageIds.set('ukrajinski', '78'); apiLanguageIds.set('vijetnamski', '80');
+    
+    const apiLanguageAcros = new Map();
+    apiLanguageAcros.set('afrikaans', 'af'); apiLanguageAcros.set('arapski', 'ar'); apiLanguageAcros.set('bugarski', 'bn'); apiLanguageAcros.set('bangla', 'bn'); apiLanguageAcros.set('bosanski', 'bs'); apiLanguageAcros.set('katalonski', 'ca'); apiLanguageAcros.set('češki', 'cs'); apiLanguageAcros.set('velški', 'cy'); apiLanguageAcros.set('danski', 'da'); apiLanguageAcros.set('njemački', 'de'); apiLanguageAcros.set('grčki', 'el'); apiLanguageAcros.set('engleski', 'en'); apiLanguageAcros.set('španjolski', 'es'); apiLanguageAcros.set('estonski', 'et'); apiLanguageAcros.set('perzijski', 'fa'); apiLanguageAcros.set('finski', 'fi'); apiLanguageAcros.set('francuski', 'fr'); apiLanguageAcros.set('hebrejski', 'he'); apiLanguageAcros.set('hindski', 'hi'); apiLanguageAcros.set('hrvatski', 'hr'); apiLanguageAcros.set('mađarski', 'hu'); apiLanguageAcros.set('indonezijski', 'id'); apiLanguageAcros.set('islandski', 'is'); apiLanguageAcros.set('talijanski', 'it'); apiLanguageAcros.set('japanski', 'ja'); apiLanguageAcros.set('korejski', 'ko'); apiLanguageAcros.set('litavski', 'lt'); apiLanguageAcros.set('latvijski', 'lv'); apiLanguageAcros.set('malajski', 'ms'); apiLanguageAcros.set('malteški', 'mt'); apiLanguageAcros.set('hmong', 'mww'); apiLanguageAcros.set('norveški', 'nb'); apiLanguageAcros.set('nizozemski', 'nl'); apiLanguageAcros.set('poljski', 'pl'); apiLanguageAcros.set('portugalski', 'pt'); apiLanguageAcros.set('rumunjski', 'ro'); apiLanguageAcros.set('ruski', 'ru'); apiLanguageAcros.set('slovački', 'sk'); apiLanguageAcros.set('slovenski', 'sl'); apiLanguageAcros.set('srpski', 'sr-Latn'); apiLanguageAcros.set('švedski', 'sv'); apiLanguageAcros.set('svahili', 'sw'); apiLanguageAcros.set('tamilski', 'ta'); apiLanguageAcros.set('tajlandski', 'th'); apiLanguageAcros.set('klinkonski', 'tlh-Latn'); apiLanguageAcros.set('turski', 'tr'); apiLanguageAcros.set('ukrajinski', 'uk'); apiLanguageAcros.set('urdski', 'ur'); apiLanguageAcros.set('vijetnamski', 'vi'); apiLanguageAcros.set('kineski', 'zh-Hans');
+   
+    const [phraseToAdd, setPhraseToAdd] = useState([]);
+    const [phrasesForeign, setPhrasesForeign] = useState([]);
+    const [phrasesNative, setPhrasesNative] = useState([]);
+
+
 
     const [wordToEdit, setWordToEdit] = useState(null);
     const [changedWord, setChangedWord] = useState("");
+
+
     const changeWord = async(originalWord, newWord) => {
         if (!newWord || newWord===originalWord.word) {
             alert("Unesite novu riječ.");
@@ -164,9 +175,9 @@ function HomePageAdmin() {
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWord", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
-             },
-                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId})
+                    "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                },
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: phrasesForeign, phrasesNative: phrasesNative})
             });
             const data = await results.json();
             if (!data.success) {
@@ -179,8 +190,52 @@ function HomePageAdmin() {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
-
+        
     }
+    const fetchExamples = async () => {
+        const lang = languages.find(l => l.langid===Number(wordLangID));
+        if (apiLanguageAcros.get(lang.langname)) {
+            const url = 'https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?api-version=3.0';
+            const options = {
+                method: 'POST',
+                headers: {
+                    'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
+                    'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
+                    'Content-Type': 'application/json'
+                },
+                body: [
+                    {
+                    Text: word,
+                    Translation: wordTrans
+                    }
+                ]
+            };
+            try {
+                const response = await fetch(url, options);
+                setPhraseToAdd(response.examples || []);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+    const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
+        setPhrasesForeign(prev => {
+            if (prev.includes(sourceSentence)) {
+                return prev.filter(s => s !== sourceSentence);
+            } else {
+                return [...prev, sourceSentence];
+            }
+        });
+
+        setPhrasesNative(prev => {
+            if (prev.includes(targetSentence)) {
+                return prev.filter(t => t !== targetSentence);
+            } else {
+                return [...prev, targetSentence];
+            }
+        });
+    };
+
 
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
@@ -485,6 +540,32 @@ function HomePageAdmin() {
                                     ))}
                                 </select>
                                 <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
+                                <button type="button" onClick={fetchExamples}>Dohvati primjere rečenica</button>
+
+                                {phraseToAdd.map((phrase, index) => {
+                                    const sourceSentence =
+                                        phrase.sourcePrefix +
+                                        phrase.sourceTerm +
+                                        phrase.sourceSuffix;
+
+                                    const targetSentence =
+                                        phrase.targetPrefix +
+                                        phrase.targetTerm +
+                                        phrase.targetSuffix;
+
+                                    return (
+                                        <div key={index}>
+                                            <input
+                                                type="checkbox"
+                                                checked={phrasesForeign.includes(sourceSentence)}
+                                                onChange={() => handleDictCheckboxChangePhrase(sourceSentence, targetSentence)}
+                                            />
+                                            <label>
+                                                {sourceSentence} — {targetSentence}
+                                            </label>
+                                        </div>
+                                    );
+                                })}
                                 <button type="submit">Dodaj riječ</button>
                             </form>
                             <form onSubmit={handleAddWordToDictionary}>
