@@ -161,7 +161,7 @@ router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
 });
 
 router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
-  const { word, langid, translation, audioFile, postId } = req.body;
+  const { word, langid, translation, audioFile, postId, phrasesForeign, phrasesNative } = req.body;
 
   try {
     const usedWords = await client.query(`select word from words where langid = $1`,[langid])
@@ -187,10 +187,20 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       }
 
       await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, NULL, NULL, $3, NULL)`,[i, translation, 1]);
+      for (phrase in phrasesNative) {
+        await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, i]);
+      }
 
       translationId = i;
     } else {
       translationId = existingTranslation.wordid;
+      const phrases = await client.query(`select phrase from phrases where wordid = $1`, [translationId]);
+      const existingPhrases = phrases.rows.map(r => r.phrase);
+      for (phrase in phrases) {
+        if (!existingPhrases.includes(phrase)) {
+          await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, i]);
+        }
+      }
     }
 
     const usedWordIDs = await client.query(`select wordId from words`);
@@ -202,6 +212,9 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
     }
 
     await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, $3, $4, $5, $6)`, [j, word, audioFile, postId, langid, translationId]); 
+    for (phrase in phrasesForeign) {
+      await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, j]);
+    }
 
     res.json({ success: true, wordid: j});
 
