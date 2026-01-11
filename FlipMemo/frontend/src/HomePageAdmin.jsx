@@ -160,11 +160,12 @@ function HomePageAdmin() {
             let audioFile = "";
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
+            console.log(apiLanguageIds.get(lang.langname))
             if (apiLanguageIds.get(lang.langname)) {
                 const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
                     method: "POST",
                     headers: { 
-                        'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
+                        'x-rapidapi-key': process.env.API1_KEY,
                         'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
                         'Content-Type': 'application/json'
                  },
