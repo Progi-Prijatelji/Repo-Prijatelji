@@ -261,6 +261,7 @@ function HomePageAdmin() {
 
     const translateWord = async() => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
+        console.log("Translating word:", wordTrans, "from hr to", apiLanguageAcros.get(lang.langname));
         const url = 'https://google-translate113.p.rapidapi.com/api/v1/translator/text';
         const options = {
         method: 'POST',
@@ -278,8 +279,9 @@ function HomePageAdmin() {
 
         try {
             const response = await fetch(url, options);
-            const result = await response.text();
+            const result = await response.json();
             console.log(result.trans);
+            setWord(result.trans || "");
         } catch (error) {
             console.error(error);
         }
