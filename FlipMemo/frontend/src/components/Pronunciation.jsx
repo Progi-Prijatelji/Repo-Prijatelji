@@ -13,7 +13,7 @@ const Pronunciation = ({ words = [] }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [recordedURL, setRecordedURL] = useState('');
-  const [recordingScore, setRecordingScore] = useState(0);
+  const [recordingScore, setRecordingScore] = useState(-1);
   const [isScoring, setIsScoring] = useState(false);
 
   const mediaRecorder = useRef(null);
@@ -21,11 +21,79 @@ const Pronunciation = ({ words = [] }) => {
   const chunks = useRef([]);
   const timerRef = useRef(null);
 
+  useEffect(() => {
+    if (words.length > 0) {
+      setDictWords(words);
+      generateWord();
+    }
+  }, [words]);
+
+
+  useEffect(() => {
+    if(recordingScore > 0){
+      if(recordingScore >= 50){
+        alert(`Dobar izgovor! Osvojili ste ${recordingScore} bodova.`);
+        setScore(score => score + 1);
+
+      (async () => {
+        try{
+          const response = await fetch("https://fmimage.onrender.com/homeUser/updateWord", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify({
+              email: localStorage.getItem("email"),
+              wordid: Number(questionWord.wordid ?? questionWord.wordID),
+              correction: true,
+              method: 'speak'
+            })
+          });
+          const data = await response.json();
+          if(!data.success){
+            console.error("Failed to update word progress:", data.message);
+          }
+
+
+        }catch(err){
+          console.error("Error updating word progress:", err);
+        }
+      })
+
+
+      }else {
+        alert(`Izgovor nije zadovoljavajući. Osvojili ste ${recordingScore} bodova. Pokušajte ponovno.`);
+
+      }
+      setRecordingScore(-1);
+      setRecordedURL('');
+      setSeconds(0);
+      setIsRecording(false);
+      setProgress(progress => progress + 1);
+    }
+  }, [recordingScore]);
+
+  useEffect(() => {
+    if (progress > 0 && progress < words.length) {
+      generateWord();
+    }
+  }, [progress]);
+
+
+  
+
+  const generateWord = () => {
+    if (dictWords.length === 0) return;
+    const rand = dictWords[Math.floor(Math.random() * dictWords.length)];
+    setQuestionWord(rand);
+  }
+
 
   const startRecording = async () => {
     setIsRecording(true);
     setRecordedURL('');
-    setRecordingScore(0);
+    setRecordingScore(-1);
 
     try{
         setSeconds(0);
@@ -42,7 +110,7 @@ const Pronunciation = ({ words = [] }) => {
         }, 1000);
 
         mediaRecorder.current.onstop = () => {
-            const recordedBlob = new Blob(chunks.current,{type: 'audio/mp3'});
+            const recordedBlob = new Blob(chunks.current,{type: 'audio/webm'});
             const url = URL.createObjectURL(recordedBlob);
             setRecordedURL(url);
 
@@ -68,21 +136,22 @@ const Pronunciation = ({ words = [] }) => {
     setIsScoring(true);
     
     try{
-      const url = `https://thefluentme.p.rapidapi.com/score/${questionWord.audiopostid}?100`;
-      const options = {
-        method: 'POST',
-        headers: {
-          'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
-          'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ audio_provided: recordedURL})
-      };
+      // const url = `https://thefluentme.p.rapidapi.com/score/${questionWord.audiopostid}?100`;
+      // const options = {
+      //   method: 'POST',
+      //   headers: {
+      //     'x-rapidapi-key': process.env.API1_KEY,
+      //     'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({ audio_provided: recordedURL})
+      // };
 
-      const response = await fetch(url, options);
-      const result = await response.json();
-      const score = result[1].overall_result_data[0].overall_points;
-      setRecordingScore(score);
+      // const response = await fetch(url, options);
+      // const result = await response.json();
+      // const score = result[1].overall_result_data[0].overall_points;
+      // setRecordingScore(score);
+      setRecordingScore(75); //ZA TESTIRANJE
 
     }catch(err){
         console.error("Error scoring pronunciation:", err);
@@ -116,79 +185,6 @@ const Pronunciation = ({ words = [] }) => {
       return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
   }
 
-
-
-
-  useEffect(() => {
-    if (words.length > 0) {
-      setDictWords(words);
-      const rand = words[Math.floor(Math.random() * words.length)];
-      setQuestionWord(rand);
-    }
-  }, [words]);
-
-
-  const scoring = async () => {
-    //TREBA NAPRAVITI UPLOAD AUDIO NA JAVNI URL PRVO
-    //BLOB SE NE MOZE POSLATI NA API, TREBA UPLOADATI U SERVER 
-    const url = `https://thefluentme.p.rapidapi.com/score/${questionWord.audiopostid}?100`;
-    const options = {
-      method: 'POST',
-      headers: {
-        'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
-        'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ audio_provided: recordedURL }) // Treba biti javni URL! OVO SE NE MOŽE SLATI KAO BLOB
-    };
-
-    try {
-      const response = await fetch(url, options);
-      const result = await response.json();
-      setRecordingScore(result[1].overall_result_data[0].overall_points);
-            
-    } catch (error) {
-      console.error(error);
-      alert('Greška pri bodovanju');
-      setIsScoring(false);
-    }
-  }
-
-  useEffect(() => {
-    if(recordingScore != null){
-      if(recordingScore >= 50){
-        setScore(score + 1);
-        alert(`Točno! Ocjena izgovora: ${recordingScore.toFixed(2)}`);
-        setTimeout(() => {
-          nextWord();
-        }, 1500);
-
-      }else{
-        alert(`Pogrešno! Ocjena izgovora: ${recordingScore.toFixed(2)}. Pokušajte ponovno.`);
-        setIsScoring(false);
-      }
-    }
-  }, [recordingScore]);
-
-  const nextWord = () => {
-    if (dictWords.length === 0) return;
-    setProgress(progress + 1);
-    const remainingWords = dictWords.filter(w => w.word !== questionWord.word);
-    setDictWords(remainingWords);
-    if (remainingWords.length > 0) {
-      const rand = remainingWords[Math.floor(Math.random() * remainingWords.length)];
-      setQuestionWord(rand);
-    }
-    setRecordedURL('');
-    setRecordingScore(null);
-    setIsScoring(false);
-    setSeconds(0);
-  };
-
-
-  
-
-  
 
 
   if (words.length === 0) {
