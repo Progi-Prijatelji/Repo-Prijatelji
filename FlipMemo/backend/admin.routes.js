@@ -196,9 +196,9 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       translationId = existingTranslation.wordid;
       const phrases = await client.query(`select phrase from phrases where wordid = $1`, [translationId]);
       const existingPhrases = phrases.rows.map(r => r.phrase);
-      for (phrase in phrases) {
+      for (phrase in phrasesNative) {
         if (!existingPhrases.includes(phrase)) {
-          await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, i]);
+          await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, translationId]);
         }
       }
     }
