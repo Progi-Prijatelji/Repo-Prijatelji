@@ -231,10 +231,10 @@ function HomePageAdmin() {
                 body: JSON.stringify({word: word, translation: wordTrans, lang: apiLanguageAcros.get(lang.langname)})      
             });
             const data = await results.json();
-            if (!data.success) {
-                alert(data.message || "Neuspješno dohvaćanje primjera rečenica.");
-                return;
-            }
+            console.log("Primljeni podaci:", data);
+            setPhraseToAdd(data.response.examples);
+            console.log(data.response.examples);
+
 
         }catch(error){
             console.error("Greška:", error);
@@ -354,7 +354,6 @@ function HomePageAdmin() {
                 alert(data.message || "Nemate pravo pristupa.");
                 return;
             }
-            console.log(data.langs);
             setLanguages(data.langs || []);
         } catch (error) {
             console.error("Greška:", error);
