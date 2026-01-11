@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, json } from 'react-router-dom';
 import logo from './assets/FlipMemo__Logo.png'
 import HeaderAdmin from './components/HeaderAdmin.jsx';
 import './css/homeAdmin.css'
@@ -232,7 +232,6 @@ function HomePageAdmin() {
             });
             const data = await results.json();
             console.log("Primljeni podaci:", data);
-            setPhraseToAdd(data.response.examples);
             console.log(data.response.examples);
 
 
@@ -241,6 +240,7 @@ function HomePageAdmin() {
             alert("Greška u povezivanju s poslužiteljem.");
         }
     }
+
     const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
         setPhrasesForeign(prev => {
             if (prev.includes(sourceSentence)) {
@@ -259,6 +259,32 @@ function HomePageAdmin() {
         });
     };
 
+    const translateWord = async() => {
+        const lang = languages.find(l => l.langid===Number(wordLangID));
+        const url = 'https://google-translate113.p.rapidapi.com/api/v1/translator/text';
+        const options = {
+        method: 'POST',
+        headers: {
+            'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
+            'x-rapidapi-host': 'google-translate113.p.rapidapi.com',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: 'hr',
+            to: apiLanguageAcros.get(lang.langname),
+            text: wordTrans
+        })
+        };
+
+        try {
+            const response = await fetch(url, options);
+            const result = await response.text();
+            console.log(result.trans);
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
 
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
@@ -562,7 +588,7 @@ function HomePageAdmin() {
                                     ))}
                                 </select>
                                 <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
-                                <button type="button" onClick={askForPhrases}>Dohvati primjere rečenica</button>
+                                <button type="button" onClick={translateWord}>Dohvati primjere rečenica</button>
 
                                 {phraseToAdd.map((phrase, index) => {
                                     const sourceSentence =
