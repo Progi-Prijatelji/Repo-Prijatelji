@@ -629,7 +629,7 @@ function HomePageAdmin() {
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                     
-                                    {allWordList.filter(w => w.word === typedWord).map((w) => (
+                                    {allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
                                         <div key={w.wordid}>
                                             <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
                                             <label>{w.word}</label>
@@ -673,18 +673,18 @@ function HomePageAdmin() {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className='add-language word-adding-part'>
-                            <h3>Dodavanje novog jezika</h3>
-                            <div className='adding-section'>
-                                <h3>Dodaj novu jezik</h3>
-                                <form onSubmit={handleAddLanguage}>
-                                    <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
-                                    <button type="submit">Dodaj jezik</button>
-                                </form>
+                            <div className='add-language word-adding-part'>
+                                <h3>Dodavanje novog jezika</h3>
+                                <div className='adding-section'>
+                                    <h3>Dodaj novu jezik</h3>
+                                    <form onSubmit={handleAddLanguage}>
+                                        <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
+                                        <button type="submit">Dodaj jezik</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+
 
 
                     {kadmin === "true" &&(
