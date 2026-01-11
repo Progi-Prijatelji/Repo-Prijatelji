@@ -161,10 +161,11 @@ function HomePageAdmin() {
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
             if (apiLanguageIds.get(lang.langname)) {
+                const api_key = process.env.API1_KEY;
                 const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
                     method: "POST",
                     headers: { 
-                        'x-rapidapi-key': process.env.API1_KEY,
+                        'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
                         'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
                         'Content-Type': 'application/json'
                  },
@@ -187,6 +188,7 @@ function HomePageAdmin() {
                 return;
             }
             setWordId(data.wordid);
+            fetchWords();
             
         }catch (error) {
             console.error("Greška:", error);
@@ -266,7 +268,7 @@ function HomePageAdmin() {
         const options = {
         method: 'POST',
         headers: {
-            'x-rapidapi-key': process.env.API2_KEY,
+            'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
             'x-rapidapi-host': 'google-translate113.p.rapidapi.com',
             'Content-Type': 'application/json'
         },
