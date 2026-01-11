@@ -10,6 +10,7 @@
     padding: 20px;
     width: 500px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }
 
 .adding-section{
@@ -29,3 +30,15 @@
     border-radius: 5px;
     font-size: 16px;
 }   
+
+.word-adding{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+}
+
+.word-adding-part{
+    width: 300px;
+    background-color: whitesmoke;
+}
