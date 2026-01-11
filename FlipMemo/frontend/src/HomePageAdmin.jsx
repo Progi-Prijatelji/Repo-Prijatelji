@@ -160,7 +160,6 @@ function HomePageAdmin() {
             let audioFile = "";
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
-            
             if (apiLanguageIds.get(lang.langname)) {
                 const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
                     method: "POST",
@@ -188,7 +187,6 @@ function HomePageAdmin() {
                 return;
             }
             setWordId(data.wordid);
-            fetchWords();
             
         }catch (error) {
             console.error("Greška:", error);
@@ -264,7 +262,6 @@ function HomePageAdmin() {
 
     const translateWord = async() => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
-        
         const url = 'https://google-translate113.p.rapidapi.com/api/v1/translator/text';
         const options = {
         method: 'POST',
@@ -283,7 +280,6 @@ function HomePageAdmin() {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-            
             setWord(result.trans || "");
         } catch (error) {
             console.error(error);
