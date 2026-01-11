@@ -75,20 +75,30 @@ const Pronunciation = ({ words = [] }) => {
   }, [recordingScore]);
 
   useEffect(() => {
+    if(progress === 0 && dictWords.length > 0){
+      generateWord();
+    }
+  }, [dictWords, progress]);
+
+  useEffect(() => {
     if (progress > 0 && progress < words.length) {
       generateWord();
     }
   }, [progress]);
 
 
-  
-
   const generateWord = () => {
-    if (dictWords.length === 0) return;
-    const rand = dictWords[Math.floor(Math.random() * dictWords.length)];
+    const source = dictWords.length ? dictWords : words;
+    if (source.length === 0) return;
+    const rand = source[Math.floor(Math.random() * source.length)];
     setQuestionWord(rand);
   }
 
+
+
+  
+
+  
 
   const startRecording = async () => {
     setIsRecording(true);
