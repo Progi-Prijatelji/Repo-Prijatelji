@@ -31,6 +31,8 @@ function HomePageAdmin() {
 
     const [allWordList, setAllWordList] = useState([]);
     const [languageFilter, setLanguageFilter] = useState("");
+    const [typedWord, setTypedWord] = useState("");
+    const [selectedWord, setSelectedWord] = useState("");
 
     const apiLanguageIds = new Map();
     apiLanguageIds.set('afrikaans', '1'); apiLanguageIds.set('arapski', '2'); apiLanguageIds.set('bengalski', '4'); apiLanguageIds.set('bugarski', '6'); apiLanguageIds.set('katalonski', '7'); apiLanguageIds.set('češki', '8'); apiLanguageIds.set('danski', '9'); apiLanguageIds.set('nizozemski', '11'); apiLanguageIds.set('engleski', '22'); apiLanguageIds.set('filipnski', '23'); apiLanguageIds.set('finski', '25'); apiLanguageIds.set('francuski', '28'); apiLanguageIds.set('njemački', '30'); apiLanguageIds.set('grčki', '32'); apiLanguageIds.set('gudžaratski', '33'); apiLanguageIds.set('hindi', '35'); apiLanguageIds.set('mađarski', '37'); apiLanguageIds.set('islandski', '38'); apiLanguageIds.set('indonezijski', '39'); apiLanguageIds.set('talijanski', '41'); apiLanguageIds.set('kanadski', '43'); apiLanguageIds.set('korejski', '45'); apiLanguageIds.set('latvijski', '47'); apiLanguageIds.set('malajski', '48'); apiLanguageIds.set('malajalam', '50'); apiLanguageIds.set('norveški', '52'); apiLanguageIds.set('poljski', '54'); apiLanguageIds.set('portugalski', '56'); apiLanguageIds.set('pandžapski', '58'); apiLanguageIds.set('rumunjski', '60'); apiLanguageIds.set('ruski', '61'); apiLanguageIds.set('srpski', '63'); apiLanguageIds.set('slovački', '64'); apiLanguageIds.set('španjolski', '65'); apiLanguageIds.set('švedski', '69'); apiLanguageIds.set('tamilski', '71'); apiLanguageIds.set('telugu', '74'); apiLanguageIds.set('tajlandski', '75'); apiLanguageIds.set('turski', '76'); apiLanguageIds.set('ukrajinski', '78'); apiLanguageIds.set('vijetnamski', '80');
@@ -296,7 +298,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({wordid: wordId, dictids: selectedDictIds})
+                body: JSON.stringify({wordid: selectedWord, dictids: selectedDictIds})
             });
             const data = await results.json();
             if (!data.success) {
@@ -316,6 +318,10 @@ function HomePageAdmin() {
 
     const handleDictCheckboxChange = (dictId) => {
         setSelectedDictIds(prev => prev.includes(dictId) ? prev.filter(id => id !== dictId) : [...prev, dictId]);
+    };
+
+    const handleWordCheckboxChange = (wordId) => {
+        setSelectedWord(wordId);
     };
 
     const handleAddLanguage = async (e) => {
@@ -532,147 +538,156 @@ function HomePageAdmin() {
         <HeaderAdmin />
             <div className="admin-page">
                 <div className='adding'>
-                    <div className='add-dictionary adding-part'>
-                        <h2>Dodavanje rječnika</h2>
-                        <div className='adding-section'>
-                            <h3>Dodaj novi rječnik</h3>
-                            <form onSubmit={handleAddDictionary}>
-                                <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
-                                <select value={langID} onChange={(e) => setLangID(e.target.value)}>
-                                    <option value="">Jezik</option>
-                                    {languages.map((lang) => (
-                                        <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
-                                    ))}
-                                </select>
-                                <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
-                                <button type="submit">Dodaj rječnik</button>
-                            </form>
-                        </div>
-                        <div className='old-dictionary'>
-                            <h2>Postojeći rječnici</h2>
-                            <ul>
-                                {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
-                                <li key={dict.dictid}>
-                                    <div>
-                                        <p>{dict.dictname}</p>
-                                        <p>{dict.description}</p>
-                                        {/*<button onClick={()=> showWords (dict.dictid)}>...</button>*/}
-                                    </div>
-                                    {/*{openDictId === dict.dictid  && (
+                    <div className='adding-part word-adding'>
+                        <div className='add-dictionary word-adding-part'>
+                            <h2>Dodavanje rječnika</h2>
+                            <div className='adding-section'>
+                                <h3>Dodaj novi rječnik</h3>
+                                <form onSubmit={handleAddDictionary}>
+                                    <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
+                                    <select value={langID} onChange={(e) => setLangID(e.target.value)}>
+                                        <option value="">Jezik</option>
+                                        {languages.map((lang) => (
+                                            <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                        ))}
+                                    </select>
+                                    <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
+                                    <button type="submit">Dodaj rječnik</button>
+                                </form>
+                            </div>
+                            <div className='old-dictionary'>
+                                <h2>Postojeći rječnici</h2>
+                                <ul>
+                                    {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
+                                    <li key={dict.dictid}>
                                         <div>
-                                            <h4>Riječi u rječniku:</h4>
-                                            <ul>
-                                                {wordList.map((wordItem) => (
-                                                    <li key={wordItem.wordid}>
-                                                        <p>{wordItem.word} - {wordItem.translation}</p>
-                                                        <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                    </li>
-                                                ))}
-                                            </ul>
+                                            <p>{dict.dictname}</p>
+                                            <p>{dict.description}</p>
+                                            {/*<button onClick={()=> showWords (dict.dictid)}>...</button>*/}
                                         </div>
-                                    )}*/}
-                                </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className='add-word adding-part'>
-                        <h2>Dodavanje riječi</h2>
-                        <div className='adding-section'>
-                            <h3>Dodaj novu riječ</h3>
-                            <form onSubmit={handleAddWord}>
-                                <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
-                                <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
-                                    <option value="">Jezik</option>
-                                    {languages.map((lang) => (
-                                        <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
-                                    ))}
-                                </select>
-                                <input type="text" placeholder="Prijevod riječi" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
-                                <button type="button" onClick={translateWord}>Dohvati primjere rečenica</button>
-
-                                {phraseToAdd.map((phrase, index) => {
-                                    const sourceSentence =
-                                        phrase.sourcePrefix +
-                                        phrase.sourceTerm +
-                                        phrase.sourceSuffix;
-
-                                    const targetSentence =
-                                        phrase.targetPrefix +
-                                        phrase.targetTerm +
-                                        phrase.targetSuffix;
-
-                                    return (
-                                        <div key={index}>
-                                            <input
-                                                type="checkbox"
-                                                checked={phrasesForeign.includes(sourceSentence)}
-                                                onChange={() => handleDictCheckboxChangePhrase(sourceSentence, targetSentence)}
-                                            />
-                                            <label>
-                                                {sourceSentence} — {targetSentence}
-                                            </label>
-                                        </div>
-                                    );
-                                })}
-                                <button type="submit">Dodaj riječ</button>
-                            </form>
-                            <form onSubmit={handleAddWordToDictionary}>
-                                <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                    <div key={dict.dictid}>
-                                        <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                        <label>{dict.dictname}</label>
-                                    </div>
-                                ))}
-                                <button type="submit">Dodaj riječ u rječnik</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div className='add-language adding-part'>
-                        <h3>Dodavanje novog jezika</h3>
-                        <div className='adding-section'>
-                            <h3>Dodaj novu jezik</h3>
-                            <form onSubmit={handleAddLanguage}>
-                                <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
-                                <button type="submit">Dodaj jezik</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div className='remove-words adding-part'>
-                        <h3>Uređivanje riječi</h3>
-                        <div className='adding-section'>
-                            <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
-                                <option value="">Jezik</option>
-                                    {languages.map((lang) => (
-                                        <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
-                                    ))}
-                            </select>
-                            <ul>
-                                {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
-                                    <li key={wordItem.wordid}>
-                                        <p>{wordItem.word} - {wordItem.translation}</p>
-                                        <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                        <button onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
-                                        { wordToEdit === wordItem.wordid &&(
-                                            <form onSubmit={(e)=>{e.preventDefault();
-                                            changeWord(wordItem, changedWord)}}>
-                                                <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                <button type="submit">Spremi</button>
-                                            </form>
-                                        ) }
+                                        {/*{openDictId === dict.dictid  && (
+                                            <div>
+                                                <h4>Riječi u rječniku:</h4>
+                                                <ul>
+                                                    {wordList.map((wordItem) => (
+                                                        <li key={wordItem.wordid}>
+                                                            <p>{wordItem.word} - {wordItem.translation}</p>
+                                                            <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}*/}
                                     </li>
-                                ))}
-                            </ul>
-
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
 
-                    </div>
-                    {
-                        kadmin === "true" &&(
-                
+                        <div className='add-word word-adding-part'>
+                            <h2>Dodavanje riječi</h2>
+                            <div className='adding-section'>
+                                <h3>Dodaj novu riječ</h3>
+                                <form onSubmit={handleAddWord}>
+                                    <input type="text" placeholder="Riječ na hrvatskom" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
+                                    <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
+                                        <option value="">Jezik</option>
+                                        {languages.map((lang) => (
+                                            <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                        ))}
+                                    </select>
+                                    <button type="button" onClick={translateWord}>Prevedi</button>
+                                    <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
+
+                                    {phraseToAdd.map((phrase, index) => {
+                                        const sourceSentence =
+                                            phrase.sourcePrefix +
+                                            phrase.sourceTerm +
+                                            phrase.sourceSuffix;
+
+                                        const targetSentence =
+                                            phrase.targetPrefix +
+                                            phrase.targetTerm +
+                                            phrase.targetSuffix;
+
+                                        return (
+                                            <div key={index}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={phrasesForeign.includes(sourceSentence)}
+                                                    onChange={() => handleDictCheckboxChangePhrase(sourceSentence, targetSentence)}
+                                                />
+                                                <label>
+                                                    {sourceSentence} — {targetSentence}
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
+                                    <button type="submit">Dodaj riječ</button>
+                                </form>
+                                <form onSubmit={handleAddWordToDictionary}>
+                                    
+                                    <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
+                                    
+                                    {allWordList.filter(w => w.word === typedWord).map((w) => (
+                                        <div key={w.wordid}>
+                                            <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
+                                            <label>{w.word}</label>
+                                        </div>
+                                    ))}
+                                    <label>Odaberi rječnik u koji želiš dodati riječ:</label>
+                                    {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                        <div key={dict.dictid}>
+                                            <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                            <label>{dict.dictname}</label>
+                                        </div>
+                                    ))}
+                                    <button type="submit">Dodaj riječ u rječnik</button>
+                                </form>
+                            </div>
+                            <div className='remove-words word-adding-part'>
+                                    <h3>Uređivanje riječi</h3>
+                                    <div className='adding-section'>
+                                        <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
+                                            <option value="">Jezik</option>
+                                                {languages.map((lang) => (
+                                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                                ))}
+                                        </select>
+                                        <ul>
+                                            {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
+                                                <li key={wordItem.wordid}>
+                                                    <p>{wordItem.word} - {wordItem.translation}</p>
+                                                    <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                    <button onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
+                                                    { wordToEdit === wordItem.wordid &&(
+                                                        <form onSubmit={(e)=>{e.preventDefault();
+                                                            changeWord(wordItem, changedWord)}}>
+                                                            <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                            <button type="submit">Spremi</button>
+                                                        </form>
+                                                    ) }
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='add-language word-adding-part'>
+                            <h3>Dodavanje novog jezika</h3>
+                            <div className='adding-section'>
+                                <h3>Dodaj novu jezik</h3>
+                                <form onSubmit={handleAddLanguage}>
+                                    <input type="text" placeholder="jezik" value={language} onChange={(e) => setLanguage(e.target.value)}/>
+                                    <button type="submit">Dodaj jezik</button>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    {kadmin === "true" &&(
                     <div className="admin-main-layout adding-part">
                         <div className="search">
                             <h2>Dodavanje admina</h2>
@@ -703,8 +718,7 @@ function HomePageAdmin() {
                                 )}
                                 </ul>
                             </div>
-                            <div className="current-admins">
-                                
+                            <div className="current-admins"> 
                                 <h3>Postojeći admini</h3>
                                 <ul className="admin-list">
                                 {adminUser.map((admin, index) => (
@@ -716,15 +730,8 @@ function HomePageAdmin() {
                                 </ul>
                             </div>
                         </div>
-
-
-
-                    </div>
-                        )
-                    }
+                    </div>)}
                 </div>
-
-
             </div>
         </>
     );
