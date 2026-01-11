@@ -160,7 +160,7 @@ function HomePageAdmin() {
             let audioFile = "";
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
-            console.log(apiLanguageIds.get(lang.langname))
+            
             if (apiLanguageIds.get(lang.langname)) {
                 const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
                     method: "POST",
@@ -188,6 +188,7 @@ function HomePageAdmin() {
                 return;
             }
             setWordId(data.wordid);
+            fetchWords();
             
         }catch (error) {
             console.error("Greška:", error);
@@ -234,8 +235,7 @@ function HomePageAdmin() {
                 body: JSON.stringify({word: word, translation: wordTrans, lang: apiLanguageAcros.get(lang.langname)})      
             });
             const data = await results.json();
-            console.log("Primljeni podaci:", data);
-            console.log(data.response.examples);
+            
 
 
         }catch(error){
@@ -264,12 +264,12 @@ function HomePageAdmin() {
 
     const translateWord = async() => {
         const lang = languages.find(l => l.langid===Number(wordLangID));
-        console.log("Translating word:", wordTrans, "from hr to", apiLanguageAcros.get(lang.langname));
+        
         const url = 'https://google-translate113.p.rapidapi.com/api/v1/translator/text';
         const options = {
         method: 'POST',
         headers: {
-            'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
+            'x-rapidapi-key': process.env.API2_KEY,
             'x-rapidapi-host': 'google-translate113.p.rapidapi.com',
             'Content-Type': 'application/json'
         },
@@ -283,7 +283,7 @@ function HomePageAdmin() {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
-            console.log(result.trans);
+            
             setWord(result.trans || "");
         } catch (error) {
             console.error(error);
@@ -630,7 +630,7 @@ function HomePageAdmin() {
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                     
-                                    {allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
+                                    {typedWord && allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
                                         <div key={w.wordid}>
                                             <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
                                             <label>{w.word}</label>
