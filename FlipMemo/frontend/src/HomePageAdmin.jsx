@@ -179,7 +179,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: phrasesForeign, phrasesNative: phrasesNative})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: phrasesForeign})
             });
             const data = await results.json();
             if (!data.success) {
@@ -254,20 +254,12 @@ function HomePageAdmin() {
         }
     }
 
-    const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
+    const handleDictCheckboxChangePhrase = (sourceSentence) => {
         setPhrasesForeign(prev => {
             if (prev.includes(sourceSentence)) {
                 return prev.filter(s => s !== sourceSentence);
             } else {
                 return [...prev, sourceSentence];
-            }
-        });
-
-        setPhrasesNative(prev => {
-            if (prev.includes(targetSentence)) {
-                return prev.filter(t => t !== targetSentence);
-            } else {
-                return [...prev, targetSentence];
             }
         });
     };
@@ -608,33 +600,27 @@ function HomePageAdmin() {
                                     <button type="button" onClick={translateWord}>Prevedi</button>
                                     <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
 
+                                    <button onClick={() => askForPhrases(word)}>Dodaj frazu</button>
                                     {phraseToAdd.map((phrase, index) => {
                                         const sourceSentence =
-                                            phrase.sourcePrefix +
-                                            phrase.sourceTerm +
-                                            phrase.sourceSuffix;
-
-                                        const targetSentence =
-                                            phrase.targetPrefix +
-                                            phrase.targetTerm +
-                                            phrase.targetSuffix;
+                                            phrase.definition + " - " + phrase.example; 
 
                                         return (
                                             <div key={index}>
                                                 <input
                                                     type="checkbox"
                                                     checked={phrasesForeign.includes(sourceSentence)}
-                                                    onChange={() => handleDictCheckboxChangePhrase(sourceSentence, targetSentence)}
+                                                    onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}
                                                 />
                                                 <label>
-                                                    {sourceSentence} — {targetSentence}
+                                                    {sourceSentence}
                                                 </label>
                                             </div>
                                         );
                                     })}
+
                                     <button type="submit">Dodaj riječ</button>
                                 </form>
-                                <button onClick={() => askForPhrases(word)}>Dodaj frazu</button>
                                 <form onSubmit={handleAddWordToDictionary}>
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
