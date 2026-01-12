@@ -223,24 +223,23 @@ function HomePageAdmin() {
         }
     };*/
 
-    const askForPhrases = async () => {
-        const lang = languages.find(l => l.langid===Number(wordLangID));
-        let acro = apiLanguageAcros.get(lang.langname);
-        try{
-            const results = await fetch("https://fmimage.onrender.com/homeAdmin/fetchExamples", {
-                method: "POST",
-                headers: { "Content-Type": "application/json",  
-                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
-             },
-                body: JSON.stringify({word: word, translation: wordTrans, lang: apiLanguageAcros.get(lang.langname)})      
-            });
-            const data = await results.json();
-            
+    const askForPhrases = async (w) => {
 
+        const url = `https://word-dictionary-api1.p.rapidapi.com/api/WordDictionaryApi/?word=${w}`;
+        const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
+            'x-rapidapi-host': 'word-dictionary-api1.p.rapidapi.com'
+        }
+        };
 
-        }catch(error){
-            console.error("Greška:", error);
-            alert("Greška u povezivanju s poslužiteljem.");
+        try {
+            const response = await fetch(url, options);
+            const result = await response.json();
+            console.log(result);
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -624,6 +623,7 @@ function HomePageAdmin() {
                                     })}
                                     <button type="submit">Dodaj riječ</button>
                                 </form>
+                                <button onClick={() => askForPhrases(word)}>Dodaj frazu</button>
                                 <form onSubmit={handleAddWordToDictionary}>
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
