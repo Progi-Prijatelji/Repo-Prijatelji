@@ -13,6 +13,7 @@ const Pronunciation = ({ words = [] }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [recordedURL, setRecordedURL] = useState('');
+  const [recordedBlob, setRecordedBlob] = useState(null);
   const [recordingScore, setRecordingScore] = useState(-1);
   const [isScoring, setIsScoring] = useState(false);
 
@@ -123,6 +124,7 @@ const Pronunciation = ({ words = [] }) => {
             const recordedBlob = new Blob(chunks.current,{type: 'audio/webm'});
             const url = URL.createObjectURL(recordedBlob);
             setRecordedURL(url);
+            setRecordedBlob(recordedBlob);
 
             chunks.current = [];
             if(timerRef.current) {
@@ -141,32 +143,37 @@ const Pronunciation = ({ words = [] }) => {
   }
 
   const handleConfirm = async () => {
-    if(!recordedURL) return;
+    if(!recordedBlob) return;
+    if (isScoring) return;
 
     setIsScoring(true);
     
     try{
-      // const url = `https://thefluentme.p.rapidapi.com/score/${questionWord.audiopostid}?100`;
-      // const options = {
-      //   method: 'POST',
-      //   headers: {
-      //     'x-rapidapi-key': process.env.API1_KEY,
-      //     'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({ audio_provided: recordedURL})
-      // };
+      const formData = new FormData();
+      formData.append('audio', recordedBlob, 'recording.webm');
+      formData.append('audiopostid', questionWord.audiopostid);
 
-      // const response = await fetch(url, options);
-      // const result = await response.json();
-      // const score = result[1].overall_result_data[0].overall_points;
-      // setRecordingScore(score);
-      setRecordingScore(75); //ZA TESTIRANJE
+      const response = await fetch("https://fmimage.onrender.com/homeUser/scorePronunciation", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: formData
+      });
+      
+      const data = await response.json();
+      
+      if(data.success){
+        setRecordingScore(data.score);
+      }else{
+        alert("Došlo je do greške pri ocjenjivanju izgovora.");
+        
+      }
 
     }catch(err){
         console.error("Error scoring pronunciation:", err);
         alert("Došlo je do greške pri ocjenjivanju izgovora.");
-        setIsScoring(false);
+        
     }finally{
         setIsScoring(false);
     }

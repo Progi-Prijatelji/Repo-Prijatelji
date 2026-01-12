@@ -2,7 +2,17 @@ const express = require("express");
 const router = express.Router();
 const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
+const cloudinary = require('./cloudinary');
+const multer = require('multer');
 
+
+const multer = require('multer');
+
+const storage = multer.memoryStorage();
+const upload = multer({
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB limit
+  storage: storage
+});
 
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -147,7 +157,64 @@ router.get('/proxyAudio', async (req, res) => {
 //-----------------------------------------------------------------------------------
 
 
+router.post('/scorePronunciation', verifyToken, upload.single('audio'), async (req, res) => {
+  try{
+    console.log(req.body);
+    console.log(req.file?.mimetype);
+    
+    if(!req.file) return res.status(400).json({ success: false, message: 'Audio file missing' });
 
+    const postid = req.body.audiopostid;
+    if (!postid) {
+      return res.status(400).json({
+        success: false,
+        message: 'audiopostid missing'
+      });
+    }
+
+   
+
+
+
+    const uploadResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          {
+            resource_type: 'video', 
+            folder: 'pronunciation',
+            format: 'webm',
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        ).end(req.file.buffer);
+      });
+
+    const audioUrl = uploadResult.secure_url;
+    
+
+    const url = `https://thefluentme.p.rapidapi.com/score/${postid}?100`;
+    const options = {
+      method: 'POST',
+      headers: {
+        'x-rapidapi-key': process.env.API1_KEY,
+        'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ audio_provided: audioUrl})
+    };
+
+    const response = await fetch(url, options);
+    const result = await response.json();
+
+    const score = result?.[1]?.overall_result_data?.[0]?.overall_points ?? 0;
+    res.json({ success: true, score: score, audioUrl: audioUrl });
+
+  }catch(err){
+    console.error("Error scoring pronunciation:", err);
+    res.status(500).json({ success: false, message: 'Scoring error' });
+  }
+});
 
 
 module.exports = router;
