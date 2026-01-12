@@ -179,7 +179,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: phrasesForeign})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: phrasesForeign, phrasesNative: phrasesNative})
             });
             const data = await results.json();
             if (!data.success) {
