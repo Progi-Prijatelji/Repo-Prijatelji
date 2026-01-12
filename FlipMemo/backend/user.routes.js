@@ -4,9 +4,12 @@ const { Client } = require("pg");
 const jwt = require("jsonwebtoken");
 const cloudinary = require('./cloudinary');
 const multer = require('multer');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('ffmpeg-static');
+ffmpeg.setFfmpegPath(ffmpegPath);
+const fs = require('fs');
+const path = require("path");
 
-
-const multer = require('multer');
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -157,38 +160,60 @@ router.get('/proxyAudio', async (req, res) => {
 //-----------------------------------------------------------------------------------
 
 
-router.post('/scorePronunciation', verifyToken, upload.single('audio'), async (req, res) => {
+router.post('/scorePronunciation', upload.single('audio'), async (req, res) => {
   try{
     console.log(req.body);
     console.log(req.file?.mimetype);
-    
+
     if(!req.file) return res.status(400).json({ success: false, message: 'Audio file missing' });
 
     const postid = req.body.audiopostid;
-    if (!postid) {
-      return res.status(400).json({
-        success: false,
-        message: 'audiopostid missing'
-      });
-    }
+    if (!postid) return res.status(400).json({ success: false, message: 'audiopostid missing' });
 
-   
+    // Kreiramo privremeni direktorij
+    const tempDir = path.join(__dirname, "tmp");
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
+
+    const inputPath = path.join(tempDir, `${Date.now()}_input.webm`);
+    const outputPath = path.join(tempDir, `${Date.now()}_output.wav`);
 
 
+    
+    //stvaranje wav filea iz webm filea
+    fs.writeFileSync(inputPath, req.file.buffer);
+    //upload na cloudinary u wav formatu
+    await new Promise((resolve, reject) => {
+      ffmpeg(inputPath)
+        .audioCodec("pcm_s16le")
+        .audioFrequency(16000)
+        .audioChannels(1)
+        .format("wav")
+        .on("end", resolve)
+        .on("error", reject)
+        .save(outputPath);
+    });
+
+
+    // Čitanje konvertiranog wav filea
+    const wavBuffer = fs.readFileSync(outputPath);
 
     const uploadResult = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream(
-          {
-            resource_type: 'video', 
-            folder: 'pronunciation',
-            format: 'webm',
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        ).end(req.file.buffer);
-      });
+      cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'video',
+          folder: 'pronunciation',
+          format: 'wav',
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(wavBuffer);
+    });
+
+    //brisanje datoteka
+    fs.unlinkSync(inputPath);
+    fs.unlinkSync(outputPath);
 
     const audioUrl = uploadResult.secure_url;
     
@@ -208,6 +233,7 @@ router.post('/scorePronunciation', verifyToken, upload.single('audio'), async (r
     const result = await response.json();
 
     const score = result?.[1]?.overall_result_data?.[0]?.overall_points ?? 0;
+
     res.json({ success: true, score: score, audioUrl: audioUrl });
 
   }catch(err){

@@ -155,14 +155,12 @@ const Pronunciation = ({ words = [] }) => {
 
       const response = await fetch("https://fmimage.onrender.com/homeUser/scorePronunciation", {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
+        
         body: formData
       });
       
       const data = await response.json();
-      
+
       if(data.success){
         setRecordingScore(data.score);
       }else{
