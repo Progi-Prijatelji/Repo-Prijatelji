@@ -216,7 +216,7 @@ router.post('/scorePronunciation', upload.single('audio'), async (req, res) => {
     fs.unlinkSync(outputPath);
 
     const audioUrl = uploadResult.secure_url;
-    
+    console.log(audioUrl);
 
     const url = `https://thefluentme.p.rapidapi.com/score/${postid}?100`;
     const options = {
@@ -233,7 +233,7 @@ router.post('/scorePronunciation', upload.single('audio'), async (req, res) => {
     const result = await response.json();
 
     const score = result?.[1]?.overall_result_data?.[0]?.overall_points ?? 0;
-
+    console.log(result, score);
     res.json({ success: true, score: score, audioUrl: audioUrl });
 
   }catch(err){

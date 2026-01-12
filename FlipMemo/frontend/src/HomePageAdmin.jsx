@@ -232,26 +232,26 @@ function HomePageAdmin() {
         try {
             const response = await fetch(url, options);
             const result = await response.json();
+            const data=result[0].meanings;
+            const definitions = [];
+    
+            data.forEach(meaning => {
+                meaning.definitions.forEach(def => {
+                    if (def.example){
+                        definitions.push({
+                            definition: def.definition,
+                            example: def.example 
+                        });
+                    }
+                });
+            });
+            console.log(definitions);
+    
+            
+            setPhraseToAdd(definitions);
         } catch (error) {
             console.error(error);
         }
-        const data=result[0].meanings;
-        const definitions = [];
-
-        data.forEach(meaning => {
-            meaning.definitions.forEach(def => {
-                if (def.example){
-                    definitions.push({
-                        definition: def.definition,
-                        example: def.example 
-                    });
-                }
-            });
-        });
-        console.log(definitions);
-
-        
-        setPhraseToAdd(definitions);
     }
 
     const handleDictCheckboxChangePhrase = (sourceSentence, targetSentence) => {
