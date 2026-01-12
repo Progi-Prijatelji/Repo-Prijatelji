@@ -161,7 +161,6 @@ function HomePageAdmin() {
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
             if (apiLanguageIds.get(lang.langname)) {
-                const api_key = process.env.API1_KEY;
                 const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
                     method: "POST",
                     headers: { 
@@ -225,13 +224,9 @@ function HomePageAdmin() {
 
     const askForPhrases = async (w) => {
 
-        const url = `https://word-dictionary-api1.p.rapidapi.com/api/WordDictionaryApi/?word=${w}`;
+        const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${w}`;
         const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
-            'x-rapidapi-host': 'word-dictionary-api1.p.rapidapi.com'
-        }
+        method: 'GET'
         };
 
         try {
