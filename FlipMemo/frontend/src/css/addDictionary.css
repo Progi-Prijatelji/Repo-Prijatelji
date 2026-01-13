@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    max-width: 98vh;
+    max-width: 95vh;
     margin: 1vh auto;
 }
 .adding-parts{
@@ -45,7 +45,7 @@
 
 .adding-section input, .adding-section select{
     padding: 8px;
-    margin: 8px;
+    margin-left:5px ;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -90,3 +90,8 @@
   transform: translateY(0);
 }
 
+.existing{
+    overflow-y: scroll;
+    max-height: 400px;
+    scrollbar-color: #5d2e86 #ffffff;
+}

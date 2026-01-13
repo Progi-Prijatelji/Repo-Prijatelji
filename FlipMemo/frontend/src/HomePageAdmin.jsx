@@ -660,9 +660,9 @@ function HomePageAdmin() {
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                             ))}
                                     </select>
-                                    <ul>
+                                    <ul className='existing admin-list'>
                                         {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
-                                            <li key={wordItem.wordid}>
+                                            <li key={wordItem.wordid} className='admin-list-item'>
                                                 <p>{wordItem.word} - {wordItem.translation}</p>
                                                 <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                 <button className="admin-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
