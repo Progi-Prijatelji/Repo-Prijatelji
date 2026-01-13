@@ -4,11 +4,20 @@
     align-items: center;
     gap: 40px;
 }
+.adding-parts{
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100vw;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
 .adding-part{
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    gap: 20px;
+    margin: 0 40px;
     border: 2px solid #ccc;
     border-radius: 10px;
     padding: 20px;

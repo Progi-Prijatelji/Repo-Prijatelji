@@ -560,7 +560,7 @@ function HomePageAdmin() {
                                         ))}
                                     </select>
                                     <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
-                                    <button type="submit">Dodaj rječnik</button>
+                                    <button className="admin-btn" type="submit">Dodaj rječnik</button>
                                 </form>
                                 <div className='old-dictionary'>
                                     <h2>Postojeći rječnici</h2>
@@ -605,10 +605,10 @@ function HomePageAdmin() {
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                         ))}
                                     </select>
-                                    {wordLangID && <button type="button" onClick={translateWord}>Prevedi</button>}
+                                    {wordLangID && <button className="admin-btn" type="button" onClick={translateWord}>Prevedi</button>}
                                     <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
 
-                                    {wordLangID===2 && <button onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
+                                    {Number(wordLangID) === 2 && <button className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
                                     {phraseToAdd.map((phrase, index) => {
                                         const sourceSentence =
                                             phrase.example; 
@@ -627,7 +627,7 @@ function HomePageAdmin() {
                                         );
                                     })}
 
-                                    <button type="submit">Dodaj riječ</button>
+                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
                                 <form onSubmit={handleAddWordToDictionary}>
                                     
@@ -646,7 +646,7 @@ function HomePageAdmin() {
                                             <label>{dict.dictname}</label>
                                         </div>
                                     ))}
-                                    <button type="submit">Dodaj riječ u rječnik</button>
+                                    <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
@@ -669,7 +669,7 @@ function HomePageAdmin() {
                                                     <form onSubmit={(e)=>{e.preventDefault();
                                                         changeWord(wordItem, changedWord)}}>
                                                         <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                        <button type="submit">Spremi</button>
+                                                        <button className="admin-btn" type="submit">Spremi</button>
                                                     </form>
                                                 ) }
                                             </li>
