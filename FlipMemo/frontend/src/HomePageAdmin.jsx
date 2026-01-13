@@ -548,7 +548,7 @@ function HomePageAdmin() {
                     <div className='adding-part word-adding'>
                         <div className='add-dictionary word-adding-part'>
                             <h2>Urečivanje rječnika</h2>
-                            <button onClick={() => toggleOptions("AddRjecnik")}>Dodaj Rjecnik</button>
+                            <button className="option-button" onClick={() => toggleOptions("AddRjecnik")}>Dodaj Rjecnik</button>
                             {revealed === "AddRjecnik" && <div className='adding-section'>
                                 <h3>Dodaj novi rječnik</h3>
                                 <form onSubmit={handleAddDictionary}>
@@ -594,7 +594,7 @@ function HomePageAdmin() {
 
                         <div className='add-word word-adding-part'>
                             <h2>Uređivanje riječi</h2>
-                            <button onClick={()=>toggleOptions("AddWord")}>Dodaj Riječ</button>
+                            <button className="option-button"onClick={()=>toggleOptions("AddWord")}>Dodaj Riječ</button>
                             {revealed === "AddWord" && <div className='adding-section'>
                                 <h3>Dodaj novu riječ</h3>
                                 <form onSubmit={handleAddWord}>
@@ -649,7 +649,7 @@ function HomePageAdmin() {
                                     <button type="submit">Dodaj riječ u rječnik</button>
                                 </form>
                             </div>}
-                            <button onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
+                            <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
                             {revealed === "EditWords" && <div className='remove-words word-adding-part'>
                                 <h3>Uređivanje riječi</h3>
                                 <div className='adding-section'>
@@ -678,7 +678,7 @@ function HomePageAdmin() {
                                 </div>
                             </div>}
                             </div>
-                            <div className='add-language word-adding-part'>
+                            {/*<div className='add-language word-adding-part'>
                                 <h3>Dodavanje novog jezika</h3>
                                 <div className='adding-section'>
                                     <h3>Dodaj novu jezik</h3>
@@ -687,7 +687,7 @@ function HomePageAdmin() {
                                         <button type="submit">Dodaj jezik</button>
                                     </form>
                                 </div>
-                            </div>
+                            </div>*/}
                         </div>
 
 

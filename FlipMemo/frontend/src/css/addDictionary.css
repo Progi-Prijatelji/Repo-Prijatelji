@@ -42,3 +42,24 @@
     width: 300px;
     background-color: whitesmoke;
 }
+
+.option-button{
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #5d2e86;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.option-button:hover {
+    background-color: #7d47a8;
+    transform: translateY(-2px);
+}   
+
+.option-button:active {
+  transform: translateY(0);
+}
