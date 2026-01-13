@@ -41,9 +41,15 @@
 .word-adding-part{
     width: 300px;
     background-color: whitesmoke;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .option-button{
+    display: block;
+    align-self: center;
     margin-top: 10px;
     padding: 10px 20px;
     background-color: #5d2e86;
