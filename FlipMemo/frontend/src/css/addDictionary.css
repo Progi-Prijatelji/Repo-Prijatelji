@@ -5,6 +5,10 @@
     gap: 40px;
 }
 .adding-part{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     border: 2px solid #ccc;
     border-radius: 10px;
     padding: 20px;

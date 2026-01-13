@@ -605,13 +605,13 @@ function HomePageAdmin() {
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                         ))}
                                     </select>
-                                    <button type="button" onClick={translateWord}>Prevedi</button>
+                                    {wordLangID && <button type="button" onClick={translateWord}>Prevedi</button>}
                                     <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
 
-                                    <button onClick={() => askForPhrases(word)}>Dodaj frazu</button>
+                                    {wordLangID===2 && <button onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
                                     {phraseToAdd.map((phrase, index) => {
                                         const sourceSentence =
-                                            phrase.definition + " - " + phrase.example; 
+                                            phrase.example; 
 
                                         return (
                                             <div key={index}>
