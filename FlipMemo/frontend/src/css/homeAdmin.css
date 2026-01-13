@@ -25,7 +25,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content:space-evenly;
+  justify-content:space-around;
   align-items: center;
   gap: 15px
 }
@@ -48,7 +48,7 @@
 
 /* Lijevi 30% */
 .search-list {
-  flex: 0 0 30%;
+  flex: 0 0 40%;
   background-color: #d3bce8;
   border-radius: 10px;
   padding: 15px;

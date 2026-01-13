@@ -563,9 +563,9 @@ function HomePageAdmin() {
                                     <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                                     <button className="admin-btn" type="submit">Dodaj rječnik</button>
                                 </form>
-                                <div className='old-dictionary'>
+                                <div className='old-dictionary current-admins'>
                                     <h2>Postojeći rječnici</h2>
-                                    <ul>
+                                    <ul className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                                         <li key={dict.dictid}>
                                             <div>
@@ -652,30 +652,32 @@ function HomePageAdmin() {
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
                             {revealed === "EditWords" && <div className='remove-words word-adding-part'>
-                                <h3>Uređivanje riječi</h3>
                                 <div className='adding-section'>
+                                    <h3>Uredi ili obriši riječi</h3>
                                     <select value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
                                         <option value="">Jezik</option>
                                             {languages.map((lang) => (
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                             ))}
                                     </select>
-                                    <ul className='existing admin-list'>
-                                        {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
-                                            <li key={wordItem.wordid} className='admin-list-item'>
-                                                <p>{wordItem.word} - {wordItem.translation}</p>
-                                                <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                <button className="admin-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
-                                                { wordToEdit === wordItem.wordid &&(
-                                                    <form onSubmit={(e)=>{e.preventDefault();
-                                                        changeWord(wordItem, changedWord)}}>
-                                                        <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                        <button className="admin-btn" type="submit">Spremi</button>
-                                                    </form>
-                                                ) }
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <div className='admin-list'>
+                                        <ul className='existing admin-list'>
+                                            {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
+                                                <li key={wordItem.wordid} className='admin-list-item'>
+                                                    <p>{wordItem.word} - {wordItem.translation}</p>
+                                                    <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                    <button className="admin-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
+                                                    { wordToEdit === wordItem.wordid &&(
+                                                        <form onSubmit={(e)=>{e.preventDefault();
+                                                            changeWord(wordItem, changedWord)}}>
+                                                            <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                            <button className="admin-btn" type="submit">Spremi</button>
+                                                        </form>
+                                                    ) }
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>}
                             </div>
