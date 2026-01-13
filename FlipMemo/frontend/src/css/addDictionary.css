@@ -3,6 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 40px;
+    max-width: 95vw;
 }
 .adding-parts{
     border: 2px solid #ccc;
@@ -28,7 +29,7 @@
 
 .adding-section{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 15px;
     margin-top: 15px;
 }
@@ -39,6 +40,7 @@
 
 .adding-section input, .adding-section select{
     padding: 8px;
+    margin: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -52,7 +54,7 @@
 }
 
 .word-adding-part{
-    width: 300px;
+    width: 47%;
     background-color: whitesmoke;
     display: flex;
     justify-content: center;

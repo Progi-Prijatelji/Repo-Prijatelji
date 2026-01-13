@@ -545,9 +545,9 @@ function HomePageAdmin() {
         <HeaderAdmin />
             <div className="admin-page">
                 <div className='adding'>
-                    <div className='adding-part word-adding'>
+                    <div className='adding-parts word-adding'>
                         <div className='add-dictionary word-adding-part'>
-                            <h2>Urečivanje rječnika</h2>
+                            <h2>Uređivanje rječnika</h2>
                             <button className="option-button" onClick={() => toggleOptions("AddRjecnik")}>Dodaj Rjecnik</button>
                             {revealed === "AddRjecnik" && <div className='adding-section'>
                                 <h3>Dodaj novi rječnik</h3>
