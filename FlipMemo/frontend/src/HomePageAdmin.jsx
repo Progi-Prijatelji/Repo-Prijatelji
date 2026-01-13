@@ -567,10 +567,9 @@ function HomePageAdmin() {
                                     <h2>Postojeći rječnici</h2>
                                     <ul className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
-                                        <li key={dict.dictid}>
+                                        <li key={dict.dictid} className='admin-list-item'>
                                             <div>
-                                                <p>{dict.dictname}</p>
-                                                <p>{dict.description}</p>
+                                                <p>{dict.dictname} - {dict.description}</p>
                                                 {/*<button onClick={()=> showWords (dict.dictid)}>...</button>*/}
                                             </div>
                                             {/*{openDictId === dict.dictid  && (
