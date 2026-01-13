@@ -663,8 +663,8 @@ function HomePageAdmin() {
                                         {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                             <li key={wordItem.wordid}>
                                                 <p>{wordItem.word} - {wordItem.translation}</p>
-                                                <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                <button onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
+                                                <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                <button className="admin-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
                                                 { wordToEdit === wordItem.wordid &&(
                                                     <form onSubmit={(e)=>{e.preventDefault();
                                                         changeWord(wordItem, changedWord)}}>
@@ -729,7 +729,7 @@ function HomePageAdmin() {
                                 {adminUser.map((admin, index) => (
                                     <li key={index} className="admin-list-item">
                                     <span>{admin}</span>
-                                    <button  className="admin-remove-btn" onClick={() => handleRemoveAdmin(admin)}>X</button>
+                                    <button  className="admin-add-btn" onClick={() => handleRemoveAdmin(admin)}>X</button>
                                     </li>
                                 ))}
                                 </ul>
