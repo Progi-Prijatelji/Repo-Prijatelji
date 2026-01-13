@@ -3,7 +3,8 @@
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    max-width: 95vw;
+    max-width: 98vh;
+    margin: 1vh auto;
 }
 .adding-parts{
     border: 2px solid #ccc;
@@ -28,12 +29,16 @@
 }
 
 .adding-section{
-    display: flex;
-    flex-direction: row;
     gap: 15px;
     margin-top: 15px;
 }
 
+.adding-section form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
 .adding-section label{
     font-weight: bold;
 }

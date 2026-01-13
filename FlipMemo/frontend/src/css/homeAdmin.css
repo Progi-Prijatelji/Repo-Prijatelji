@@ -27,11 +27,10 @@
   flex-direction: column;
   justify-content:baseline;
   gap: 15px
-
-  
-  
 }
-
+.container-admin {
+  gap: 20px; /* razmak koji lijepo raspoređuje oba kontainera */
+}
 
 .search{
   width: 100%;
