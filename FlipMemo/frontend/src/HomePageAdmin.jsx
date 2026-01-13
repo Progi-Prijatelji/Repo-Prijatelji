@@ -49,6 +49,8 @@ function HomePageAdmin() {
     const [wordToEdit, setWordToEdit] = useState(null);
     const [changedWord, setChangedWord] = useState("");
 
+    const [revealed, setRevealed] = useState("");
+
 
     const changeWord = async(originalWord, newWord) => {
         if (!newWord || newWord===originalWord.word) {
@@ -541,8 +543,9 @@ function HomePageAdmin() {
                 <div className='adding'>
                     <div className='adding-part word-adding'>
                         <div className='add-dictionary word-adding-part'>
-                            <h2>Dodavanje rječnika</h2>
-                            <div className='adding-section'>
+                            <h2>Urečivanje rječnika</h2>
+                            <button onClick={setRevealed("AddRjecnik")}></button>
+                            {revealed === "AddRjecnik" && <div className='adding-section'>
                                 <h3>Dodaj novi rječnik</h3>
                                 <form onSubmit={handleAddDictionary}>
                                     <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
@@ -555,7 +558,7 @@ function HomePageAdmin() {
                                     <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                                     <button type="submit">Dodaj rječnik</button>
                                 </form>
-                            </div>
+                            </div>}
                             <div className='old-dictionary'>
                                 <h2>Postojeći rječnici</h2>
                                 <ul>
