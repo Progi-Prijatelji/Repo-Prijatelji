@@ -166,7 +166,7 @@ function HomePageAdmin() {
                 const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
                     method: "POST",
                     headers: { 
-                        'x-rapidapi-key': '019d93f7e7msh3cb41e2e42f56f8p190361jsn96e9a72c7059',
+                        'x-rapidapi-key': '75a57d3999msh9fcebafe9c752d2p157bc0jsn2594fcfd6b2b',
                         'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
                         'Content-Type': 'application/json'
                  },
@@ -197,32 +197,7 @@ function HomePageAdmin() {
         }
         
     }
-   /* ovo bi trebala copypastat u admin routes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-   u askForPhrases ti to saljem pa si pogledaj ak trebas jos nesto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    {poslat cu ti i jezik za ovo lang u linku!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            const url = `https://microsoft-translator-text.p.rapidapi.com/Dictionary/Examples?to=${lang}&from=hr&api-version=3.0`;
-            const options = {
-                method: 'POST',
-                headers: {
-                    'x-rapidapi-key': '53721952edmsh7b1cdc73f126a32p13c135jsn1e9892198854',
-                    'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-                    'Content-Type': 'application/json'
-                },
-                body: [
-                    {
-                    Text: word, ¸¸¸¸¸¸ovo dvoje cu ti posalt ko argumente!!!!!!!!!!!!!!!!!!!!!!!!!
-                    Translation: wordTrans 
-                    }
-                ]
-            };
-            try {
-                const response = await fetch(url, options);
-                 a ti meni vrati ovo  response kao json samo!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };*/
+  
 
     const askForPhrases = async (w) => {
 
@@ -695,7 +670,7 @@ function HomePageAdmin() {
 
 
                     {kadmin === "true" &&(
-                    <div className="admin-main-layout adding-part">
+                    <div className="admin-main-layout">
                         <div className="search container-admin">
                             <h2>Dodavanje admina</h2>
                             <form className="admin-search" onSubmit={handleSearch}>

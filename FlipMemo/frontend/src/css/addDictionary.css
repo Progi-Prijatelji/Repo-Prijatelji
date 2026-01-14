@@ -38,7 +38,6 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    gap: 15px;
 }
 .adding-section label{
     font-weight: bold;
@@ -73,7 +72,7 @@
 
 .word-adding-part{
     width: 47%;
-    background-color: whitesmoke;
+    background-color: #d3bce8;
     display: flex;
     justify-content: center;
     align-items: center;
