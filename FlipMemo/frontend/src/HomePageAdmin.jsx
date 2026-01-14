@@ -163,10 +163,14 @@ function HomePageAdmin() {
             return;
         }
         try{
-            setPhrasesForeign(prev => { 
-                const morePhrases = phrasesForeignMore.filter(p => p.trim() !== "");
-                return [...prev, ...morePhrases];
-            });
+            const morePhrases = phrasesForeignMore
+            .map(p => p.trim())
+            .filter(p => p !== "");
+
+            const finalPhrasesForeign = [
+                ...phrasesForeign,
+                ...morePhrases
+            ];
             let audioFile = "";
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
@@ -189,7 +193,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: phrasesForeign, phrasesNative: phrasesNative})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: finalPhrasesForeign, phrasesNative: phrasesNative})
             });
             const data = await results.json();
             if (!data.success) {
@@ -205,6 +209,7 @@ function HomePageAdmin() {
             setPhraseToAdd([]);
             setPhrasesForeign([]);
             setPhrasesNative([]);
+            setPhrasesForeignMore([]);
             
             
         }catch (error) {
