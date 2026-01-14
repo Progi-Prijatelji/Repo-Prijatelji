@@ -68,6 +68,14 @@
     display: block;
 }
 
+.add-word-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .word-adding{
     display: flex;
     flex-direction: row;
@@ -113,3 +121,5 @@
     scrollbar-color: #5d2e86 #ffffff;
     width: 100%;
 }
+
+
