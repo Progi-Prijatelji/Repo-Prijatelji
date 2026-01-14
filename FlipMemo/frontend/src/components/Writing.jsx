@@ -104,6 +104,10 @@ const Writing = ( {words} ) => {
   };
 
 
+  if (words.length === 0) {
+        return <div>Nema rijeci</div>;
+    }
+    
   return (
     <div className="learn-main-container">
             {progress >= words.length && (
