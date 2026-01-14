@@ -3,14 +3,14 @@
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    max-width: 100vw;
-    margin: auto 1vw;
+    max-width: 100%;
+    margin: 20px;
 }
 .adding-parts{
     border: 2px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    width: 100vw;
+    width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: white;
 }
@@ -23,7 +23,7 @@
     border: 2px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    width: 100vw;
+    width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: white;
 }
@@ -78,12 +78,12 @@
   box-sizing: border-box;
 }
 
-.word-adding{
+.word-adding {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 40px;
+    flex-wrap: wrap;
+    max-width: 100%;
 }
+
 
 .word-adding-part{
     width: 47%;

@@ -159,6 +159,10 @@ function HomePageAdmin() {
             return;
         }
         try{
+            setPhrasesForeign(prev => { 
+                const morePhrases = phrasesForeignMore.filter(p => p.trim() !== "");
+                return [...prev, ...morePhrases];
+            });
             let audioFile = "";
             let audioPostId = "";
             const lang = languages.find(l => l.langid===Number(wordLangID));
@@ -609,6 +613,8 @@ function HomePageAdmin() {
                                             </div>
                                         );
                                     })}
+                                    <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split(","))}/>
+                                    <textarea placeholder="fraze na hrvatskom jeziku" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
                                     <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
                                 <form onSubmit={handleAddWordToDictionary}>
@@ -631,7 +637,7 @@ function HomePageAdmin() {
                                     <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
                                 </form>
                             </div>}
-                            <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj Riječ</button>
+                            <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj u rječnik</button>
                             {revealed === "AddWordToDict" &&
                             <div>
                                 <form onSubmit={handleAddWordToDictionary}>
