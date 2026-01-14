@@ -659,7 +659,7 @@ function HomePageAdmin() {
                                         ))}
                                     </select>
                                     
-                                    {typedWord && allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
+                                    {typedWord && allWordList.filter(w => w.word.includes(typedWord) && w.langid === Number(wordLangID)).map((w) => (
                                         <div key={w.wordid}>
                                             <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
                                             <label>{w.word}</label>
