@@ -188,12 +188,12 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje riječi.");
                 return;
             }
-            /*setWordId(data.wordid);*/
+            setWordId(data.wordid);
             fetchWords();
             setWord("");
-            setWordId("");
+            /*setWordId("");*/
             setWordTrans("");
-            setWordLangID("");
+            /*setWordLangID("");*/
             setPhraseToAdd([]);
             
         }catch (error) {
@@ -293,6 +293,7 @@ function HomePageAdmin() {
             setWordTrans("");
             setWordLangID("");
             setSelectedDictIds([]);
+            setTypedWord("");
         }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -608,8 +609,26 @@ function HomePageAdmin() {
                                             </div>
                                         );
                                     })}
-
                                     <button className="admin-btn" type="submit">Dodaj riječ</button>
+                                </form>
+                                <form onSubmit={handleAddWordToDictionary}>
+                                    
+                                    <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
+                                    
+                                    {typedWord && allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
+                                        <div key={w.wordid}>
+                                            <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
+                                            <label>{w.word}</label>
+                                        </div>
+                                    ))}
+                                    <label>Odaberi rječnik u koji želiš dodati riječ:</label>
+                                    {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                        <div key={dict.dictid}>
+                                            <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                            <label>{dict.dictname}</label>
+                                        </div>
+                                    ))}
+                                    <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj Riječ</button>
