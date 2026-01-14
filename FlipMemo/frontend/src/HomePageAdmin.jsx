@@ -625,12 +625,6 @@ function HomePageAdmin() {
                                     <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
                                 <form onSubmit={handleAddWordToDictionary}>
-                                    {allWordList.map((w) => (
-                                        <div key={w.wordid}>
-                                            <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
-                                            <label>{w.word}</label>
-                                        </div>
-                                    ))}
                                     <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
                                         <div key={dict.dictid}>
