@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    max-width: 95vw;
+    max-width: 100vw;
     margin: auto 1vw;
 }
 .adding-parts{
@@ -38,6 +38,7 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    background-color: #e7d9f5;
 }
 .adding-section label{
     font-weight: bold;
@@ -55,13 +56,17 @@
     text-align: center;
 }
 
-.adding-section input, .adding-section select{
+.adding-section input{
     padding: 8px;
     margin-bottom: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
 }   
+
+.adding-section select{
+    display: block;
+}
 
 .word-adding{
     display: flex;
@@ -106,4 +111,5 @@
     overflow-y: scroll;
     max-height: 250px;
     scrollbar-color: #5d2e86 #ffffff;
+    width: 100%;
 }
