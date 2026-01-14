@@ -572,7 +572,7 @@ function HomePageAdmin() {
                             <button className="option-button"onClick={()=>toggleOptions("AddWord")}>Dodaj Riječ</button>
                             {revealed === "AddWord" && <div className='adding-section'>
                                 <h3>Dodaj novu riječ</h3>
-                                <form onSubmit={handleAddWord}>
+                                <form onSubmit={handleAddWord} className='add-word-form'>
                                     <input type="text" placeholder="Riječ na hrvatskom" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
                                     <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                         <option value="">Jezik</option>
@@ -583,14 +583,15 @@ function HomePageAdmin() {
                                     {wordLangID && <button className="admin-btn" type="button" onClick={translateWord}>Prevedi</button>}
                                     <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
 
-                                    {Number(wordLangID) === 2 && <button className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
+                                    {Number(wordLangID) === 2 && <button type="button" className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
                                     {phraseToAdd.map((phrase, index) => {
                                         const sourceSentence =
                                             phrase.example; 
 
                                         return (
-                                            <div key={index}>
+                                            <div key={index} className='admin-list'>
                                                 <input
+                                                    className='admin-list-item'
                                                     type="checkbox"
                                                     checked={phrasesForeign.includes(sourceSentence)}
                                                     onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}

@@ -39,6 +39,8 @@
     justify-content: space-around;
     align-items: center;
     background-color: #e7d9f5;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .adding-section label{
     font-weight: bold;
@@ -66,6 +68,14 @@
 
 .adding-section select{
     display: block;
+}
+
+.add-word-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .word-adding{
@@ -113,3 +123,5 @@
     scrollbar-color: #5d2e86 #ffffff;
     width: 100%;
 }
+
+
