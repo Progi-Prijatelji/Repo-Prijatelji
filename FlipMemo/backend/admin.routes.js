@@ -169,7 +169,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
     const exists = usedWords.rows.find(r => r.word === word)
     if(exists){
       const wordIDUsed = await client.query(`select wordid from words where word = $1 and langid = $2`,[word, langid])
-      res.json({ success: true, wordid: wordIDUsed.rows[0].wordid});
+      return res.json({ success: true, wordid: wordIDUsed.rows[0].wordid});
     }
 
     const usedTranslations = await client.query(`select wordid, word from words where langid = 1`);
@@ -238,7 +238,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
         q++;
       }
 
-      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2)`, [q, phrase, j]);
+      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, j]);
     }
 
     res.json({ success: true, wordid: j});
@@ -284,7 +284,8 @@ router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   try {
     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordid, t.word AS translation, l.langname AS langname, l.langid AS langid
                                             FROM languages l JOIN words w ON l.langid = w.langid LEFT JOIN words t ON t.wordid = w.translationid
-                                            WHERE w.langid <> 1`);
+                                            WHERE w.langid <> 1
+                                            ORDER BY word`);
 
     res.json({success: true, words: returnWords.rows});
   } catch (err) {
