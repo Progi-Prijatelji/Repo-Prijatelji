@@ -34,7 +34,7 @@ const HeaderAdmin = () => {
 
                 <div className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`}>
                     <Link 
-                        to='/home/settings'
+                        to='/homeAdmin/settings'
                         className="dropdown-item"
                         onClick={() => setIsDropdownOpen(false)}>
                         <Settings size={16} style={{marginRight: '8px'}}/>
