@@ -53,8 +53,7 @@ function HomePageAdmin() {
     const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
     const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState([]);
-    const [phrasesNativeChanged, setPhrasesNativeChanged] = useState([]);
-
+    
 
     const changeWord = async(originalWord, newWord) => {
         if (!newWord || newWord===originalWord.word) {
@@ -292,7 +291,13 @@ function HomePageAdmin() {
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
         try{
-            const wordIdToUse = selectedWord || wordId;
+            let wordIdToUse = "";
+            if (revealed !== "AddWord") {
+                wordIdToUse = wordId;}
+            else {
+                wordIdToUse = selectedWord;
+            }
+
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
