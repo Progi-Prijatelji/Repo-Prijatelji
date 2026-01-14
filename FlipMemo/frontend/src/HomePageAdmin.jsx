@@ -188,8 +188,13 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje riječi.");
                 return;
             }
-            setWordId(data.wordid);
+            /*setWordId(data.wordid);*/
             fetchWords();
+            setWord("");
+            setWordId("");
+            setWordTrans("");
+            setWordLangID("");
+            setPhraseToAdd([]);
             
         }catch (error) {
             console.error("Greška:", error);
@@ -570,7 +575,8 @@ function HomePageAdmin() {
                         <div className='add-word word-adding-part'>
                             <h2>Uređivanje riječi</h2>
                             <button className="option-button"onClick={()=>toggleOptions("AddWord")}>Dodaj Riječ</button>
-                            {revealed === "AddWord" && <div className='adding-section'>
+                            {revealed === "AddWord" && 
+                            <div className='adding-section'>
                                 <h3>Dodaj novu riječ</h3>
                                 <form onSubmit={handleAddWord} className='add-word-form'>
                                     <input type="text" placeholder="Riječ na hrvatskom" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
@@ -605,9 +611,19 @@ function HomePageAdmin() {
 
                                     <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
+                            </div>}
+                            <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj Riječ</button>
+                            {revealed === "AddWordToDict" &&
+                            <div>
                                 <form onSubmit={handleAddWordToDictionary}>
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
+                                    <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
+                                        <option value="">Jezik</option>
+                                        {languages.map((lang) => (
+                                            <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                        ))}
+                                    </select>
                                     
                                     {typedWord && allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
                                         <div key={w.wordid}>
