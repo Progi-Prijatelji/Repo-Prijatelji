@@ -166,7 +166,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const usedWords = await client.query(`select word from words where langid = $1`,[langid])
 
-    const exists = usedWords.rows.find(r => r.word === word && r.langid === langid)
+    const exists = usedWords.rows.find(r => r.word === word)
     if(exists){
       const wordIDUsed = await client.query(`select wordid from words where word = $1 and langid = $2`,[word, langid])
       res.json({ success: true, wordid: wordIDUsed.rows[0].wordid});
@@ -187,8 +187,17 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       }
 
       await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, NULL, NULL, $3, NULL)`,[i, translation, 1]);
+
       for (phrase of phrasesNative) {
-        await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, i]);
+        const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+        const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+
+        let q = 1;
+        while (existingPhraseIDs.includes(q)) {
+        q++;
+        }
+
+        await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1,$2, $3)`, [q, phrase, i]);
       }
 
       translationId = i;
@@ -198,7 +207,15 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
       const existingPhrases = phrases.rows.map(r => r.phrase);
       for (phrase of phrasesNative) {
         if (!existingPhrases.includes(phrase)) {
-          await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, translationId]);
+          const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+          const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+
+          let q = 1;
+          while (existingPhraseIDs.includes(q)) {
+            q++;
+          }
+
+          await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, translationId]);
         }
       }
     }
@@ -213,7 +230,15 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
 
     await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, $3, $4, $5, $6)`, [j, word, audioFile, postId, langid, translationId]); 
     for (phrase of phrasesForeign) {
-      await client.query(`insert into phrases (phrase, wordid) values ($1, $2)`, [phrase, j]);
+      const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+      const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+
+      let q = 1;
+      while (existingPhraseIDs.includes(q)) {
+        q++;
+      }
+
+      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2)`, [q, phrase, j]);
     }
 
     res.json({ success: true, wordid: j});
