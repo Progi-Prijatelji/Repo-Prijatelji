@@ -166,7 +166,7 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
   try {
     const usedWords = await client.query(`select word from words where langid = $1`,[langid])
 
-    const exists = usedWords.rows.find(r => r.word === word)
+    const exists = usedWords.rows.find(r => r.word === word && r.langid === langid)
     if(exists){
       const wordIDUsed = await client.query(`select wordid from words where word = $1 and langid = $2`,[word, langid])
       res.json({ success: true, wordid: wordIDUsed.rows[0].wordid});
