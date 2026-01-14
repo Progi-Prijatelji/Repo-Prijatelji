@@ -39,6 +39,8 @@
     justify-content: space-around;
     align-items: center;
     background-color: #e7d9f5;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .adding-section label{
     font-weight: bold;
@@ -68,11 +70,12 @@
     display: block;
 }
 
-.add-word-form{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
+.add-word-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .word-adding{

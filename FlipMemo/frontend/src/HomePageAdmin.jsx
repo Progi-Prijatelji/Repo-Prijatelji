@@ -589,8 +589,9 @@ function HomePageAdmin() {
                                             phrase.example; 
 
                                         return (
-                                            <div key={index} className='existing admin-list'>
+                                            <div key={index} className='admin-list'>
                                                 <input
+                                                    className='admin-list-item'
                                                     type="checkbox"
                                                     checked={phrasesForeign.includes(sourceSentence)}
                                                     onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}
