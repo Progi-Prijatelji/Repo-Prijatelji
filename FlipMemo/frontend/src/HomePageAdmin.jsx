@@ -292,12 +292,13 @@ function HomePageAdmin() {
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
         try{
+            const wordIdToUse = selectedWord || wordId;
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({wordid: selectedWord, dictids: selectedDictIds})
+                body: JSON.stringify({wordid: wordIdToUse, dictids: selectedDictIds})
             });
             const data = await results.json();
             if (!data.success) {
