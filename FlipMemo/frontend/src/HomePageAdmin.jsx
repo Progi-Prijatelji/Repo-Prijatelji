@@ -589,7 +589,7 @@ function HomePageAdmin() {
                                             phrase.example; 
 
                                         return (
-                                            <div key={index}>
+                                            <div key={index} className='existing admin-list'>
                                                 <input
                                                     type="checkbox"
                                                     checked={phrasesForeign.includes(sourceSentence)}
