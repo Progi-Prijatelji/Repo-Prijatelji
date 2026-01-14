@@ -6,7 +6,7 @@ import { Settings, Menu, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
-    const [language, setLanguage] = useState('engleski')
+ 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
