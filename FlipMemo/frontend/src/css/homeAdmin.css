@@ -18,10 +18,9 @@
 
 .admin-main-layout{
   background-color: white;
-  width: 100%;
-  
+  width: 80%;
   flex: 1; /* zauzima sav preostali prostor */
-  padding: 10px;
+  padding: 20px;
   margin: 0;
   display: flex;
   flex-direction: column;

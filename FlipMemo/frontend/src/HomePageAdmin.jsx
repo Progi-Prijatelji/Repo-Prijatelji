@@ -52,6 +52,9 @@ function HomePageAdmin() {
     const [revealed, setRevealed] = useState("");
     const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
+    const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState([]);
+    const [phrasesNativeChanged, setPhrasesNativeChanged] = useState([]);
+
 
     const changeWord = async(originalWord, newWord) => {
         if (!newWord || newWord===originalWord.word) {
@@ -64,7 +67,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                 },
-                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord})
+                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: phrasesForeignMoreChanged})
             });
             const data = await results.json();
             if (!data.success) {
@@ -200,6 +203,9 @@ function HomePageAdmin() {
             setWordTrans("");
             /*setWordLangID("");*/
             setPhraseToAdd([]);
+            setPhrasesForeign([]);
+            setPhrasesNative([]);
+            
             
         }catch (error) {
             console.error("Greška:", error);
@@ -615,14 +621,11 @@ function HomePageAdmin() {
                                         );
                                     })}
                                     <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split(","))}/>
-                                    <textarea placeholder="fraze na hrvatskom jeziku" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
+                                    <textarea placeholder="fraze na hrvatskom jeziku (odvojene zarezom)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
                                     <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
                                 <form onSubmit={handleAddWordToDictionary}>
-                                    
-                                    <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
-                                    
-                                    {typedWord && allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
+                                    {allWordList.map((w) => (
                                         <div key={w.wordid}>
                                             <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
                                             <label>{w.word}</label>
@@ -688,6 +691,7 @@ function HomePageAdmin() {
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             changeWord(wordItem, changedWord)}}>
                                                             <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                            <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value.split(","))}/>
                                                             <button className="admin-btn" type="submit">Spremi</button>
                                                         </form>
                                                     ) }
