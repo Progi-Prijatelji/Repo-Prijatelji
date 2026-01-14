@@ -19,7 +19,7 @@
 .admin-main-layout{
   background-color: white;
   width: 100%;
-  height: 100%;
+  
   flex: 1; /* zauzima sav preostali prostor */
   padding: 10px;
   margin: 0;
@@ -40,6 +40,7 @@
 
 .user-containers {
   width: 100%;
+  
   display: flex;
   gap: 20px; /* razmak koji lijepo raspoređuje oba kontainera */
 }

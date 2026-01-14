@@ -50,6 +50,7 @@ function HomePageAdmin() {
     const [changedWord, setChangedWord] = useState("");
 
     const [revealed, setRevealed] = useState("");
+    const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
 
     const changeWord = async(originalWord, newWord) => {
