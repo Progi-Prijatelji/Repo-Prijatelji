@@ -199,12 +199,25 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje riječi.");
                 return;
             }
+            if (selectedDictIds.length > 0) {
+                const addToDictResults = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                    },
+                    body: JSON.stringify({wordid: data.wordid, dictids: selectedDictIds})
+                });
+                const addToDictData = await addToDictResults.json();
+                if (!addToDictData.success) {
+                    alert(addToDictData.message || "Neuspješno dodavanje riječi u rječnik.");
+                }
+            }
             setWordId(data.wordid);
             fetchWords();
             setWord("");
-            /*setWordId("");*/
+            setWordId("");
             setWordTrans("");
-            /*setWordLangID("");*/
+            setWordLangID("");
             setPhraseToAdd([]);
             setPhrasesForeign([]);
             setPhrasesNative([]);
@@ -633,9 +646,6 @@ function HomePageAdmin() {
                                     })}
                                     <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split(","))}/>
                                     <textarea placeholder="fraze na hrvatskom jeziku (odvojene zarezom)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
-                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
-                                </form>
-                                <form onSubmit={handleAddWordToDictionary}>
                                     <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
                                         <div key={dict.dictid}>
@@ -643,7 +653,7 @@ function HomePageAdmin() {
                                             <label>{dict.dictname}</label>
                                         </div>
                                     ))}
-                                    <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
+                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj u rječnik</button>
