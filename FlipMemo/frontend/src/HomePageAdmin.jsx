@@ -304,19 +304,13 @@ function HomePageAdmin() {
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
         try{
-            let wordIdToUse = "";
-            if (revealed !== "AddWord") {
-                wordIdToUse = wordId;}
-            else {
-                wordIdToUse = selectedWord;
-            }
-
+            
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({wordid: wordIdToUse, dictids: selectedDictIds})
+                body: JSON.stringify({wordid: selectedWord, dictids: selectedDictIds})
             });
             const data = await results.json();
             if (!data.success) {
@@ -327,6 +321,7 @@ function HomePageAdmin() {
             setWordId("");
             setWordTrans("");
             setWordLangID("");
+            setSelectedWord("");
             setSelectedDictIds([]);
             setTypedWord("");
         }catch(error){
@@ -631,16 +626,17 @@ function HomePageAdmin() {
                                             phrase.example; 
 
                                         return (
-                                            <div key={index} className='admin-list existing'>
-                                                <input
-                                                    className='admin-list-item'
-                                                    type="checkbox"
-                                                    checked={phrasesForeign.includes(sourceSentence)}
-                                                    onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}
-                                                />
-                                                <label>
-                                                    {sourceSentence}
-                                                </label>
+                                            <div className='admin-list existing'>
+                                                <div key={index} className='admin-list-item'>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={phrasesForeign.includes(sourceSentence)}
+                                                        onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}
+                                                    />
+                                                    <label>
+                                                        {sourceSentence}
+                                                    </label>
+                                                </div>
                                             </div>
                                         );
                                     })}
@@ -648,9 +644,11 @@ function HomePageAdmin() {
                                     <textarea placeholder="fraze na hrvatskom jeziku (odvojene zarezom)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
                                     <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                        <div key={dict.dictid} className='existing'>
-                                            <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                            <label>{dict.dictname}</label>
+                                        <div className='admin-list existing'>
+                                            <div key={dict.dictid} className='admin-list-item'>
+                                                <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                                <label>{dict.dictname}</label>
+                                            </div>
                                         </div>
                                     ))}
                                     <button className="admin-btn" type="submit">Dodaj riječ</button>
