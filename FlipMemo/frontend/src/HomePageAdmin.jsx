@@ -53,8 +53,7 @@ function HomePageAdmin() {
     const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
     const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState([]);
-    const [phrasesNativeChanged, setPhrasesNativeChanged] = useState([]);
-
+    
 
     const changeWord = async(originalWord, newWord) => {
         if (!newWord || newWord===originalWord.word) {
@@ -200,12 +199,25 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dodavanje riječi.");
                 return;
             }
+            if (selectedDictIds.length > 0) {
+                const addToDictResults = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                    },
+                    body: JSON.stringify({wordid: data.wordid, dictids: selectedDictIds})
+                });
+                const addToDictData = await addToDictResults.json();
+                if (!addToDictData.success) {
+                    alert(addToDictData.message || "Neuspješno dodavanje riječi u rječnik.");
+                }
+            }
             setWordId(data.wordid);
             fetchWords();
             setWord("");
-            /*setWordId("");*/
+            setWordId("");
             setWordTrans("");
-            /*setWordLangID("");*/
+            setWordLangID("");
             setPhraseToAdd([]);
             setPhrasesForeign([]);
             setPhrasesNative([]);
@@ -292,13 +304,13 @@ function HomePageAdmin() {
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
         try{
-            const wordIdToUse = selectedWord || wordId;
+            
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },
-                body: JSON.stringify({wordid: wordIdToUse, dictids: selectedDictIds})
+                body: JSON.stringify({wordid: selectedWord, dictids: selectedDictIds})
             });
             const data = await results.json();
             if (!data.success) {
@@ -309,6 +321,7 @@ function HomePageAdmin() {
             setWordId("");
             setWordTrans("");
             setWordLangID("");
+            setSelectedWord("");
             setSelectedDictIds([]);
             setTypedWord("");
         }catch(error){
@@ -608,43 +621,44 @@ function HomePageAdmin() {
                                     <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
 
                                     {Number(wordLangID) === 2 && <button type="button" className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
-                                    {phraseToAdd.map((phrase, index) => {
-                                        const sourceSentence =
-                                            phrase.example; 
+                                    <div className='admin-list existing'>
+                                        {phraseToAdd.map((phrase, index) => {
+                                            const sourceSentence =
+                                                phrase.example; 
 
-                                        return (
-                                            <div key={index} className='admin-list'>
-                                                <input
-                                                    className='admin-list-item'
-                                                    type="checkbox"
-                                                    checked={phrasesForeign.includes(sourceSentence)}
-                                                    onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}
-                                                />
-                                                <label>
-                                                    {sourceSentence}
-                                                </label>
-                                            </div>
-                                        );
-                                    })}
+                                            return (
+                                                    <div key={index} className='admin-list-item'>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={phrasesForeign.includes(sourceSentence)}
+                                                            onChange={() => handleDictCheckboxChangePhrase(sourceSentence)}
+                                                        />
+                                                        <label>
+                                                            {sourceSentence}
+                                                        </label>
+                                                    </div>
+                                            );
+                                        })}
+                                    </div>
                                     <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split(","))}/>
                                     <textarea placeholder="fraze na hrvatskom jeziku (odvojene zarezom)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
-                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
-                                </form>
-                                <form onSubmit={handleAddWordToDictionary}>
                                     <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                                    {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                        <div key={dict.dictid}>
-                                            <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                            <label>{dict.dictname}</label>
-                                        </div>
-                                    ))}
-                                    <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
+                                    <div className='admin-list existing'>
+                                        {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                                <div key={dict.dictid} className='admin-list-item'>
+                                                    <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                                    <label>{dict.dictname}</label>
+                                                </div>
+                                        ))}
+                                    </div>
+                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj u rječnik</button>
                             {revealed === "AddWordToDict" &&
                             <div>
                                 <form onSubmit={handleAddWordToDictionary}>
+                                    <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                     <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
@@ -653,20 +667,22 @@ function HomePageAdmin() {
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                         ))}
                                     </select>
-                                    
-                                    {typedWord && allWordList.filter(w => w.word.includes(typedWord)).map((w) => (
-                                        <div key={w.wordid}>
-                                            <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
-                                            <label>{w.word}</label>
-                                        </div>
-                                    ))}
-                                    <label>Odaberi rječnik u koji želiš dodati riječ:</label>
-                                    {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                        <div key={dict.dictid}>
-                                            <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                            <label>{dict.dictname}</label>
-                                        </div>
-                                    ))}
+                                    <div className='admin-list existing'>
+                                        {typedWord && allWordList.filter(w => w.word.includes(typedWord) && w.langid === Number(wordLangID)).map((w) => (
+                                            <div key={w.wordid}>
+                                                <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
+                                                <label>{w.word}</label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className='admin-list existing'>
+                                        {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                            <div key={dict.dictid} className='admin-list-item'>
+                                                <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                                <label>{dict.dictname}</label>
+                                            </div>
+                                        ))}
+                                    </div>
                                     <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
                                 </form>
                             </div>}

@@ -152,7 +152,7 @@ router.post('/addLang', verifyToken, verifyAdmin, async (req, res) =>{
 
 router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
-        const result = await client.query(`SELECT * FROM LANGUAGES where langid > 1`);
+        const result = await client.query(`SELECT * FROM LANGUAGES`);
     
         res.json({success: true, langs: result.rows});
     } catch (err) {
@@ -284,7 +284,6 @@ router.get('/showAllWords', verifyToken, verifyAdmin, async (req, res) =>{
   try {
     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordid, t.word AS translation, l.langname AS langname, l.langid AS langid
                                             FROM languages l JOIN words w ON l.langid = w.langid LEFT JOIN words t ON t.wordid = w.translationid
-                                            WHERE w.langid <> 1
                                             ORDER BY word`);
 
     res.json({success: true, words: returnWords.rows});
@@ -321,10 +320,20 @@ router.post('/fetchExamples', verifyToken, verifyAdmin, async (req, res)=>{
 });
 
 router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
-   const {wordid, newWord} = req.body;
+   const {wordid, newWord, phrases} = req.body;
 
    try {
     await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
+
+    for (phrase of phrases){
+      const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+      const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+      let q = 1;
+      while (existingPhraseIDs.includes(q)) {
+        q++;
+      }
+      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
+    }
 
     res.json({ success: true });
    } catch (err) {
