@@ -631,7 +631,7 @@ function HomePageAdmin() {
                                             phrase.example; 
 
                                         return (
-                                            <div key={index} className='admin-list'>
+                                            <div key={index} className='admin-list existing'>
                                                 <input
                                                     className='admin-list-item'
                                                     type="checkbox"
@@ -648,7 +648,7 @@ function HomePageAdmin() {
                                     <textarea placeholder="fraze na hrvatskom jeziku (odvojene zarezom)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
                                     <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                        <div key={dict.dictid}>
+                                        <div key={dict.dictid} className='existing'>
                                             <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
                                             <label>{dict.dictname}</label>
                                         </div>
@@ -660,6 +660,7 @@ function HomePageAdmin() {
                             {revealed === "AddWordToDict" &&
                             <div>
                                 <form onSubmit={handleAddWordToDictionary}>
+                                    <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                     <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
@@ -670,14 +671,13 @@ function HomePageAdmin() {
                                     </select>
                                     
                                     {typedWord && allWordList.filter(w => w.word.includes(typedWord) && w.langid === Number(wordLangID)).map((w) => (
-                                        <div key={w.wordid}>
+                                        <div key={w.wordid} className='existing'>
                                             <input type="radio" checked={selectedWord === w.wordid} onChange={()=>handleWordCheckboxChange(w.wordid)}/>
                                             <label>{w.word}</label>
                                         </div>
                                     ))}
-                                    <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                        <div key={dict.dictid}>
+                                        <div key={dict.dictid} className='existing'>
                                             <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
                                             <label>{dict.dictname}</label>
                                         </div>
