@@ -67,7 +67,7 @@ const Writing = ( {words} ) => {
     }
 
     try{
-      const isCorrect = inputValue.toLowerCase() === questionWord.toLowerCase();
+      const isCorrect = inputValue.toLowerCase().trim() === questionWord.toLowerCase().trim();
 
       const response = await fetch("https://fmimage.onrender.com/homeUser/updateWord", {
         method: "POST",

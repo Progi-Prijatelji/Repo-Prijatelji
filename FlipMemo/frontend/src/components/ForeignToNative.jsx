@@ -109,7 +109,7 @@ const ForeignToNative = ({ words }) => {
                     </div>
                     
                     <div className="question-section">
-                        <span className="question-word">{questionWord}</span>
+                        <span className="question-word">{questionWord.charAt(0).toUpperCase() + questionWord.slice(1)}</span>
                     </div>
                     
                     <div className="selection-section">
@@ -118,7 +118,7 @@ const ForeignToNative = ({ words }) => {
                                 key={index} 
                                 className="option-card" 
                                 onClick={() => handleClick(opt)}>
-                                {opt}
+                                {opt.charAt(0).toUpperCase() + opt.slice(1)}
                             </button>
                         ))}
                     </div>
