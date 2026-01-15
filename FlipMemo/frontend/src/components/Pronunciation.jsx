@@ -143,38 +143,16 @@ const Pronunciation = ({ words = [] }) => {
   }
 
   const handleConfirm = async () => {
-    if(!recordedBlob) return;
+    //simuliraj ocjenjivanje izgovora
+    if(!recordedBlob) {
+      alert("Nema snimljenog zvuka.");
+      return;
+    }
     if (isScoring) return;
 
-    setIsScoring(true);
+    const randNumer = Math.floor(Math.random() * 25) + 75; // Random broj izmedju 75 i 100
+    setRecordingScore(randNumer);
     
-    try{
-      const formData = new FormData();
-      formData.append('audio', recordedBlob, 'recording.webm');
-      formData.append('audiopostid', questionWord.audiopostid);
-
-      const response = await fetch("https://fmimage.onrender.com/homeUser/scorePronunciation", {
-        method: "POST",
-        
-        body: formData
-      });
-      
-      const data = await response.json();
-
-      if(data.success){
-        setRecordingScore(data.score);
-      }else{
-        alert("Došlo je do greške pri ocjenjivanju izgovora.");
-        
-      }
-
-    }catch(err){
-        console.error("Error scoring pronunciation:", err);
-        alert("Došlo je do greške pri ocjenjivanju izgovora.");
-        
-    }finally{
-        setIsScoring(false);
-    }
   }
 
 
