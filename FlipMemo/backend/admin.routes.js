@@ -152,7 +152,7 @@ router.post('/addLang', verifyToken, verifyAdmin, async (req, res) =>{
 
 router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
     try {
-        const result = await client.query(`SELECT * FROM LANGUAGES where langid > 1`);
+        const result = await client.query(`SELECT * FROM LANGUAGES`);
     
         res.json({success: true, langs: result.rows});
     } catch (err) {
