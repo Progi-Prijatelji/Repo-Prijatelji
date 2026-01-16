@@ -754,12 +754,9 @@ function HomePageAdmin() {
                                                             </form>
                                                         </div>
                                                     ) }
-                                                    <div >
-                                                        <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
-                                                        <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                        <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
-
-                                                    </div>
+                                                    <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
+                                                    <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                    <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
                                                 </li>
                                             ))}
                                         </ul>
