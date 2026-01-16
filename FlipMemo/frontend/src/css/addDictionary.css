@@ -169,3 +169,20 @@
 .admin-list-item-width{
     width: 80%;
 }
+
+
+.admin-list-item-words{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: #faf8fc;
+    border: 1px solid #e0d7ef;
+    padding: 10px 14px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 5%;
+    
+
+}

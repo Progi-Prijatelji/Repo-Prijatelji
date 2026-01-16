@@ -605,8 +605,9 @@ function HomePageAdmin() {
                                                             <ul>
                                                                 <h4>Riječi u rječniku:</h4>
                                                                 {wordList.map((wordItem) => (
-                                                                    <li key={wordItem.wordid} className='admin-list-item-block'>
+                                                                    <li key={wordItem.wordid} className='admin-list-item-words'>
                                                                         <p>{wordItem.word} - {wordItem.translation}</p>
+                                                                        <br />
                                                                         <ul>
                                                                             { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
                                                                                 <li key={index}>
@@ -745,7 +746,7 @@ function HomePageAdmin() {
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <div className='admin-list-item-block'>
                                                     <li key={wordItem.wordid} className='admin-list-item admin-list-item-width'>     
-                                                        <div>
+                                                        <div className='admin-form-part'>
                                                             <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
                                                             <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                         </div>                                  
