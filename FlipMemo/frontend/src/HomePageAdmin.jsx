@@ -82,7 +82,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                 },
-                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: phrasesForeignMoreChanged})
+                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: phrasesForeignMoreChanged.split(",")})
             });
             const data = await results.json();
             if (!data.success) {
@@ -91,6 +91,7 @@ function HomePageAdmin() {
             }
             setWordToEdit(null);
             setChangedWord("");
+            setPhrasesForeignMoreChanged("");
             await fetchWords();
         }catch(error){
             console.error("Greška:", error);
@@ -560,7 +561,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({wordid: word}),
+                body: JSON.stringify({wordid: word.wordId}),
                 credentials: "include"  
             });
             const data = await results.json();
