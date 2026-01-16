@@ -63,7 +63,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                 },
-                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: newPhrases.split(",")})
+                body: JSON.stringify({wordid: originalWord.wordid, newWord: originalWord.word, phrases: newPhrases.split(",")})
             });
             const data = await results.json();
             if (!data.success) {
@@ -74,6 +74,7 @@ function HomePageAdmin() {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
+        setPhrasesForeignMoreChanged("");
     }
 
 
@@ -106,6 +107,7 @@ function HomePageAdmin() {
     const editWord = async(wordid) => {
         setWordToEdit(prev=> prev === wordid ? null : wordid);
         setChangedWord("");
+        setAddNewPhrases(null);
     }
     
     const fetchWords = async() => {
@@ -576,6 +578,7 @@ function HomePageAdmin() {
     }
 
     const editPhrases = async(word) => {
+        setWordToEdit(null);
         setAddNewPhrases(prev=> prev === word ? null : word);
 
         try{
@@ -593,8 +596,9 @@ function HomePageAdmin() {
                 alert(data.message || "Neuspješno dobivanje fraza.");
                 return;
             }
-            console.log(data.phrases);
+
             setPhrasesForeignMoreChanged(data.phrases.map(p => p.example).join(",") || "");
+            console.log(setPhrasesForeignMoreChanged);
 
             
         }catch (error) {
@@ -755,8 +759,6 @@ function HomePageAdmin() {
                                                     <p>{wordItem.word} - {wordItem.translation}</p>
                                                     <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                     <button className="admin-add-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi riječ</button>
-                                                    <button className='admin-add-btn' onClick={()=>editPhrases(wordItem.wordid)}>Uredi fraze</button>
-            
                                                     { wordToEdit === wordItem.wordid &&(
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             changeWord(wordItem, changedWord)}}>
@@ -764,6 +766,9 @@ function HomePageAdmin() {
                                                             <button className="admin-btn" type="submit">Spremi</button>
                                                         </form>
                                                     ) }
+                                                    
+                                                    <button className='admin-add-btn' onClick={()=>editPhrases(wordItem.wordid)}>Uredi fraze</button>
+            
                                                     { addNewPhrases === wordItem.wordid &&(
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             phrasesForeignMoreChange(wordItem, changedWord)}}>
