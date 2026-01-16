@@ -590,43 +590,43 @@ function HomePageAdmin() {
                                         <button className="admin-btn" type="submit">Dodaj rječnik</button>
                                     </div>
                                 </form>
+                                {langID && 
                                 <div className='old-dictionary current-admins'>
-                                    <h2>Postojeći rječnici</h2>
+                                    <h2>Postojeći rječnici:</h2>
                                     <ul className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
-                                            <div className="dictionary-list">   
-                                                <li key={dict.dictid} >
-                                                    <div className='dictionary-list-items'> 
-                                                        <div className='admin-list-item'>
-                                                            {<button className="admin-btn" onClick={()=> showWords (dict.dictid)}>...</button>}
-                                                            <p>{dict.dictname} - {dict.description}</p>
-                                                        </div>
-                                                            {openDictId === dict.dictid  && (
-                                                                <ul>
-                                                                    <h4>Riječi u rječniku:</h4>
-                                                                    {wordList.map((wordItem) => (
-                                                                        <li key={wordItem.wordid} className='admin-list-item-block'>
-                                                                            <p>{wordItem.word} - {wordItem.translation}</p>
-                                                                            <ul>
-                                                                                { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
-                                                                                    <li key={index}>
-                                                                                        <p>{phrase.phrase}</p>
-                                                                                    </li>
-                                                                                ))}
-                                                                            </ul>
-                                                                            
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            )}
+                                            <li key={dict.dictid} >
+                                                {/*<div className='dictionary-list-items'> */}
+                                                    <div className='admin-list-item'>
+                                                        {<button className="admin-btn" onClick={()=> showWords (dict.dictid)}>...</button>}
+                                                        <p>{dict.dictname} - {dict.description}</p>
                                                     </div>
-                                                </li>
+                                                        {openDictId === dict.dictid  && (
+                                                            <ul>
+                                                                <h4>Riječi u rječniku:</h4>
+                                                                {wordList.map((wordItem) => (
+                                                                    <li key={wordItem.wordid} className='admin-list-item-block'>
+                                                                        <p>{wordItem.word} - {wordItem.translation}</p>
+                                                                        <ul>
+                                                                            { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
+                                                                                <li key={index}>
+                                                                                    <p>{phrase.phrase}</p>
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                        
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                {/*</div>*/}
+                                            </li>
 
-                                            </div>
                                             
                                         ))}
                                     </ul>
                                 </div>
+                                }
                             </div>}
                         </div>
 
@@ -649,9 +649,9 @@ function HomePageAdmin() {
                                     </div>
                                     <div className='admin-form-part'>
                                         <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
+                                        {Number(wordLangID) === 2 && <button type="button" className="admin-btn" onClick={() => askForPhrases(word)}>Prikaži fraze</button>}
                                     </div>
 
-                                    {Number(wordLangID) === 2 && <button type="button" className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
                                     <div className='admin-list existing'>
                                         {phraseToAdd.map((phrase, index) => {
                                             const sourceSentence =
@@ -675,16 +675,21 @@ function HomePageAdmin() {
                                         <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split("|"))}/>
                                         <textarea placeholder="fraze na hrvatskom jeziku (odvojene |)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split("|"))}/>
                                     </div>
-                                    <label>Odaberi rječnik/e u koji želiš dodati riječ:</label>
-                                    <div className='admin-list existing'>
-                                        {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                                <div key={dict.dictid} className='admin-list-item'>
-                                                    <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                                    <label>{dict.dictname}</label>
-                                                </div>
-                                        ))}
-                                    </div>
-                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
+                                    {wordLangID &&
+                                        <div>
+                                            <label>Odaberi rječnik/e u koji želiš dodati riječ:</label>
+                                            <div className='admin-list existing'>
+                                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                                        <div key={dict.dictid} className='admin-list-item'>
+                                                            <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                                            <label>{dict.dictname}</label>
+                                                        </div>
+                                                ))}
+                                            </div>
+                                            <button className="admin-btn" type="submit">Dodaj riječ</button>
+                                        </div>
+
+                                    }
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj u rječnik</button>
@@ -709,15 +714,19 @@ function HomePageAdmin() {
                                             </div>
                                         ))}
                                     </div>
-                                    <div className='admin-list existing'>
-                                        <h3>Odaberi rječnik/e u koje želiš dodati riječ:</h3>
-                                        {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
-                                            <div key={dict.dictid} className='admin-list-item'>
-                                                <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
-                                                <label>{dict.dictname}</label>
+                                    {wordLangID &&
+                                        <div>
+                                            <h3>Odaberi rječnik/e u koje želiš dodati riječ:</h3>
+                                            <div className='admin-list existing'>
+                                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                                    <div key={dict.dictid} className='admin-list-item'>
+                                                        <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
+                                                        <label>{dict.dictname}</label>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    }
                                     <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
                                 </form>
                             </div>}
@@ -736,7 +745,7 @@ function HomePageAdmin() {
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <li key={wordItem.wordid} className='admin-list-item'>                                        
                                                     { Number(wordToEdit) === wordItem.wordid &&(
-                                                        <div className='adding-section'>
+                                                        <div className='adding-section admin-list-item-block'>
                                                             <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
                                                                 changeWord(wordItem, changedWord)}}>
                                                                 <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
@@ -745,9 +754,12 @@ function HomePageAdmin() {
                                                             </form>
                                                         </div>
                                                     ) }
-                                                    <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
-                                                    <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                    <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
+                                                    <div >
+                                                        <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
+                                                        <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                        <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
+
+                                                    </div>
                                                 </li>
                                             ))}
                                         </ul>
