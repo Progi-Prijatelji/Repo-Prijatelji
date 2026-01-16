@@ -578,9 +578,9 @@ function HomePageAdmin() {
                 return;
             }
 
-            console.log(data.phrases);
-            setPhrasesForeignMoreChanged(data.phrases.map(p.join(",")) || "");
-            console.log(setPhrasesForeignMoreChanged);
+            
+            setPhrasesForeignMoreChanged(data.phrases.join(",") || "");
+            
 
             
         }catch (error) {
@@ -753,7 +753,7 @@ function HomePageAdmin() {
             
                                                     { addNewPhrases === wordItem.wordid &&(
                                                         <form onSubmit={(e)=>{e.preventDefault();
-                                                            phrasesForeignMoreChange(wordItem, changedWord)}}>
+                                                            phrasesForeignMoreChange(wordItem, phrasesForeignMoreChanged)}}>
                                                             <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value.split(","))}/>
                                                             <button className="admin-btn" type="submit">Spremi</button>
                                                         </form>
