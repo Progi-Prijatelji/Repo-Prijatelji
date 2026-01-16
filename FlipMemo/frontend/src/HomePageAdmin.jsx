@@ -28,6 +28,7 @@ function HomePageAdmin() {
 
     const [openDictId, setOpenDictId] = useState(null);
     const [wordList, setWordList] = useState([]);
+    const [phraseList, setPhraseList] = useState([]);
 
     const [allWordList, setAllWordList] = useState([]);
     const [languageFilter, setLanguageFilter] = useState("");
@@ -122,6 +123,7 @@ function HomePageAdmin() {
                 return;
             }
             setWordList(data.words);
+            setPhraseList(data.phrases);
 
         }catch(error){
             console.error("Greška:", error);
@@ -551,7 +553,7 @@ function HomePageAdmin() {
                 return;
             }
 
-            setPhrasesForeignMoreChanged(data.phrases.join(",") || "");
+            setPhrasesForeignMoreChanged(data.phrases.join("|") || "");
             
 
             
@@ -600,6 +602,13 @@ function HomePageAdmin() {
                                                         {wordList.map((wordItem) => (
                                                             <li key={wordItem.wordid}>
                                                                 <p>{wordItem.word} - {wordItem.translation}</p>
+                                                                <ul>
+                                                                    { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
+                                                                        <li key={index}>
+                                                                            <p>{phrase.phrase}</p>
+                                                                        </li>
+                                                                    ))}
+                                                                </ul>
                                                                 
                                                             </li>
                                                         ))}
