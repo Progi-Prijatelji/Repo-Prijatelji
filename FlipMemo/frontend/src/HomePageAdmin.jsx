@@ -560,7 +560,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({wordid: word.wordId}),
+                body: JSON.stringify({wordid: word.wordid}),
                 credentials: "include"  
             });
             const data = await results.json();
@@ -570,7 +570,6 @@ function HomePageAdmin() {
                 return;
             }
 
-            setPhrasesForeignMoreChanged("");
             setPhrasesForeignMoreChanged(data.phrases.join(",") || "");
             
 

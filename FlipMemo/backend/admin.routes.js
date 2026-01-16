@@ -350,13 +350,15 @@ router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
     await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
     await client.query(`delete from phrases where wordid = $1`, [wordid]);
     for (phrase of phrases){
-      const usedPhraseIDs = await client.query(`select phraseid from phrases`);
-      const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
-      let q = 1;
-      while (existingPhraseIDs.includes(q)) {
-        q++;
+      if (phrase !== "") {
+        const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+        const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+        let q = 1;
+        while (existingPhraseIDs.includes(q)) {
+          q++;
+        }
+        await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
       }
-      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
     }
 
     res.json({ success: true });
