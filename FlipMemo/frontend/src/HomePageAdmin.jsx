@@ -731,8 +731,8 @@ function HomePageAdmin() {
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
-                            {revealed === "EditWords" && <div className='remove-words word-adding-part'>
-                                <div className='adding-section add-word-form'>
+                            {revealed === "EditWords" && <div className='adding-section word-adding-part'>
+                                <div className='add-word-form'>
                                     <h3>Uredi ili obriši riječi</h3>
                                     <select className="admin-btn" value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
                                         <option value="">Jezik</option>
@@ -740,7 +740,7 @@ function HomePageAdmin() {
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                             ))}
                                     </select>
-                                    <div className='admin-list adding-section'>
+                                    <div className='admin-list'>
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <div className='admin-list-item-block'>
