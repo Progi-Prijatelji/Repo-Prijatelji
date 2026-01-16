@@ -104,12 +104,10 @@ function HomePageAdmin() {
         }
     }
     const editWord = async(wordid) => {
-        setWordToEdit(wordid);
+        setWordToEdit(prev=> prev === wordid ? null : wordid);
         setChangedWord("");
     }
-    const addNewPhrase = async(wordid) => { 
-        setAddNewPhrases(wordid);
-    }
+    
     const fetchWords = async() => {
         try { 
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/showAllWords", {
@@ -578,6 +576,8 @@ function HomePageAdmin() {
     }
 
     const editPhrases = async(word) => {
+        setAddNewPhrases(prev=> prev === word ? null : word);
+
         try{
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendPhrases", {
                 method: "POST",
@@ -619,7 +619,7 @@ function HomePageAdmin() {
                                     <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
                                     <select value={langID} onChange={(e) => setLangID(e.target.value)}>
                                         <option value="">Jezik</option>
-                                        {languages.map((lang) => (
+                                        {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                         ))}
                                     </select>
@@ -665,7 +665,7 @@ function HomePageAdmin() {
                                     <input type="text" placeholder="Riječ na hrvatskom" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
                                     <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                         <option value="">Jezik</option>
-                                        {languages.map((lang) => (
+                                        {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                         ))}
                                     </select>
@@ -715,7 +715,7 @@ function HomePageAdmin() {
                                     <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                     <select value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                         <option value="">Jezik</option>
-                                        {languages.map((lang) => (
+                                        {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                         ))}
                                     </select>
@@ -754,8 +754,8 @@ function HomePageAdmin() {
                                                 <li key={wordItem.wordid} className='admin-list-item'>
                                                     <p>{wordItem.word} - {wordItem.translation}</p>
                                                     <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                    <button className="admin-add-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
-                                                    <button className='admin-add-btn' onClick={()=>editPhrases(wordItem.wordid)}>Dodaj frazu</button>
+                                                    <button className="admin-add-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi riječ</button>
+                                                    <button className='admin-add-btn' onClick={()=>editPhrases(wordItem.wordid)}>Uredi fraze</button>
             
                                                     { wordToEdit === wordItem.wordid &&(
                                                         <form onSubmit={(e)=>{e.preventDefault();
