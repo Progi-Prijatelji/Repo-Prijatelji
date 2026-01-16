@@ -743,20 +743,23 @@ function HomePageAdmin() {
                                     <div className='admin-list adding-section'>
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
-                                                <li key={wordItem.wordid} className='admin-list-item'>                                        
-                                                    { Number(wordToEdit) === wordItem.wordid &&(
-                                                        <div className='adding-section admin-list-item-block'>
-                                                            <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
-                                                                changeWord(wordItem, changedWord)}}>
-                                                                <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                                <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
-                                                                <button className="admin-btn" type="submit">Spremi</button>
-                                                            </form>
-                                                        </div>
-                                                    ) }
-                                                    <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
-                                                    <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                    <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
+                                                <li key={wordItem.wordid} className='admin-list-item'>                                       
+                                                    <div className='adding-section admin-list-item-block'>
+                                                        { Number(wordToEdit) === wordItem.wordid &&(
+                                                                <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
+                                                                    changeWord(wordItem, changedWord)}}>
+                                                                    <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                                    <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
+                                                                    <button className="admin-btn" type="submit">Spremi</button>
+                                                                </form>
+                                                        ) }
+                                                    </div>
+                                                    <div className='admin-form-part'> 
+                                                        <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
+                                                        <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                        <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
+
+                                                    </div>
                                                 </li>
                                             ))}
                                         </ul>
