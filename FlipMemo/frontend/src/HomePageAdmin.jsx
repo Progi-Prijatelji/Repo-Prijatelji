@@ -578,7 +578,8 @@ function HomePageAdmin() {
                 return;
             }
 
-            setPhrasesForeignMoreChanged(data.phrases.map(p => p.example).join(",") || "");
+            console.log(data.phrases);
+            setPhrasesForeignMoreChanged(data.phrases.map(p.join(",")) || "");
             console.log(setPhrasesForeignMoreChanged);
 
             
@@ -736,7 +737,7 @@ function HomePageAdmin() {
                                     <div className='admin-list'>
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
-                                                <li key={wordItem.wordid} className='admin-list-item'>
+                                                <li key={wordItem.wordid} className='admin-list-item'>                                        
                                                     <p>{wordItem.word} - {wordItem.translation}</p>
                                                     <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                     <button className="admin-add-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi riječ</button>
