@@ -91,7 +91,6 @@ function HomePageAdmin() {
             }
             setWordToEdit(null);
             setChangedWord("");
-            setPhrasesForeignMoreChanged("");
             await fetchWords();
         }catch(error){
             console.error("Greška:", error);
@@ -571,7 +570,7 @@ function HomePageAdmin() {
                 return;
             }
 
-            
+            setPhrasesForeignMoreChanged("");
             setPhrasesForeignMoreChanged(data.phrases.join(",") || "");
             
 
