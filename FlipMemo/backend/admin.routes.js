@@ -292,7 +292,8 @@ router.get('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   const {dictid} = req.body
 
   try {
-    const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation FROM dictword dw JOIN words w ON w.wordid = dw.wordid
+    const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation, w.wordid AS wordid, w.translationid AS translationid
+                                            FROM dictword dw JOIN words w ON w.wordid = dw.wordid
                                             LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid]);
     
     const returnPhrases = await client.query(`SELECT p.phrase, p.wordid FROM dictword dw JOIN words w ON dw.wordid = w.wordid AND dictid = $1 LEFT JOIN words t ON w.translationid = t.wordid LEFT JOIN phrases p ON p.wordid = w.wordid OR p.wordid = t.wordid`, [dictid]);
