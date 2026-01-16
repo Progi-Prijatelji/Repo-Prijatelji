@@ -749,7 +749,7 @@ function HomePageAdmin() {
                                                         <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                         <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
                                                     </li>
-                                                    <div className='adding-section '>
+                                                    <div className='word-adding-part'>
                                                         { Number(wordToEdit) === wordItem.wordid &&(
                                                                 <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
                                                                     changeWord(wordItem, changedWord)}}>
