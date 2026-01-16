@@ -134,4 +134,18 @@
     gap: 5px;
 }
 
+.admin-list-item-block{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-part{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px 0px;
+}
+
 
