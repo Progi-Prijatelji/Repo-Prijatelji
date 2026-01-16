@@ -182,7 +182,7 @@
     align-items: center;
     margin-bottom: 8px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 20%;
+    border-radius: 20px;
     
 
 }
