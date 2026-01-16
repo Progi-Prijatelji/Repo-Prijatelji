@@ -49,11 +49,33 @@ function HomePageAdmin() {
     const [wordToEdit, setWordToEdit] = useState(null);
     const [changedWord, setChangedWord] = useState("");
 
+
     const [revealed, setRevealed] = useState("");
     const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
-    const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState([]);
+    const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState("");
+    const [addNewPhrases, setAddNewPhrases] = useState(null);
     
+    const phrasesForeignMoreChange = async(originalWord, newPhrases) => {
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/changeWord", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                },
+                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: newPhrases.split(",")})
+            });
+            const data = await results.json();
+            if (!data.success) {
+                alert(data.message || "Neuspješno mijenjanje fraza.");
+                return;
+            }
+        }catch(error){
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+
 
     const changeWord = async(originalWord, newWord) => {
         if (!newWord || newWord===originalWord.word) {
@@ -84,6 +106,9 @@ function HomePageAdmin() {
     const editWord = async(wordid) => {
         setWordToEdit(wordid);
         setChangedWord("");
+    }
+    const addNewPhrase = async(wordid) => { 
+        setAddNewPhrases(wordid);
     }
     const fetchWords = async() => {
         try { 
@@ -551,6 +576,33 @@ function HomePageAdmin() {
     const toggleOptions = (option) => {
         setRevealed(prev => prev === option ? "" : option);
     }
+
+    const editPhrases = async(word) => {
+        try{
+            const results = await fetch("https://fmimage.onrender.com/homeAdmin/sendPhrases", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                },
+                body: JSON.stringify({wordid: word}),
+                credentials: "include"  
+            });
+            const data = await results.json();
+
+            if (!data.success) {
+                alert(data.message || "Neuspješno dobivanje fraza.");
+                return;
+            }
+            console.log(data.phrases);
+            setPhrasesForeignMoreChanged(data.phrases.map(p => p.example).join(",") || "");
+
+            
+        }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+
     return(
         <>
         <HeaderAdmin />
@@ -702,11 +754,19 @@ function HomePageAdmin() {
                                                 <li key={wordItem.wordid} className='admin-list-item'>
                                                     <p>{wordItem.word} - {wordItem.translation}</p>
                                                     <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                    <button className="admin-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
+                                                    <button className="admin-add-btn" onClick={()=>editWord(wordItem.wordid)}>Uredi</button>
+                                                    <button className='admin-add-btn' onClick={()=>editPhrases(wordItem.wordid)}>Dodaj frazu</button>
+            
                                                     { wordToEdit === wordItem.wordid &&(
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             changeWord(wordItem, changedWord)}}>
                                                             <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                            <button className="admin-btn" type="submit">Spremi</button>
+                                                        </form>
+                                                    ) }
+                                                    { addNewPhrases === wordItem.wordid &&(
+                                                        <form onSubmit={(e)=>{e.preventDefault();
+                                                            phrasesForeignMoreChange(wordItem, changedWord)}}>
                                                             <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value.split(","))}/>
                                                             <button className="admin-btn" type="submit">Spremi</button>
                                                         </form>
