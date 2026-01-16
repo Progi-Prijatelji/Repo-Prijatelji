@@ -740,7 +740,7 @@ function HomePageAdmin() {
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                             ))}
                                     </select>
-                                    <div className='admin-list'>
+                                    <div>
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <div className='admin-list-item-block'>

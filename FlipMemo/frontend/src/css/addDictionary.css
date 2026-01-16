@@ -30,6 +30,8 @@
 }
 
 .adding-section{
+    display: flex;
+    justify-content: center;
     gap: 15px;
     margin-top: 15px;
     background-color: #e7d9f5;
