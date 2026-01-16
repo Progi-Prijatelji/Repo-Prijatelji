@@ -725,9 +725,9 @@ function HomePageAdmin() {
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <li key={wordItem.wordid} className='admin-list-item'>                                        
-                                                    <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
-                                                    <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                     <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
+                                                    <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                    <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
                                                     { Number(wordToEdit) === wordItem.wordid &&(
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             changeWord(wordItem, changedWord)}}>
