@@ -33,6 +33,8 @@
     gap: 15px;
     margin-top: 15px;
     background-color: #e7d9f5;
+    width: 80%;
+    padding: 8px;
 }
 
 .adding-section form{
@@ -94,6 +96,7 @@
     align-items: center;
     flex-direction: column;
     padding: 5px;
+
 }
 
 .option-button{

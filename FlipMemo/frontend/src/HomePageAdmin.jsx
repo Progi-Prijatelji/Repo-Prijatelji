@@ -745,11 +745,9 @@ function HomePageAdmin() {
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <div className='admin-list-item-block'>
                                                     <li key={wordItem.wordid} className='admin-list-item'>                                       
-                                                        <div className='admin-form-part'> 
-                                                            <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
-                                                            <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                            <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
-                                                        </div>
+                                                        <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
+                                                        <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                        <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
                                                     </li>
                                                     <div className='adding-section '>
                                                         { Number(wordToEdit) === wordItem.wordid &&(
