@@ -51,28 +51,9 @@ function HomePageAdmin() {
     const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
     const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState("");
-    const [addNewPhrases, setAddNewPhrases] = useState(null);
     
-    const phrasesForeignMoreChange = async(originalWord, newPhrases) => {
-        try{
-            const results = await fetch("https://fmimage.onrender.com/homeAdmin/changeWord", {
-                method: "POST",
-                headers: { "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                },
-                body: JSON.stringify({wordid: originalWord.wordid, newWord: originalWord.word, phrases: newPhrases.split(",")})
-            });
-            const data = await results.json();
-            if (!data.success) {
-                alert(data.message || "Neuspješno mijenjanje fraza.");
-                return;
-            }
-        }catch(error){
-            console.error("Greška:", error);
-            alert("Greška u povezivanju s poslužiteljem.");
-        }
-        setPhrasesForeignMoreChanged("");
-    }
+    
+    
 
 
     const changeWord = async(originalWord, newWord) => {
@@ -82,7 +63,7 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                 },
-                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: phrasesForeignMoreChanged.split(",")})
+                body: JSON.stringify({wordid: originalWord.wordid, newWord: newWord, phrases: phrasesForeignMoreChanged.split("|").map(p => p.trim()).filter(p => p !== "")})
             });
             const data = await results.json();
             if (!data.success) {
@@ -610,21 +591,21 @@ function HomePageAdmin() {
                                         <li key={dict.dictid} className='admin-list-item'>
                                             <div>
                                                 <p>{dict.dictname} - {dict.description}</p>
-                                                {/*<button onClick={()=> showWords (dict.dictid)}>...</button>*/}
+                                                {<button onClick={()=> showWords (dict.dictid)}>...</button>}
                                             </div>
-                                            {/*{openDictId === dict.dictid  && (
+                                            {openDictId === dict.dictid  && (
                                                 <div>
                                                     <h4>Riječi u rječniku:</h4>
                                                     <ul>
                                                         {wordList.map((wordItem) => (
                                                             <li key={wordItem.wordid}>
                                                                 <p>{wordItem.word} - {wordItem.translation}</p>
-                                                                <button onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                                
                                                             </li>
                                                         ))}
                                                     </ul>
                                                 </div>
-                                            )}*/}
+                                            )}
                                         </li>
                                         ))}
                                     </ul>
@@ -669,8 +650,8 @@ function HomePageAdmin() {
                                             );
                                         })}
                                     </div>
-                                    <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split(","))}/>
-                                    <textarea placeholder="fraze na hrvatskom jeziku (odvojene zarezom)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split(","))}/>
+                                    <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split("|"))}/>
+                                    <textarea placeholder="fraze na hrvatskom jeziku (odvojene |)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split("|"))}/>
                                     <label>Odaberi rječnik u koji želiš dodati riječ:</label>
                                     <div className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
@@ -736,7 +717,7 @@ function HomePageAdmin() {
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             changeWord(wordItem, changedWord)}}>
                                                             <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                            <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
+                                                            <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
                                                             <button className="admin-btn" type="submit">Spremi</button>
                                                         </form>
                                                     ) }
