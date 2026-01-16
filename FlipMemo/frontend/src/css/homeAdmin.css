@@ -1,14 +1,14 @@
 
 .admin-page {
-  width: 100vw;
+  /*width: 100vw;*/
   background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
   font-family: "Poppins", sans-serif;
-  padding-top: 250px; /* razmak od headera */
+  padding-top: 200px; /* razmak od headera */
   background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
-  min-height: 100vh;
+ /* min-height: 100vh;*/
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 20px;
@@ -18,7 +18,7 @@
 
 .admin-main-layout{
   background-color: white;
-  width: 80%;
+  width: 95vw;
   flex: 1; /* zauzima sav preostali prostor */
   padding: 20px;
   margin: 0;

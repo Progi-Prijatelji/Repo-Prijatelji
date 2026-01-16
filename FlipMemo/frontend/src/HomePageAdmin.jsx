@@ -594,14 +594,14 @@ function HomePageAdmin() {
                                                 <li key={dict.dictid} >
                                                     <div className='admin-list-item'>
                                                         <p>{dict.dictname} - {dict.description}</p>
-                                                        {<button onClick={()=> showWords (dict.dictid)}>...</button>}
+                                                        {<button className="admin-btn" onClick={()=> showWords (dict.dictid)}>...</button>}
                                                     </div>
                                                     {openDictId === dict.dictid  && (
                                                         <div className='dictionary-list-items'> 
                                                             <h4>Riječi u rječniku:</h4>
                                                             <ul>
                                                                 {wordList.map((wordItem) => (
-                                                                    
+
                                                                     <li key={wordItem.wordid} className='admin-list-item'>
                                                                         <p>{wordItem.word} - {wordItem.translation}</p>
                                                                         <ul>
