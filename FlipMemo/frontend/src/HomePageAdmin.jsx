@@ -591,7 +591,7 @@ function HomePageAdmin() {
                                     <ul className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                                         <li key={dict.dictid} className='admin-list-item'>
-                                            <div>
+                                            <div className='admin-list-item'>
                                                 <p>{dict.dictname} - {dict.description}</p>
                                                 {<button onClick={()=> showWords (dict.dictid)}>...</button>}
                                             </div>
@@ -600,7 +600,7 @@ function HomePageAdmin() {
                                                     <h4>Riječi u rječniku:</h4>
                                                     <ul>
                                                         {wordList.map((wordItem) => (
-                                                            <li key={wordItem.wordid}>
+                                                            <li key={wordItem.wordid} className='admin-list-item'>
                                                                 <p>{wordItem.word} - {wordItem.translation}</p>
                                                                 <ul>
                                                                     { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
