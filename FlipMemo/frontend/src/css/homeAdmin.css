@@ -135,7 +135,7 @@
   justify-content: space-between;
   flex-direction: row-reverse;
   align-items: center;
-  margin-bottom: 8px;
+  margin:4px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

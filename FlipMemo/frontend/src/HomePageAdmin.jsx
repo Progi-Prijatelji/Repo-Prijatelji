@@ -638,17 +638,17 @@ function HomePageAdmin() {
                                 <h3>Dodaj novu riječ</h3>
                                 <form onSubmit={handleAddWord} className='add-word-form'>
                                     <div className='admin-form-part'> 
-                                        <input type="text" placeholder="Riječ na hrvatskom" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
                                         <select className="admin-btn" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                             <option value="">Jezik</option>
                                             {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                             ))}
                                         </select>
+                                        <input type="text" placeholder="Riječ na hrvatskom" value={wordTrans} onChange={(e) => setWordTrans(e.target.value)}/>
                                     </div>
                                     <div className='admin-form-part'>
-                                        <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
                                         {wordLangID && <button className="admin-btn" type="button" onClick={translateWord}>Prevedi</button>}
+                                        <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
                                     </div>
 
                                     {Number(wordLangID) === 2 && <button type="button" className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
