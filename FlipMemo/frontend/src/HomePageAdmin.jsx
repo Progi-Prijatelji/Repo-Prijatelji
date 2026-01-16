@@ -110,7 +110,7 @@ function HomePageAdmin() {
         
         try{
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/showWords", {
-                method: "GET",
+                method: "POST",
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
              },

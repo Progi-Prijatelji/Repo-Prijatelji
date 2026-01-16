@@ -288,7 +288,7 @@ router.post('/addWordToDicts', verifyToken, verifyAdmin, async (req, res) =>{
   }
 });
 
-router.get('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
+router.post('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
   const {dictid} = req.body
 
   try {
