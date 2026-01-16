@@ -293,9 +293,11 @@ router.get('/showWords', verifyToken, verifyAdmin, async (req, res) =>{
 
   try {
     const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation FROM dictword dw JOIN words w ON w.wordid = dw.wordid
-                                            LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid])
+                                            LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid]);
+    
+    const returnPhrases = await client.query(`SELECT p.phrase, p.wordid FROM dictword dw JOIN words w ON dw.wordid = w.wordid AND dictid = $1 LEFT JOIN words t ON w.translationid = t.wordid LEFT JOIN phrases p ON p.wordid = w.wordid OR p.wordid = t.wordid`, [dictid]);
 
-    res.json({success: true, words: returnWords.rows});
+    res.json({success: true, words: returnWords.rows, phrases: returnPhrases.rows});
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false });
@@ -346,18 +348,15 @@ router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
 
    try {
     await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
-    const existingPhrases = await client.query(`SELECT phrase FROM phrases WHERE wordid = $1`, [wordid]);
-    const phrasesArray = existingPhrases.rows.map(r => r.phrase);
+    await client.query(`delete from phrases where wordid = $1`, [wordid]);
     for (phrase of phrases){
-      if (!(phrase in phrasesArray)) {
-        const usedPhraseIDs = await client.query(`select phraseid from phrases`);
-        const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
-        let q = 1;
-        while (existingPhraseIDs.includes(q)) {
-          q++;
-        }
-        await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
+      const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+      const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+      let q = 1;
+      while (existingPhraseIDs.includes(q)) {
+        q++;
       }
+      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
     }
 
     res.json({ success: true });
