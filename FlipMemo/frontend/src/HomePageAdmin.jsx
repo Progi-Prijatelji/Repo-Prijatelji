@@ -743,8 +743,15 @@ function HomePageAdmin() {
                                     <div className='admin-list adding-section'>
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
-                                                <li key={wordItem.wordid} className='admin-list-item'>                                       
-                                                    <div className='adding-section admin-list-item-block'>
+                                                <div className='admin-list-item-block'>
+                                                    <li key={wordItem.wordid} className='admin-list-item'>                                       
+                                                        <div className='admin-form-part'> 
+                                                            <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
+                                                            <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
+                                                            <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
+                                                        </div>
+                                                    </li>
+                                                    <div className='adding-section '>
                                                         { Number(wordToEdit) === wordItem.wordid &&(
                                                                 <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
                                                                     changeWord(wordItem, changedWord)}}>
@@ -754,13 +761,7 @@ function HomePageAdmin() {
                                                                 </form>
                                                         ) }
                                                     </div>
-                                                    <div className='admin-form-part'> 
-                                                        <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
-                                                        <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
-                                                        <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
-
-                                                    </div>
-                                                </li>
+                                                </div>
                                             ))}
                                         </ul>
                                     </div>
