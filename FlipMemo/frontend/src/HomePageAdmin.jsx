@@ -744,7 +744,7 @@ function HomePageAdmin() {
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
                                                 <div className='admin-list-item-block'>
-                                                    <li key={wordItem.wordid} className='admin-list-item'>                                       
+                                                    <li key={wordItem.wordid} className='admin-list-item admin-list-item-width'>                                       
                                                         <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
                                                         <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                         <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>

@@ -31,6 +31,7 @@
 
 .adding-section{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     gap: 15px;
     margin-top: 15px;
@@ -165,4 +166,6 @@
     margin-bottom: 8px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
+.admin-list-item-width{
+    width: 80%;
+}
