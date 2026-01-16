@@ -597,17 +597,18 @@ function HomePageAdmin() {
                                         {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
                                             <li key={dict.dictid} >
                                                 {/*<div className='dictionary-list-items'> */}
-                                                    <div className='admin-list-item'>
-                                                        {<button className="admin-btn" onClick={()=> showWords (dict.dictid)}>...</button>}
-                                                        <p>{dict.dictname} - {dict.description}</p>
-                                                    </div>
+                                                    <div className='admin-list-block'>
+                                                        <div className='admin-list-item'> 
+                                                            {<button className="admin-btn" onClick={()=> showWords (dict.dictid)}>...</button>}
+                                                            <p>{dict.dictname} - {dict.description}</p>
+                                                        </div>
                                                         {openDictId === dict.dictid  && (
                                                             <ul>
                                                                 <h4>Riječi u rječniku:</h4>
                                                                 {wordList.map((wordItem) => (
                                                                     <li key={wordItem.wordid} className='admin-list-item-words'>
                                                                         <p>{wordItem.word} - {wordItem.translation}</p>
-                                                                        <br />
+                                                                        <hr />
                                                                         <ul>
                                                                             { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
                                                                                 <li key={index}>
@@ -620,6 +621,7 @@ function HomePageAdmin() {
                                                                 ))}
                                                             </ul>
                                                         )}
+                                                    </div>
                                                 {/*</div>*/}
                                             </li>
 
@@ -750,7 +752,7 @@ function HomePageAdmin() {
                                                             <button className="admin-add-btn" onClick={()=>editPhrases(wordItem)}>Uredi riječ</button>
                                                             <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                         </div>                                  
-                                                        <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
+                                                        <p>{wordItem.word}{ wordItem.translation && <span> - {wordItem.translation}</span>}</p>
                                                     </li>
                                                     <div>
                                                         { Number(wordToEdit) === wordItem.wordid &&(
