@@ -3,10 +3,10 @@
   /*width: 100vw;*/
   background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: stretch;
   font-family: "Poppins", sans-serif;
-  padding-top: 200px; /* razmak od headera */
+  padding-top: 150px; /* razmak od headera */
   background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
  /* min-height: 100vh;*/
   padding-left: 10px;
@@ -130,10 +130,10 @@
 .admin-list-item {
   background: #faf8fc;
   border: 1px solid #e0d7ef;
-
   padding: 10px 14px;
   display: flex;
   justify-content: space-between;
+  flex-direction: row-reverse;
   align-items: center;
   margin-bottom: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
