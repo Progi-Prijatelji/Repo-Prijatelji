@@ -195,29 +195,13 @@ function HomePageAdmin() {
                 ...phrasesForeign,
                 ...morePhrases
             ];
-            let audioFile = "";
-            let audioPostId = "";
-            const lang = languages.find(l => l.langid===Number(wordLangID));
-            if (apiLanguageIds.get(lang.langname)) {
-                const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
-                    method: "POST",
-                    headers: { 
-                        'x-rapidapi-key': 'db42fd30a6msh16db513f27f5c5ap1d716bjsn7c',
-                        'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
-                        'Content-Type': 'application/json'
-                 },
-                    body: JSON.stringify({post_language_id: apiLanguageIds.get(lang.langname),  post_title: word, post_content: word})
-                });
-                const audioData = await audioResults.json();
-                audioFile = audioData.ai_reading;
-                audioPostId = audioData.post_id;
-            }
+            
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWord", {
                 method: "POST",
                 headers: { "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, audioFile: audioFile, postId: audioPostId, phrasesForeign: finalPhrasesForeign, phrasesNative: phrasesNative})
+                body: JSON.stringify({word: word,  langid: wordLangID, translation: wordTrans, phrasesForeign: finalPhrasesForeign, phrasesNative: phrasesNative})
             });
             const data = await results.json();
             if (!data.success) {

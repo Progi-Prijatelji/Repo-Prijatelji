@@ -161,7 +161,7 @@ router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
 });
 
 router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
-  const { word, langid, translation, audioFile, postId, phrasesForeign, phrasesNative } = req.body;
+  const { word, langid, translation, phrasesForeign, phrasesNative } = req.body;
 
   try {
     const usedWords = await client.query(`select word from words where langid = $1`,[langid])
@@ -226,6 +226,24 @@ router.post('/addWord', verifyToken, verifyAdmin, async (req, res) => {
     let j = 1;
     while (existingIDs.includes(j)) {
       j++;
+    }
+
+    let audioFile = "";
+    let postId = "";
+    const lang = languages.find(l => l.langid===Number(wordLangID));
+    if (apiLanguageIds.get(lang.langname)) {
+        const audioResults = await fetch("https://thefluentme.p.rapidapi.com/post", {
+            method: "POST",
+            headers: { 
+                'x-rapidapi-key': process.env.API1_KEY,
+                'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
+                'Content-Type': 'application/json'
+          },
+            body: JSON.stringify({post_language_id: apiLanguageIds.get(lang.langname),  post_title: word, post_content: word})
+        });
+        const audioData = await audioResults.json();
+        audioFile = audioData.ai_reading;
+        postId = audioData.post_id;
     }
 
     await client.query(`insert into words (wordid, word, audiofile, audiopostid, langid, translationid) values ($1, $2, $3, $4, $5, $6)`, [j, word, audioFile, postId, langid, translationId]); 
@@ -324,15 +342,18 @@ router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
 
    try {
     await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
-
+    const existingPhrases = await client.query(`SELECT phrase FROM phrases WHERE wordid = $1`, [wordid]);
+    const phrasesArray = existingPhrases.rows.map(r => r.phrase);
     for (phrase of phrases){
-      const usedPhraseIDs = await client.query(`select phraseid from phrases`);
-      const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
-      let q = 1;
-      while (existingPhraseIDs.includes(q)) {
-        q++;
+      if (!(phrase in phrasesArray)) {
+        const usedPhraseIDs = await client.query(`select phraseid from phrases`);
+        const existingPhraseIDs = usedPhraseIDs.rows.map(r => r.phraseid);
+        let q = 1;
+        while (existingPhraseIDs.includes(q)) {
+          q++;
+        }
+        await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
       }
-      await client.query(`insert into phrases (phraseid, phrase, wordid) values ($1, $2, $3)`, [q, phrase, wordid]);
     }
 
     res.json({ success: true });
@@ -353,6 +374,18 @@ router.post('/deleteWord', verifyToken, verifyAdmin, async (req, res) =>{
     console.error(err);
     res.status(500).json({ success: false });
    }
+});
+
+router.post('/sendPhrases',verifyToken, verifyAdmin, async (req, res) =>{
+  const { wordid } = req.body;
+  try {
+    const returnPhrases = await client.query(`SELECT phrase FROM phrases WHERE wordid = $1`, [wordid]);
+    const phrases = returnPhrases.rows.map(r => r.phrase);
+    res.json({success: true, phrases: phrases});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
 });
 
 module.exports = router;
