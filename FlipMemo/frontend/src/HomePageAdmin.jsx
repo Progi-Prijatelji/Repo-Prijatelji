@@ -646,8 +646,10 @@ function HomePageAdmin() {
                                             ))}
                                         </select>
                                     </div>
-                                    {wordLangID && <button className="admin-btn" type="button" onClick={translateWord}>Prevedi</button>}
-                                    <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
+                                    <div className='admin-form-part'>
+                                        <input type="text" placeholder="Riječ" value={word} onChange={(e) => setWord(e.target.value)}/>
+                                        {wordLangID && <button className="admin-btn" type="button" onClick={translateWord}>Prevedi</button>}
+                                    </div>
 
                                     {Number(wordLangID) === 2 && <button type="button" className="admin-btn" onClick={() => askForPhrases(word)}>Dodaj frazu</button>}
                                     <div className='admin-list existing'>
@@ -669,8 +671,10 @@ function HomePageAdmin() {
                                             );
                                         })}
                                     </div>
-                                    <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split("|"))}/>
-                                    <textarea placeholder="fraze na hrvatskom jeziku (odvojene |)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split("|"))}/>
+                                    <div className='admin-form-part'>
+                                        <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMore} onChange={(e) => setPhrasesForeignMore(e.target.value.split("|"))}/>
+                                        <textarea placeholder="fraze na hrvatskom jeziku (odvojene |)" value={phrasesNative} onChange={(e) => setPhrasesNative(e.target.value.split("|"))}/>
+                                    </div>
                                     <label>Odaberi rječnik/e u koji želiš dodati riječ:</label>
                                     <div className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
