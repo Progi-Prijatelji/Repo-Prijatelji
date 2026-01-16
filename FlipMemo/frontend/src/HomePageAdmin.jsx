@@ -731,8 +731,8 @@ function HomePageAdmin() {
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
-                            {revealed === "EditWords" && <div className='adding-section word-adding-part'>
-                                <div className='add-word-form'>
+                            {revealed === "EditWords" && 
+                            <div className='adding-section'>
                                     <h3>Uredi ili obriši riječi</h3>
                                     <select className="admin-btn" value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
                                         <option value="">Jezik</option>
@@ -749,21 +749,21 @@ function HomePageAdmin() {
                                                         <button className="admin-add-btn" onClick={()=> deleteWord(wordItem.wordid)}>X</button>
                                                         <p>{wordItem.word}{ wordItem.translation && <span>- {wordItem.translation}</span>}</p>
                                                     </li>
-                                                    <div className='word-adding-part'>
+                                                    <div>
                                                         { Number(wordToEdit) === wordItem.wordid &&(
-                                                                <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
-                                                                    changeWord(wordItem, changedWord)}}>
-                                                                    <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                                    <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
-                                                                    <button className="admin-btn" type="submit">Spremi</button>
-                                                                </form>
+                                                            <form className='admin-form-part' onSubmit={(e)=>{e.preventDefault();
+                                                                changeWord(wordItem, changedWord)}}>
+                                                                <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
+                                                                <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
+                                                                <button className="admin-btn" type="submit">Spremi</button>
+                                                            </form>
                                                         ) }
                                                     </div>
                                                 </div>
                                             ))}
                                         </ul>
                                     </div>
-                                </div>
+                                
                             </div>}
                             </div>
                             {/*<div className='add-language word-adding-part'>
