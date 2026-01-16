@@ -738,7 +738,7 @@ function HomePageAdmin() {
                                                         <form onSubmit={(e)=>{e.preventDefault();
                                                             changeWord(wordItem, changedWord)}}>
                                                             <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
-                                                            <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value.split(","))}/>
+                                                            <textarea placeholder="fraze na stranom jeziku (odvojene zarezom)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
                                                             <button className="admin-btn" type="submit">Spremi</button>
                                                         </form>
                                                     ) }
