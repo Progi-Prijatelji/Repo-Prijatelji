@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const ForeignToNative = ({ words }) => {
+const ForeignToNative = ({ words, allWords }) => {
 
     const [dictWords, setDictWords] = useState([]);
     const [allTranslations, setAllTranslations] = useState([]); //hrvatske rijeci
@@ -15,10 +15,11 @@ const ForeignToNative = ({ words }) => {
         if (words.length > 0) {
             
             const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+            const allTranslations = allWords.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
             setDictWords(normalized);
-            setAllTranslations(normalized.map(w => w.translation));
+            setAllTranslations(allTranslations.map(w => w.translation));
         }
-    }, [words]);
+    }, [words, allWords]);
 
     useEffect(() => {
         if (dictWords.length > 0 && allTranslations.length > 0 && progress === 0) {

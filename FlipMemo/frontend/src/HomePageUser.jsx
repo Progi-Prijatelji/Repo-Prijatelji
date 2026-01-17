@@ -34,7 +34,7 @@ function HomePageUser() {
         });
         const langData = await langRes.json();
         if (langData.success && langData.langs.length > 0) {
-          setLanguages(langData.langs);
+          setLanguages(langData.langs.filter(lang => lang.langid !== 1));
           setSelectedLanguage(langData.langs[0]);
         }
       } catch (err) {

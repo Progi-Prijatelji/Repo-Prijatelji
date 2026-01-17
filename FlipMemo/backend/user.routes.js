@@ -123,122 +123,20 @@ router.post('/checkWrittenWord', verifyToken, async (req, res) =>{
   }
 });
 
+router.post('/showWords', verifyToken, async (req, res) =>{
+  const {dictid} = req.body
 
-//----------------------PROXY (MOZDA NECE RADIT VIDIT CEMO) ----------------------
-//-----------------------------------------------------------------------------------
-
-router.get('/proxyAudio', async (req, res) => {
   try {
-    const { url } = req.query;
-    console.log('Proxy URL received:', url);
+    const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation, w.wordid AS wordid, w.translationid AS translationid
+                                            FROM dictword dw JOIN words w ON w.wordid = dw.wordid
+                                            LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid]);
     
-    if (!url) return res.status(400).json({ error: "URL is required" });
+    const returnPhrases = await client.query(`SELECT p.phrase, p.wordid FROM dictword dw JOIN words w ON dw.wordid = w.wordid AND dictid = $1 LEFT JOIN words t ON w.translationid = t.wordid LEFT JOIN phrases p ON p.wordid = w.wordid OR p.wordid = t.wordid`, [dictid]);
 
-    const audioResponse = await fetch(url);
-    console.log('Fetch status:', audioResponse.status);
-    
-    if (!audioResponse.ok) {
-      console.error('Audio fetch failed:', audioResponse.statusText);
-      return res.status(404).json({ error: "Audio not found" });
-    }
-
-    res.setHeader('Content-Type', 'audio/mpeg');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-    
-    
-    const buffer = await audioResponse.arrayBuffer();
-    res.send(buffer);
-    
+    res.json({success: true, words: returnWords.rows, phrases: returnPhrases.rows});
   } catch (err) {
-    console.error('Proxy error details:', err.message, err.stack);
-    res.status(500).json({ error: "Proxy error", details: err.message });
-  }
-});
-
-//-----------------------------------------------------------------------------------
-//-----------------------------------------------------------------------------------
-
-
-router.post('/scorePronunciation', upload.single('audio'), async (req, res) => {
-  try{
-    console.log(req.body);
-    console.log(req.file?.mimetype);
-
-    if(!req.file) return res.status(400).json({ success: false, message: 'Audio file missing' });
-
-    const postid = req.body.audiopostid;
-    if (!postid) return res.status(400).json({ success: false, message: 'audiopostid missing' });
-
-    // Kreiramo privremeni direktorij
-    const tempDir = path.join(__dirname, "tmp");
-    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
-
-    const inputPath = path.join(tempDir, `${Date.now()}_input.webm`);
-    const outputPath = path.join(tempDir, `${Date.now()}_output.wav`);
-
-
-    
-    //stvaranje wav filea iz webm filea
-    fs.writeFileSync(inputPath, req.file.buffer);
-    //upload na cloudinary u wav formatu
-    await new Promise((resolve, reject) => {
-      ffmpeg(inputPath)
-        .audioCodec("pcm_s16le")
-        .audioFrequency(16000)
-        .audioChannels(1)
-        .format("wav")
-        .on("end", resolve)
-        .on("error", reject)
-        .save(outputPath);
-    });
-
-
-    // Čitanje konvertiranog wav filea
-    const wavBuffer = fs.readFileSync(outputPath);
-
-    const uploadResult = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        {
-          resource_type: 'video',
-          folder: 'pronunciation',
-          format: 'wav',
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      ).end(wavBuffer);
-    });
-
-    //brisanje datoteka
-    fs.unlinkSync(inputPath);
-    fs.unlinkSync(outputPath);
-
-    const audioUrl = uploadResult.secure_url;
-    console.log(audioUrl);
-
-    const url = `https://thefluentme.p.rapidapi.com/score/${postid}?100`;
-    const options = {
-      method: 'POST',
-      headers: {
-        'x-rapidapi-key': process.env.API1_KEY,
-        'x-rapidapi-host': 'thefluentme.p.rapidapi.com',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ audio_provided: audioUrl})
-    };
-
-    const response = await fetch(url, options);
-    const result = await response.json();
-
-    const score = result?.[1]?.overall_result_data?.[0]?.overall_points ?? 0;
-    console.log(result, score);
-    res.json({ success: true, score: score, audioUrl: audioUrl });
-
-  }catch(err){
-    console.error("Error scoring pronunciation:", err);
-    res.status(500).json({ success: false, message: 'Scoring error' });
+    console.error(err);
+    res.status(500).json({ success: false });
   }
 });
 

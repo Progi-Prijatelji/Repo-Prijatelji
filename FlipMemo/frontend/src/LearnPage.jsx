@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import Header from './components/Header.jsx';
 import ForeighToNative from './components/ForeignToNative.jsx';
 import NativeToForeign from './components/NativeToForeign.jsx';
@@ -9,11 +10,9 @@ import './css/LearnPage.css';
 
 function LearnPage() {
   const { dictId, mode } = useParams();
-  const [dictionary, setDictionary] = useState('');
   const navigate = useNavigate();
   const [words, setWords] = useState([]);
-  const [wordIds, setWordIds] = useState([]);
-  const [translations, setTranslations] = useState([]);
+  const [allWords, setAllWords] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const wordsMock = [
@@ -39,19 +38,20 @@ function LearnPage() {
 
         console.log('sendWordsInDictForUser response status:', response.status);
 
-
-        const dictRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendDictList', {
+        const allWords = await fetch('https://fmimage.onrender.com/homeUser/showWords', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
-          }
+          },
+          body: JSON.stringify({ dictid: parseInt(dictId) })
         });
-        const dictData = await dictRes.json();
-        if (dictData.success) {
-          const foundDict = dictData.dicts.find(d => d.dictid === parseInt(dictId));
-          if (foundDict) setDictionary(foundDict.dictName); // Koristi setter
-        }
 
+        const allWordsData = await allWords.json();
+        if (allWordsData && allWordsData.success) {
+          setAllWords(allWordsData.words);
+        }
+        
         const data = await response.json();
         console.log('sendWordsInDictForUser response body:', data);
         if (data && data.success) {
@@ -81,15 +81,18 @@ function LearnPage() {
     <>
       <Header />
       <div className="learn-page">
-        <button className="back-button" onClick={() => navigate(-1)}>Nazad</button>
+        <button className="back-button" onClick={() => navigate(-1)}>
+          <ArrowLeft size={20} />
+          Nazad
+        </button>
         
 
         {mode === 'fton' && (
-          <ForeighToNative words={words} />
+          <ForeignToNative words={words} allWords={allWords} />
         )}
 
         {mode === 'ntof' && (
-          <NativeToForeign words={words}/>
+          <NativeToForeign words={words} allWords={allWords} />
         )}
 
         {mode === 'write' && (
