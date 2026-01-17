@@ -13,6 +13,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
           const selectedId = Number(e.target.value);
           const lang = langs.find((l) => l.langid === selectedId);
           onChange(lang || null);
+          console.log('Selected language:', lang);
         }}
         className="language-selector"
       >

@@ -34,12 +34,10 @@ function HomePageUser() {
         });
         const langData = await langRes.json();
         if (langData.success && langData.langs.length > 0) {
-          setLanguages(langData.langs.filter(lang => lang.langid !== 1));
-          setSelectedLanguage(langData.langs[0]);
+          const filtered = langData.langs.filter(lang => lang.langid !== 1);
+          setLanguages(filtered);
+          setSelectedLanguage(filtered[0] ?? null);
         }
-
-        const dict = await dictRes.json();
-        if (dict.success) setDictionaries(dict.dicts);
       } catch (err) {
         console.error('Greška pri dohvaćanju podataka:', err);
       }
@@ -55,6 +53,9 @@ function HomePageUser() {
     navigate(`/learn/${selectedDict.dictid}/${mode}`);
   };
 
+
+  
+
   return (
     <>
       <Header />
@@ -63,7 +64,7 @@ function HomePageUser() {
           <LanguageSelector
             language={selectedLanguage}
             languages={languages}
-            onChange={setSelectedLanguage}
+            onChange={{setSelectedLanguage}}
           />
           <div className="dictionary-list">
             {selectedLanguage && dictionaries
