@@ -37,6 +37,9 @@ function HomePageUser() {
           setLanguages(langData.langs.filter(lang => lang.langid !== 1));
           setSelectedLanguage(langData.langs[0]);
         }
+
+        const dict = await dictRes.json();
+        if (dict.success) setDictionaries(dict.dicts);
       } catch (err) {
         console.error('Greška pri dohvaćanju podataka:', err);
       }
