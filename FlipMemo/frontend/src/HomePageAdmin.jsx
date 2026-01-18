@@ -331,7 +331,7 @@ function HomePageAdmin() {
 
     const handleWordCheckboxChange = (wordId) => {
         setSelectedWord(wordId);
-        fetchDictToAddWord(wordId)
+        
     };
 
     const handleAddLanguage = async (e) => {
@@ -453,7 +453,14 @@ function HomePageAdmin() {
         fetchDictionaries();
         fetchAdmin();
         fetchWords();
+
     }, []);
+
+    useEffect(() => {
+        if (selectedWord) {
+            fetchDictToAddWord(selectedWord);
+        }
+    }, [selectedWord]);
     
     const handleSearch = async(e) => {
         e.preventDefault();
