@@ -58,6 +58,8 @@ function HomePageAdmin() {
     const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState("");
     
     const [addedSucc, setAddedSucc] = useState("")
+
+    const [dictAddWord, setDictAddWord] = useState("")
     
     
 
@@ -585,17 +587,17 @@ function HomePageAdmin() {
                 headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
                 },
-                body: JSON.stringify({wordid: word.wordid}),
+                body: JSON.stringify({wordid: word}),
                 credentials: "include"  
             });
             const data = await result.json();
 
             if (!data.success) {
-                alert(data.message || "Neuspješno dobivanje fraza.");
+                alert(data.message || "Neuspješno dobivanje rjecnika.");
                 return;
             }
 
-            setDictionaries(result)
+            setDictAddWord(result)
 
         }catch(error){
             console.error("Greška:", error);
@@ -768,11 +770,11 @@ function HomePageAdmin() {
                                             </div>
                                         ))}
                                     </div>
-                                    {wordLangID &&
+                                    {dictAddWord.length>0 &&
                                         <div>
                                             <h3>Odaberi rječnik/e u koje želiš dodati riječ:</h3>
                                             <div className='admin-list existing'>
-                                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                                {dictAddWord.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
                                                     <div key={dict.dictid} className='admin-list-item'>
                                                         <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
                                                         <label>{dict.dictname}</label>
