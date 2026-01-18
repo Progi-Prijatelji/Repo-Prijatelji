@@ -181,4 +181,17 @@
   .admin-btn {
     width: 100%;
   }
+
+  .user-containers {
+    flex-direction: column;
+  }
+
+  .search-list {
+    width:95%;
+  }
+
+/* Desni 70% */
+  .current-admins {
+    width: 95%;
+  }
 }

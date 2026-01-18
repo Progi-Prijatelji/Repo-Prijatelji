@@ -726,13 +726,13 @@ function HomePageAdmin() {
                                 <form onSubmit={handleAddWordToDictionary} className='add-word-form'> 
                                     <label>Odaberi rječnik/e u koji želiš dodati riječ:</label>
                                     <div className='admin-form-part'>
-                                        <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                         <select className="admin-btn" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                             <option value="">Jezik</option>
                                             {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
                                             ))}
                                         </select>
+                                        <input type="text" placeholder="Riječ koju zelis dodat u rječnik" value={typedWord} onChange={(e) => setTypedWord(e.target.value)}/>
                                     </div>
                                     <div className='admin-list existing'>
                                         {typedWord && allWordList.filter(w => w.word.includes(typedWord) && w.langid === Number(wordLangID)).map((w) => (
