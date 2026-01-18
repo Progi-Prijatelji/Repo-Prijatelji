@@ -582,7 +582,7 @@ function HomePageAdmin() {
         <HeaderAdmin />
             <div className="admin-page">
                 <div className='adding'>
-                    <div className='adding-   word-adding'>
+                    <div className='adding-parts word-adding'>
                         <div className='add-dictionary word-adding-part'>
                             <h2>Uređivanje rječnika</h2>
                             <button className="option-button" onClick={() => toggleOptions("AddRjecnik")}>Dodaj Rjecnik</button>

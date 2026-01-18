@@ -198,6 +198,7 @@
     background: #d3bce8;
 }
 
+
 @media (max-width: 480px){
     .word-adding{
         display: flex;
@@ -218,5 +219,4 @@
     }
 
     
-
 }
