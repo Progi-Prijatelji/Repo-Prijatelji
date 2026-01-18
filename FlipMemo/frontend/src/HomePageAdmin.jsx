@@ -456,11 +456,11 @@ function HomePageAdmin() {
 
     }, []);
 
-    /*useEffect(() => {
+    useEffect(() => {
         if (selectedWord) {
             fetchDictToAddWord(selectedWord);
         }
-    }, [selectedWord]);*/
+    }, [selectedWord]);
     
     const handleSearch = async(e) => {
         e.preventDefault();
@@ -587,7 +587,7 @@ function HomePageAdmin() {
         }
     }
 
-    /*const fetchDictToAddWord = async (word)=>{
+    const fetchDictToAddWord = async (word)=>{
         try{
             const result = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictsWithoutWord", {
                 method: "POST",
@@ -604,13 +604,13 @@ function HomePageAdmin() {
                 return;
             }
 
-            setDictAddWord(result)
+            setDictAddWord(data)
 
         }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
-    }*/
+    }
 
     return(
         <>
@@ -781,7 +781,7 @@ function HomePageAdmin() {
                                         <div>
                                             <h3>Odaberi rječnik/e u koje želiš dodati riječ:</h3>
                                             <div className='admin-list existing'>
-                                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                                {dictAddWord.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
                                                     <div key={dict.dictid} className='admin-list-item'>
                                                         <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
                                                         <label>{dict.dictname}</label>
