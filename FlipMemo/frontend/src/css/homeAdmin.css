@@ -194,4 +194,7 @@
   .current-admins {
     width: 95%;
   }
+  .admin-list-item span{
+     font-size: 12px;
+  }
 }

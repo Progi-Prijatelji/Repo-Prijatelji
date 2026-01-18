@@ -763,12 +763,14 @@ function HomePageAdmin() {
                             {revealed === "EditWords" && 
                             <div className='adding-section'>
                                     <h3>Uredi ili obriši riječi</h3>
-                                    <select className="admin-btn" value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
-                                        <option value="">Jezik</option>
-                                            {languages.map((lang) => (
-                                                <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
-                                            ))}
-                                    </select>
+                                    <form className='add-word-form'>
+                                        <select className="admin-btn" value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
+                                            <option value="">Jezik</option>
+                                                {languages.map((lang) => (
+                                                    <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
+                                                ))}
+                                        </select>
+                                    </form>
                                     <div>
                                         <ul className='existing admin-list'>
                                             {allWordList.filter(wordItem => wordItem.langid === Number(languageFilter)).map((wordItem) => (
@@ -848,8 +850,8 @@ function HomePageAdmin() {
                                 <ul className="admin-list">
                                 {adminUser.map((admin, index) => (
                                     <li key={index} className="admin-list-item">
-                                    <button  className="admin-add-btn" onClick={() => handleRemoveAdmin(admin)}>X</button>
-                                    <span>{admin}</span>
+                                        <button  className="admin-add-btn" onClick={() => handleRemoveAdmin(admin)}>X</button>
+                                        <span>{admin}</span>
                                     </li>
                                 ))}
                                 </ul>
