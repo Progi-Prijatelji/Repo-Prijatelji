@@ -456,11 +456,11 @@ function HomePageAdmin() {
 
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (selectedWord) {
             fetchDictToAddWord(selectedWord);
         }
-    }, [selectedWord]);
+    }, [selectedWord]);*/
     
     const handleSearch = async(e) => {
         e.preventDefault();
@@ -587,7 +587,7 @@ function HomePageAdmin() {
         }
     }
 
-    const fetchDictToAddWord = async (word)=>{
+    /*const fetchDictToAddWord = async (word)=>{
         try{
             const result = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictsWithoutWord", {
                 method: "POST",
@@ -610,7 +610,7 @@ function HomePageAdmin() {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
-    }
+    }*/
 
     return(
         <>
