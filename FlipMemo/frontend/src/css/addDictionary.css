@@ -76,7 +76,7 @@
     display: block;
 }
 
-.adding-section p{
+.success{
     color: #7d47a8;
 }
 
@@ -196,4 +196,27 @@
     flex-direction: column;
     justify-content: center;
     background: #d3bce8;
+}
+
+@media (max-width: 480px){
+    .word-adding{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .word-adding-part{
+        width: 90%;
+        background-color: #d3bce8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 5px;
+    }
+
+    
+
 }

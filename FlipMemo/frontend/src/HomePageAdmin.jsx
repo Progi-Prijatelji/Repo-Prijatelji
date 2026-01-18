@@ -582,7 +582,7 @@ function HomePageAdmin() {
         <HeaderAdmin />
             <div className="admin-page">
                 <div className='adding'>
-                    <div className='adding-parts word-adding'>
+                    <div className='adding-   word-adding'>
                         <div className='add-dictionary word-adding-part'>
                             <h2>Uređivanje rječnika</h2>
                             <button className="option-button" onClick={() => toggleOptions("AddRjecnik")}>Dodaj Rjecnik</button>
@@ -603,7 +603,7 @@ function HomePageAdmin() {
                                         <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                                         <button className="admin-btn" type="submit">Dodaj rječnik</button>
                                     </div>
-                                    <p>{addedSucc}</p>
+                                    <p className='success'>{addedSucc}</p>
                                 </form>
                                 {langID && 
                                 <div className='old-dictionary current-admins'>
@@ -717,7 +717,7 @@ function HomePageAdmin() {
                                         </div>
 
                                     }
-                                    <p>{addedSucc}</p>
+                                    <p className='success'>{addedSucc}</p>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj u rječnik</button>
@@ -756,7 +756,7 @@ function HomePageAdmin() {
                                         </div>
                                     }
                                     <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
-                                    <p>{addedSucc}</p>
+                                    <p className='success'>{addedSucc}</p>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
@@ -787,7 +787,7 @@ function HomePageAdmin() {
                                                                 <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
                                                                 <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
                                                                 <button className="admin-btn" type="submit">Spremi</button>
-                                                                <p>{addedSucc}</p>
+                                                                <p className='success'>{addedSucc}</p>
                                                             </form>
                                                         ) }
                                                     </div>
