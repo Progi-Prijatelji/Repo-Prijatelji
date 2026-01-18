@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link, json } from 'react-router-dom';
 import logo from './assets/FlipMemo__Logo.png'
+import { ChevronDown } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 import HeaderAdmin from './components/HeaderAdmin.jsx';
 import './css/homeAdmin.css'
 import './css/addDictionary.css'
@@ -49,10 +51,13 @@ function HomePageAdmin() {
 
 
     const [revealed, setRevealed] = useState("");
+    
+
     const [phrasesForeignMore, setPhrasesForeignMore] = useState([]);
 
     const [phrasesForeignMoreChanged, setPhrasesForeignMoreChanged] = useState("");
     
+    const [addedSucc, setAddedSucc] = useState("")
     
     
 
@@ -203,6 +208,7 @@ function HomePageAdmin() {
             setPhrasesForeign([]);
             setPhrasesNative([]);
             setPhrasesForeignMore([]);
+            setAddedSucc("Uspješno dodana riječ")
             
             
         }catch (error) {
@@ -284,7 +290,12 @@ function HomePageAdmin() {
 
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
+        if (!wordLangID || !selectedWord){
+            alert("Molimo odaberite riječ i/ili jedan ili više rječnika");
+            return;
+        }
         try{
+            
             
             const results = await fetch("https://fmimage.onrender.com/homeAdmin/addWordToDicts", {
                 method: "POST",
@@ -305,6 +316,7 @@ function HomePageAdmin() {
             setSelectedWord("");
             setSelectedDictIds([]);
             setTypedWord("");
+            setAddedSucc("Uspješno dodana riječ u rječnik")
         }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -344,7 +356,7 @@ function HomePageAdmin() {
 
     const handleAddDictionary = async (e) => {
         e.preventDefault();
-        if (!dictName || !langID) {
+        if (!dictName || !langID || !dictDesc) {
             alert("Molimo ispunite sva obavezna polja.");
             return;
         }
@@ -364,6 +376,7 @@ function HomePageAdmin() {
             await fetchDictionaries();
             setDictName("");
             setDictDesc("");
+            setAddedSucc("Uspješno dodan rječnik")
         } catch (error) {
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
@@ -531,6 +544,7 @@ function HomePageAdmin() {
 
     const toggleOptions = (option) => {
         setRevealed(prev => prev === option ? "" : option);
+        setAddedSucc("")
     }
 
     const editPhrases = async(word) => {
@@ -589,13 +603,14 @@ function HomePageAdmin() {
                                         <textarea placeholder="Opis rječnika" value={dictDesc} onChange={(e) => setDictDesc(e.target.value)}/>
                                         <button className="admin-btn" type="submit">Dodaj rječnik</button>
                                     </div>
+                                    <p>{addedSucc}</p>
                                 </form>
                                 {langID && 
                                 <div className='old-dictionary current-admins'>
                                     <h2>Postojeći rječnici:</h2>
                                     <ul className='admin-list existing'>
                                         {dictionaries.filter(dict => dict.langid === Number(langID)).map((dict) => (
-                                            <li key={dict.dictid} >
+                                            <li key={dict.dictid}>
                                                 {/*<div className='dictionary-list-items'> */}
                                                     <div className='admin-list-block'>
                                                         <div className='admin-list-item'> 
@@ -603,23 +618,32 @@ function HomePageAdmin() {
                                                             <p>{dict.dictname} - {dict.description}</p>
                                                         </div>
                                                         {openDictId === dict.dictid  && (
-                                                            <ul>
-                                                                <h4>Riječi u rječniku:</h4>
-                                                                {wordList.map((wordItem) => (
-                                                                    <li key={wordItem.wordid} className='admin-list-item-words'>
-                                                                        <p>{wordItem.word} - {wordItem.translation}</p>
-                                                                        <hr />
+                                                            
+                                                                wordList.length === 0 ?(
+                                                                    <div className='existing-dictionaries'>
+                                                                        <p>Nema riječi u rječniku</p>
+                                                                    </div>
+                                                                ):(
+                                                                    <div className='existing-dictionaries'>
                                                                         <ul>
-                                                                            { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
-                                                                                <li key={index}>
-                                                                                    <p>{phrase.phrase}</p>
+                                                                            <h4>Riječi u rječniku:</h4>
+                                                                            {wordList.map((wordItem) => (
+                                                                                <li key={wordItem.wordid} className='admin-list-item-words'>
+                                                                                    <p>{wordItem.word} - {wordItem.translation}</p>
+                                                                                    <hr />
+                                                                                    <ul>
+                                                                                        { phraseList.filter(phrase => phrase.wordid === wordItem.wordid).map((phrase, index) => (
+                                                                                            <li key={index}>
+                                                                                                <p>{phrase.phrase}</p>
+                                                                                            </li>
+                                                                                        ))}
+                                                                                    </ul>
+                                                                                    
                                                                                 </li>
                                                                             ))}
                                                                         </ul>
-                                                                        
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
+                                                                    </div>
+                                                                )
                                                         )}
                                                     </div>
                                                 {/*</div>*/}
@@ -693,6 +717,7 @@ function HomePageAdmin() {
                                         </div>
 
                                     }
+                                    <p>{addedSucc}</p>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("AddWordToDict")}>Dodaj u rječnik</button>
@@ -731,6 +756,7 @@ function HomePageAdmin() {
                                         </div>
                                     }
                                     <button className="admin-btn" type="submit">Dodaj riječ u rječnik</button>
+                                    <p>{addedSucc}</p>
                                 </form>
                             </div>}
                             <button className="option-button"onClick={()=>toggleOptions("EditWords")}>Uredi riječi</button>
@@ -761,6 +787,7 @@ function HomePageAdmin() {
                                                                 <input type="text" value={changedWord} onChange={(e) => setChangedWord(e.target.value)}/>
                                                                 <textarea placeholder="fraze na stranom jeziku (odvojene |)" value={phrasesForeignMoreChanged} onChange={(e) => setPhrasesForeignMoreChanged(e.target.value)}/>
                                                                 <button className="admin-btn" type="submit">Spremi</button>
+                                                                <p>{addedSucc}</p>
                                                             </form>
                                                         ) }
                                                     </div>

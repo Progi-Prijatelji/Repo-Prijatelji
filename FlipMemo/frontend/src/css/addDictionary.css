@@ -76,6 +76,10 @@
     display: block;
 }
 
+.adding-section p{
+    color: #7d47a8;
+}
+
 .add-word-form {
   display: flex;
   flex-direction: column;
@@ -185,4 +189,11 @@
     border-radius: 20px;
     
 
+}
+
+.existing-dictionaries{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #d3bce8;
 }
