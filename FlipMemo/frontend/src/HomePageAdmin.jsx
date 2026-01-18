@@ -713,10 +713,10 @@ function HomePageAdmin() {
                                                         </div>
                                                 ))}
                                             </div>
-                                            <button className="admin-btn" type="submit">Dodaj riječ</button>
                                         </div>
 
                                     }
+                                    <button className="admin-btn" type="submit">Dodaj riječ</button>
                                     <p className='success'>{addedSucc}</p>
                                 </form>
                             </div>}

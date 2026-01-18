@@ -209,13 +209,37 @@
     }
 
     .word-adding-part{
-        width: 90%;
+        width: 95%;
         background-color: #d3bce8;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        padding: 3px;
+    }
+
+    .adding-section{
+        gap: 10px;
+        width: 95%;
         padding: 5px;
+    }
+
+    .adding-section textarea{
+        padding: 5px;
+    }
+
+    .adding-section input{
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    .admin-form-part{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .admin-list-item-width{
+        width: 95%;
     }
 
     
