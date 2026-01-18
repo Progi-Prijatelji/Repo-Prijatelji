@@ -777,11 +777,11 @@ function HomePageAdmin() {
                                             </div>
                                         ))}
                                     </div>
-                                    {dictAddWord.length>0 &&
+                                    {wordLangID &&
                                         <div>
                                             <h3>Odaberi rječnik/e u koje želiš dodati riječ:</h3>
                                             <div className='admin-list existing'>
-                                                {dictAddWord.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
+                                                {dictionaries.filter(dict => dict.langid === Number(wordLangID)).map((dict) => (
                                                     <div key={dict.dictid} className='admin-list-item'>
                                                         <input type="checkbox" checked={selectedDictIds.includes(dict.dictid)} onChange={()=>handleDictCheckboxChange(dict.dictid)}/>
                                                         <label>{dict.dictname}</label>
