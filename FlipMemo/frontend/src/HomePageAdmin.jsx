@@ -329,6 +329,7 @@ function HomePageAdmin() {
 
     const handleWordCheckboxChange = (wordId) => {
         setSelectedWord(wordId);
+        fetchDictToAddWord(wordId)
     };
 
     const handleAddLanguage = async (e) => {
@@ -572,6 +573,31 @@ function HomePageAdmin() {
 
             
         }catch (error) {
+            console.error("Greška:", error);
+            alert("Greška u povezivanju s poslužiteljem.");
+        }
+    }
+
+    const fetchDictToAddWord = async (word)=>{
+        try{
+            const result = await fetch("https://fmimage.onrender.com/homeAdmin/sendDictsWithoutWord", {
+                method: "POST",
+                headers: { "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("jwt")}` 
+                },
+                body: JSON.stringify({wordid: word.wordid}),
+                credentials: "include"  
+            });
+            const data = await result.json();
+
+            if (!data.success) {
+                alert(data.message || "Neuspješno dobivanje fraza.");
+                return;
+            }
+
+            setDictionaries(result)
+
+        }catch(error){
             console.error("Greška:", error);
             alert("Greška u povezivanju s poslužiteljem.");
         }
