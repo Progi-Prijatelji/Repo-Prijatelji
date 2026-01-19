@@ -59,7 +59,7 @@ function HomePageAdmin() {
     
     const [addedSucc, setAddedSucc] = useState("")
 
-    const [dictAddWord, setDictAddWord] = useState("")
+    const [dictAddWord, setDictAddWord] = useState([])
     
     
 
@@ -604,7 +604,7 @@ function HomePageAdmin() {
                 return;
             }
 
-            setDictAddWord(data)
+            setDictAddWord(data.dicts||[])
 
         }catch(error){
             console.error("Greška:", error);
