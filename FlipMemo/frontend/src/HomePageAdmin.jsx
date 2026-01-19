@@ -604,7 +604,7 @@ function HomePageAdmin() {
                 return;
             }
 
-            setDictAddWord(data.dicts||[])
+            setDictAddWord(data.dictionaries||[])
 
         }catch(error){
             console.error("Greška:", error);
