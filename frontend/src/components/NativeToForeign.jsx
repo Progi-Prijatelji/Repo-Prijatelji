@@ -3,21 +3,27 @@ import { useState, useEffect } from 'react';
 
 
 
-const ForeignToNative = ( { words } ) => {
+const NativeToForeign = ( { words, allWords, allPhrases } ) => {
 
     const [dictWords, setDictWords] = useState([]);// hrvatske rijeci iz rjecnika
     const [allTranslations, setAllTranslations] = useState([]); //engleske rijeci
     const [questionWord, setQuestionWord] = useState('');
+    const [questionPhrase, setQuestionPhrase] = useState('');
     const [options, setOptions] = useState([]);
     const [currentCorrectWord, setCurrentCorrectWord] = useState(null);
     const [progress, setProgress] = useState(0);
     const [score, setScore] = useState(0);
+    const [showPhrase, setShowPhrase] = useState(false);
 
     useEffect(() => {
         if( words.length > 0 ) {
             const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+            const mappedTranslations = allWords
+                .map(w => w.word)
+                .filter(Boolean);
+            const uniqueTranslations = [...new Set(mappedTranslations)];
             setDictWords(normalized);
-            setAllTranslations(normalized.map( w => w.word ));
+            setAllTranslations(uniqueTranslations);
         }
     }, [words]);
 
@@ -33,10 +39,14 @@ const ForeignToNative = ( { words } ) => {
         }
     }, [progress]);
 
+
+
     const generateQuestion = () => {
         const randWord = dictWords[Math.floor(Math.random() * dictWords.length)];
         const correctTranslation = randWord.word;
         setCurrentCorrectWord(correctTranslation);
+
+
 
      
         const wrongAnswers = allTranslations
@@ -48,7 +58,14 @@ const ForeignToNative = ( { words } ) => {
         const allOptions = [correctTranslation, ...wrongAnswers]
             .sort(() => Math.random() - 0.5);
 
+        
+        const phrasesForWord = allPhrases.filter(p => p.wordid === randWord.wordid);
+        const randomPhrase = phrasesForWord.length
+            ? phrasesForWord[Math.floor(Math.random() * phrasesForWord.length)].phrase
+            : '';
+
         setQuestionWord(randWord.translation);
+        setQuestionPhrase(randomPhrase);
         setOptions(allOptions);
     }
  
@@ -108,7 +125,20 @@ const ForeignToNative = ( { words } ) => {
                     </div>
                     
                     <div className="question-section">
-                        <span className="question-word">{questionWord}</span>
+                        <span 
+                            className="question-word"
+                            onMouseEnter={() => setShowPhrase(true)}
+                            onMouseLeave={() => setShowPhrase(false)}
+                            style={{ position: 'relative', cursor: 'help' }}
+                        >
+                            {questionWord.charAt(0).toUpperCase() + questionWord.slice(1)}
+                            
+                            {(showPhrase && questionPhrase) && (
+                                <div className="phrase-tooltip">
+                                    {questionPhrase}
+                                </div>
+                            )}
+                        </span>
                     </div>
                     
                     <div className="selection-section">
@@ -117,7 +147,7 @@ const ForeignToNative = ( { words } ) => {
                                 key={index} 
                                 className="option-card" 
                                 onClick={() => handleClick(opt)}>
-                                {opt}
+                                {opt.charAt(0).toUpperCase() + opt.slice(1)}
                             </button>
                         ))}
                     </div>
@@ -127,4 +157,4 @@ const ForeignToNative = ( { words } ) => {
     );
 }
 
-export default ForeignToNative;
+export default NativeToForeign;
