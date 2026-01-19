@@ -210,7 +210,7 @@ function HomePageAdmin() {
             setPhrasesForeign([]);
             setPhrasesNative([]);
             setPhrasesForeignMore([]);
-            setSlectedDictIds([])
+            setSelectedDictIds([])
             setAddedSucc("Uspješno dodana riječ")
             
             
