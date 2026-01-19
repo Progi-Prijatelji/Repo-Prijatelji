@@ -10,7 +10,7 @@ html, body, #root {
     display: flex;
     flex-direction: column;
     align-items: center; 
-    padding-top: 130px; 
+    padding-top: 138px; 
     position: relative;
     width: 100%;
     min-height: 100vh;
@@ -194,7 +194,7 @@ html, body, #root {
 /* Back button positioning and style */
 .back-button{
     position: fixed;
-    top: 100px;
+    top: 95;
     left: 20px;
     z-index: 9999;
     background: #ffffff;

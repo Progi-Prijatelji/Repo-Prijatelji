@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Header from './components/Header.jsx';
-import ForeighToNative from './components/ForeignToNative.jsx';
+import ForeignToNative from './components/ForeignToNative.jsx';
 import NativeToForeign from './components/NativeToForeign.jsx';
 import Writing from './components/Writing.jsx';
 import Pronunciation from './components/Pronunciation.jsx';
@@ -33,7 +33,10 @@ function LearnPage() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('jwt')}`
           },
-          body: JSON.stringify({ email: localStorage.getItem('email'), dictid: parseInt(dictId), method: mode})
+          body: JSON.stringify({ 
+              email: localStorage.getItem('email'), 
+              dictid: parseInt(dictId), 
+              method: mode})
         });
 
         console.log('sendWordsInDictForUser response status:', response.status);
