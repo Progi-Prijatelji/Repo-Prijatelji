@@ -13,7 +13,10 @@ function LearnPage() {
   const navigate = useNavigate();
   const [words, setWords] = useState([]);
   const [allWords, setAllWords] = useState([]);
+  const [allPhrases, setAllPhrases] = useState([]);
+  
   const [loading, setLoading] = useState(true);
+
 
   const wordsMock = [
     { word: 'apple', translation: 'jabuka', audioFile: 'apple.mp3' },
@@ -53,6 +56,7 @@ function LearnPage() {
         const allWordsData = await allWords.json();
         if (allWordsData && allWordsData.success) {
           setAllWords(allWordsData.words);
+          setAllPhrases(allWordsData.phrases);
         }
         
         const data = await response.json();
@@ -91,11 +95,11 @@ function LearnPage() {
         
 
         {mode === 'fton' && (
-          <ForeignToNative words={words} allWords={allWords} />
+          <ForeignToNative words={words} allWords={allWords} allPhrases={allPhrases} />
         )}
 
         {mode === 'ntof' && (
-          <NativeToForeign words={words} allWords={allWords} />
+          <NativeToForeign words={words} allWords={allWords} allPhrases={allPhrases} />
         )}
 
         {mode === 'write' && (
@@ -147,5 +151,22 @@ export default LearnPage;
 //   res.json({success: true, words: returnWords.rows});     
 //   } catch (err) {
 //     res.status(500).json({success: false});
+//   }
+// });
+
+// router.post('/showWords', verifyToken, async (req, res) =>{
+//   const {dictid} = req.body
+
+//   try {
+//     const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation, w.wordid AS wordid, w.translationid AS translationid
+//                                             FROM dictword dw JOIN words w ON w.wordid = dw.wordid
+//                                             LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid]);
+    
+//     const returnPhrases = await client.query(`SELECT p.phrase, p.wordid FROM dictword dw JOIN words w ON dw.wordid = w.wordid AND dictid = $1 LEFT JOIN words t ON w.translationid = t.wordid LEFT JOIN phrases p ON p.wordid = w.wordid OR p.wordid = t.wordid`, [dictid]);
+
+//     res.json({success: true, words: returnWords.rows, phrases: returnPhrases.rows});
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false });
 //   }
 // });

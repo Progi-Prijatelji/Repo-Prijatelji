@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 
-const ForeignToNative = ({ words, allWords }) => {
+const ForeignToNative = ({ words, allWords, allPhrases }) => {
 
     const [dictWords, setDictWords] = useState([]);
     const [allTranslations, setAllTranslations] = useState([]);
     const [questionWord, setQuestionWord] = useState('');
+    const [questionPhrase, setQuestionPhrase] = useState('');
     const [options, setOptions] = useState([]);
     const [currentCorrectWord, setCurrentCorrectWord] = useState(null);
     const [currentWordId, setCurrentWordId] = useState(null);
@@ -55,8 +56,15 @@ const ForeignToNative = ({ words, allWords }) => {
         const allOptions = [correctTranslation, ...wrongAnswers]
             .sort(() => Math.random() - 0.5);
 
+        const phrasesForWord = allPhrases.filter(p => p.wordid === randWord.wordid);
+        const randomPhrase = phrasesForWord.length
+            ? phrasesForWord[Math.floor(Math.random() * phrasesForWord.length)].phrase
+            : '';
+
+
 
         setQuestionWord(randWord.word);
+        setQuestionPhrase(randomPhrase);
         setCurrentWordId(randWord.wordid); 
         setOptions(allOptions);
     };
@@ -125,9 +133,9 @@ const ForeignToNative = ({ words, allWords }) => {
                         >
                             {questionWord.charAt(0).toUpperCase() + questionWord.slice(1)}
                             
-                            {showPhrase && (
+                            {(showPhrase && questionPhrase) && (
                                 <div className="phrase-tooltip">
-                                    {mockFraza}
+                                    {questionPhrase}
                                 </div>
                             )}
                         </span>
@@ -170,3 +178,23 @@ export default ForeignToNative;
 //     res.status(500).json({success: false});
 //   }
 // });
+
+
+// router.post('/showWords', verifyToken, async (req, res) =>{
+//   const {dictid} = req.body
+
+//   try {
+//     const returnWords = await client.query(`SELECT w.word AS word, t.word AS translation, w.wordid AS wordid, w.translationid AS translationid
+//                                             FROM dictword dw JOIN words w ON w.wordid = dw.wordid
+//                                             LEFT JOIN words t ON t.wordid = w.translationid WHERE dw.dictid = $1`, [dictid]);
+    
+//     const returnPhrases = await client.query(`SELECT p.phrase, p.wordid FROM dictword dw JOIN words w ON dw.wordid = w.wordid AND dictid = $1 LEFT JOIN words t ON w.translationid = t.wordid LEFT JOIN phrases p ON p.wordid = w.wordid OR p.wordid = t.wordid`, [dictid]);
+
+//     res.json({success: true, words: returnWords.rows, phrases: returnPhrases.rows});
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false });
+//   }
+// });
+
+
