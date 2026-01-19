@@ -75,7 +75,7 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
                                             JOIN words w ON w.wordid = dw.wordid
                                             LEFT JOIN words t ON t.wordid = w.translationid 
                                             JOIN userword uw on uw.wordid = dw.wordid
-                                            left join phrases p on p.wordid = dw.wordid
+                                            
                                             WHERE dw.dictid = $1 and uw.userid = $2 and uw.container <= 5 and uw.method = $3
                                             and ((lastTimeDate IS NULL and container = 0)
                                             or (lastTimeDate <= NOW() - '1 day'::interval and container = 1)
