@@ -135,7 +135,7 @@ export default LearnPage;
 //       }
 //     }  
 //       //sve riejci koje se mogu uciti, ili rijeci koje se nikada nisu ucile do sad ili rijeci koje su u pripadajucem konatineru dovoljno vremena
-//     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation 
+//     const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation, t.wordid AS translationID
 //                                             FROM dictword dw 
 //                                             JOIN words w ON w.wordid = dw.wordid
 //                                             LEFT JOIN words t ON t.wordid = w.translationid 

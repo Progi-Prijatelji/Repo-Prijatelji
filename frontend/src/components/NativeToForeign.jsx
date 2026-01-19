@@ -1,7 +1,4 @@
-
 import { useState, useEffect } from 'react';
-
-
 
 const NativeToForeign = ( { words, allWords, allPhrases } ) => {
 
@@ -59,7 +56,7 @@ const NativeToForeign = ( { words, allWords, allPhrases } ) => {
             .sort(() => Math.random() - 0.5);
 
         
-        const phrasesForWord = allPhrases.filter(p => p.wordid === randWord.wordid);
+        const phrasesForWord = allPhrases.filter(p => p.wordid === randWord.translationID);
         const randomPhrase = phrasesForWord.length
             ? phrasesForWord[Math.floor(Math.random() * phrasesForWord.length)].phrase
             : '';
