@@ -59,7 +59,7 @@ function HomePageAdmin() {
     
     const [addedSucc, setAddedSucc] = useState("")
 
-    const [dictAddWord, setDictAddWord] = useState("")
+    const [dictAddWord, setDictAddWord] = useState([])
     
     
 
