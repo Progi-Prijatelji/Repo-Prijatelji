@@ -61,7 +61,7 @@ function LearnPage() {
           
           setWords(data.words);
           
-          setWordIds(data.words.map(w => w.wordID));
+          
           setTranslations(data.words.map(w => w.translation));
         } else {
           console.warn('No words returned or request not successful');

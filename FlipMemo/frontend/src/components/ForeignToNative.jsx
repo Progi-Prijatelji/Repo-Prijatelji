@@ -3,21 +3,28 @@ import { useState, useEffect } from 'react';
 const ForeignToNative = ({ words, allWords }) => {
 
     const [dictWords, setDictWords] = useState([]);
-    const [allTranslations, setAllTranslations] = useState([]); //hrvatske rijeci
+    const [allTranslations, setAllTranslations] = useState([]);
     const [questionWord, setQuestionWord] = useState('');
     const [options, setOptions] = useState([]);
     const [currentCorrectWord, setCurrentCorrectWord] = useState(null);
-    const [currentWordId, setCurrentWordId] = useState(null); // ID aktivne riječi
+    const [currentWordId, setCurrentWordId] = useState(null);
     const [progress, setProgress] = useState(0);
     const [score, setScore] = useState(0);
+    const [showPhrase, setShowPhrase] = useState(false);
+
+    const mockFraza = "Ovo je primjer fraze";
 
     useEffect(() => {
         if (words.length > 0) {
             
             const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
-            const allTranslations = allWords.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+            const mappedTranslations = allWords
+                .map(w => w.translation)
+                .filter(Boolean);
+            const uniqueTranslations = [...new Set(mappedTranslations)];
+
             setDictWords(normalized);
-            setAllTranslations(allTranslations.map(w => w.translation));
+            setAllTranslations(uniqueTranslations);
         }
     }, [words, allWords]);
 
@@ -64,7 +71,7 @@ const ForeignToNative = ({ words, allWords }) => {
                 },
                 body: JSON.stringify({
                     email: localStorage.getItem('email'),
-                    wordid: currentWordId ?? randWord?.wordid, 
+                    wordid: currentWordId,
                     correction: option === currentCorrectWord,
                     method: 'fton'
                 })
@@ -110,7 +117,20 @@ const ForeignToNative = ({ words, allWords }) => {
                     </div>
                     
                     <div className="question-section">
-                        <span className="question-word">{questionWord.charAt(0).toUpperCase() + questionWord.slice(1)}</span>
+                        <span 
+                            className="question-word"
+                            onMouseEnter={() => setShowPhrase(true)}
+                            onMouseLeave={() => setShowPhrase(false)}
+                            style={{ position: 'relative', cursor: 'help' }}
+                        >
+                            {questionWord.charAt(0).toUpperCase() + questionWord.slice(1)}
+                            
+                            {showPhrase && (
+                                <div className="phrase-tooltip">
+                                    {mockFraza}
+                                </div>
+                            )}
+                        </span>
                     </div>
                     
                     <div className="selection-section">
