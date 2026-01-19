@@ -210,6 +210,7 @@ function HomePageAdmin() {
             setPhrasesForeign([]);
             setPhrasesNative([]);
             setPhrasesForeignMore([]);
+            selectedDictIds([])
             setAddedSucc("Uspješno dodana riječ")
             
             
@@ -292,8 +293,8 @@ function HomePageAdmin() {
 
     const handleAddWordToDictionary = async (e) => {
         e.preventDefault();
-        if (!wordLangID || !selectedWord){
-            alert("Molimo odaberite riječ i/ili jedan ili više rječnika");
+        if (!selectedDictIds.length>0 || !selectedWord){
+            alert("Molimo odaberite riječ i jedan ili više rječnika");
             return;
         }
         try{
@@ -777,7 +778,7 @@ function HomePageAdmin() {
                                             </div>
                                         ))}
                                     </div>
-                                    {wordLangID &&
+                                    {dictAddWord.length>0 &&
                                         <div>
                                             <h3>Odaberi rječnik/e u koje želiš dodati riječ:</h3>
                                             <div className='admin-list existing'>
