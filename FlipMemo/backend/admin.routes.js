@@ -398,7 +398,6 @@ router.post('/sendDictsWithoutWord',verifyToken, verifyAdmin, async (req, res) =
   const { wordid } = req.body;
   try {
     const dicts = await client.query(`SELECT dictid, dictname, langid FROM dictionaries WHERE dictid NOT IN (SELECT dictid FROM dictword dw WHERE dw.wordid = $1) `, [wordid]);
-    console.log(dicts.rows);
     res.json({success: true, dictionaries: dicts.rows});
   } catch (err) {
     console.error(err);
