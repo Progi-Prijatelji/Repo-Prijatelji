@@ -21,7 +21,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
         <option value="" disabled hidden>Odaberi jezik</option>
         {langs.map((lang) => (
           <option key={lang.langid} value={lang.langid}>
-            <Flag country={lang.langImg} />
+            <Flag country={languages.find(l => Number(l.langid) === Number(lang.langid))?.langImg} />
             {lang.langname.charAt(0).toUpperCase() + lang.langname.slice(1)}
           </option>
         ))}
