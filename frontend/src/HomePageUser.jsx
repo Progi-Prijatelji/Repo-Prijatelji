@@ -116,8 +116,14 @@ function HomePageUser() {
                 <p><strong>Opis:</strong> {selectedDict.description.charAt(0).toUpperCase() + selectedDict.description.slice(1)}</p>
                 <p>
                   <strong>Jezik:</strong> 
-                  <Flag size={15}country={languages.find(l => Number(l.langid) === Number(selectedDict.langid))?.langimg} />
-                  {selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}
+                  <div style={{display: 'inline-flex', alignItems: 'center', gap: '5px', marginLeft: '5px'}}>
+                    {selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}
+                    <Flag 
+                      style={{height: '15px', width: '15px'}}
+                      size={15} 
+                      country={languages.find(l => Number(l.langid) === Number(selectedDict.langid))?.langimg} />
+                  </div>
+                  
                 </p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">

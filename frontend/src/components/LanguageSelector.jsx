@@ -8,6 +8,11 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
 
   return (
     <div className="language-selector-wrapper">
+      {language?.langimg ? (
+        <Flag style={{height: '15px', width: '15px'}} size={15} country={language.langimg} />
+      ) : (
+        <div style={{ width: 20, height: 14 }} />
+      )}
       <select
         value={value}
         onChange={(e) => {
@@ -21,7 +26,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
         <option value="" disabled hidden>Odaberi jezik</option>
         {langs.map((lang) => (
           <option key={lang.langid} value={lang.langid}>
-            <Flag size={15} country={languages.find(l => Number(l.langid) === Number(lang.langid))?.langimg} />
+            
             {lang.langname.charAt(0).toUpperCase() + lang.langname.slice(1)}
           </option>
         ))}
