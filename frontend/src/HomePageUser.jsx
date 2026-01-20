@@ -32,7 +32,7 @@ function HomePageUser() {
         const dictData = await dictRes.json();
         if (dictData.success) setDictionaries(dictData.dicts);
 
-        const langRes = await fetch('https://fmimage.onrender.com/homeAdmin/sendLangList', {
+        const langRes = await fetch('https://fmimage.onrender.com/homeUser/sendLangList', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -73,7 +73,10 @@ function HomePageUser() {
     } catch {}
   }, [selectedLanguage]);
 
-  const handleCardClick = (dict) => setSelectedDict(dict);
+  const handleCardClick = (dict) => {
+    setSelectedDict(dict);
+    console.log("Selected dictionary lang img:", languages.find(l => Number(l.langid) === Number(dict.langid))?.langImg);
+  }
   const closeModal = () => setSelectedDict(null);
   const handleModeClick = (mode) => {
     if (!selectedDict) return;
@@ -111,7 +114,11 @@ function HomePageUser() {
                 <button className="modal-close" onClick={closeModal}>✕</button>
                 <h2>{selectedDict.dictname.charAt(0).toUpperCase() + selectedDict.dictname.slice(1)}</h2>
                 <p><strong>Opis:</strong> {selectedDict.description.charAt(0).toUpperCase() + selectedDict.description.slice(1)}</p>
-                <p><strong>Jezik:</strong> <Flag country={selectedLanguage?.langImg} />{selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}</p>
+                <p>
+                  <strong>Jezik:</strong> 
+                  <Flag country={languages.find(l => Number(l.langid) === Number(selectedDict.langid))?.langImg} />
+                  {selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}
+                </p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">
                   <div className="mod-card" onClick={() => handleModeClick('fton')}>
