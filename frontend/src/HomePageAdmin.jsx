@@ -628,7 +628,7 @@ function HomePageAdmin() {
                                 <form onSubmit={handleAddDictionary}>
                                     <div className='admin-form-part'> 
                                         <input type="text" placeholder="Naziv rječnika" value={dictName} onChange={(e) => setDictName(e.target.value)}/>
-                                        <select className="admin-btn" size="5" value={langID} onChange={(e) => setLangID(e.target.value)}>
+                                        <select className="admin-btn" value={langID} onChange={(e) => setLangID(e.target.value)}>
                                             <option value="">Jezik</option>
                                             {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
@@ -700,7 +700,7 @@ function HomePageAdmin() {
                             <div className='adding-section'>
                                 <h3>Dodaj novu riječ</h3>
                                 <form onSubmit={handleAddWord} className='add-word-form'>
-                                    <select className="admin-btn" size="5" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
+                                    <select className="admin-btn" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                         <option value="">Jezik</option>
                                         {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                             <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
@@ -762,7 +762,7 @@ function HomePageAdmin() {
                                 <form onSubmit={handleAddWordToDictionary} className='add-word-form'> 
                                     <label>Odaberi rječnik/e u koji želiš dodati riječ:</label>
                                     <div className='admin-form-part'>
-                                        <select className="admin-btn" size="5" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
+                                        <select className="admin-btn" value={wordLangID} onChange={(e) => setWordLangID(e.target.value)}>
                                             <option value="">Jezik</option>
                                             {languages.filter(lang => lang.langid !== 1).map((lang) => (
                                                 <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
@@ -800,7 +800,7 @@ function HomePageAdmin() {
                             <div className='adding-section'>
                                     <h3>Uredi ili obriši riječi</h3>
                                     <form className='add-word-form'>
-                                        <select className="admin-btn" size="5" value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
+                                        <select className="admin-btn" value={languageFilter} onChange={(e) => setLanguageFilter(e.target.value)}>
                                             <option value="">Jezik</option>
                                                 {languages.map((lang) => (
                                                     <option key={lang.langid} value={lang.langid}>{lang.langname}</option>
