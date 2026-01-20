@@ -8,11 +8,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
 
   return (
     <div className="language-selector-wrapper">
-      {language?.langimg ? (
-        <Flag style={{height: '15px', width: '15px'}} size={15} country={language.langimg} />
-      ) : (
-        <div style={{ width: 20, height: 14 }} />
-      )}
+      
       <select
         value={value}
         onChange={(e) => {
@@ -23,6 +19,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
         }}
         className="language-selector admin-btn"
       >
+        
         <option value="" disabled hidden>Odaberi jezik</option>
         {langs.map((lang) => (
           <option key={lang.langid} value={lang.langid}>
@@ -31,6 +28,12 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
           </option>
         ))}
       </select>
+
+      {language?.langimg ? (
+        <Flag style={{height: '25px', width: '25px'}} size={25} country={language.langimg} />
+      ) : (
+        <div style={{ width: 20, height: 14 }} />
+      )}
     </div>
   );
 };
