@@ -75,7 +75,7 @@ function HomePageUser() {
 
   const handleCardClick = (dict) => {
     setSelectedDict(dict);
-    console.log("Selected dictionary lang img:", languages.find(l => Number(l.langid) === Number(dict.langid))?.langImg);
+    console.log("Selected dictionary lang img:", languages.find(l => Number(l.langid) === Number(dict.langid))?.langimg);
   }
   const closeModal = () => setSelectedDict(null);
   const handleModeClick = (mode) => {
@@ -116,7 +116,7 @@ function HomePageUser() {
                 <p><strong>Opis:</strong> {selectedDict.description.charAt(0).toUpperCase() + selectedDict.description.slice(1)}</p>
                 <p>
                   <strong>Jezik:</strong> 
-                  <Flag country={languages.find(l => Number(l.langid) === Number(selectedDict.langid))?.langImg} />
+                  <Flag size={15}country={languages.find(l => Number(l.langid) === Number(selectedDict.langid))?.langimg} />
                   {selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}
                 </p>
                 <h2>Odaberi mod:</h2>
