@@ -141,5 +141,15 @@ router.post('/showWords', verifyToken, async (req, res) =>{
   }
 });
 
+router.get('/sendLangList', verifyToken, verifyAdmin, async (req, res) =>{
+  try {
+      const result = await client.query(`SELECT DISTINCT languages.* FROM languages RIGHT JOIN dictionaries ON languages.langid = dictionaries.langid`);
+  
+      res.json({success: true, langs: result.rows});
+  } catch (err) {
+      res.status(500).json({success: false});
+  }
+});
+
 
 module.exports = router;
