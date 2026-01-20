@@ -8,11 +8,24 @@ import './css/homePage.css';
 
 function HomePageUser() {
   const [languages, setLanguages] = useState([]);
-  const [dictionaries, setDictionaries] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    try {
+      const stored = localStorage.getItem('selectedLanguage');
+      return stored ? JSON.parse(stored) : null;
+    } catch { return null; }
+  });
   const [selectedDict, setSelectedDict] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('jwt');
+
+  // persist selected language between navigations
+  useEffect(() => {
+    if (selectedLanguage) {
+      localStorage.setItem('selectedLanguage', JSON.stringify(selectedLanguage));
+    } else {
+      localStorage.removeItem('selectedLanguage');
+    }
+  }, [selectedLanguage]);
 
   useEffect(() => {
     const fetchData = async () => {
