@@ -5,6 +5,7 @@ import LanguageSelector from './components/LanguageSelector.jsx';
 import DictionaryCard from './components/DictionaryCard.jsx';
 import { Pen, Mic, Languages, BookA} from 'lucide-react';
 import './css/homePage.css';
+import Flag from 'react-flagkit';
 
 function HomePageUser() {
   const [languages, setLanguages] = useState([]);
@@ -110,7 +111,7 @@ function HomePageUser() {
                 <button className="modal-close" onClick={closeModal}>✕</button>
                 <h2>{selectedDict.dictname.charAt(0).toUpperCase() + selectedDict.dictname.slice(1)}</h2>
                 <p><strong>Opis:</strong> {selectedDict.description.charAt(0).toUpperCase() + selectedDict.description.slice(1)}</p>
-                <p><strong>Jezik:</strong> {selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}</p>
+                <p><strong>Jezik:</strong> <Flag country={selectedLanguage?.langImg} />{selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}</p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">
                   <div className="mod-card" onClick={() => handleModeClick('fton')}>

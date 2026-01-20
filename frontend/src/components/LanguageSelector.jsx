@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/LanguageSelector.css';
+import Flag from 'react-flagkit';
 
 const LanguageSelector = ({ language, languages = [], onChange }) => {
   const langs = languages.length ? languages : [];
@@ -20,6 +21,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
         <option value="" disabled hidden>Odaberi jezik</option>
         {langs.map((lang) => (
           <option key={lang.langid} value={lang.langid}>
+            <Flag country={lang.langImg} />
             {lang.langname.charAt(0).toUpperCase() + lang.langname.slice(1)}
           </option>
         ))}
