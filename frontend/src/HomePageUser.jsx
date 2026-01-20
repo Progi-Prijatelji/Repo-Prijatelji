@@ -8,24 +8,16 @@ import './css/homePage.css';
 
 function HomePageUser() {
   const [languages, setLanguages] = useState([]);
+  const [dictionaries, setDictionaries] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     try {
-      const stored = localStorage.getItem('selectedLanguage');
-      return stored ? JSON.parse(stored) : null;
+      const s = localStorage.getItem('selectedLanguage');
+      return s ? JSON.parse(s) : null;
     } catch { return null; }
   });
   const [selectedDict, setSelectedDict] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('jwt');
-
-  // persist selected language between navigations
-  useEffect(() => {
-    if (selectedLanguage) {
-      localStorage.setItem('selectedLanguage', JSON.stringify(selectedLanguage));
-    } else {
-      localStorage.removeItem('selectedLanguage');
-    }
-  }, [selectedLanguage]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,9 +39,22 @@ function HomePageUser() {
         });
         const langData = await langRes.json();
         if (langData.success && langData.langs.length > 0) {
-          const filtered = langData.langs.filter(lang => lang.langid !== 1);
+          
+          let filtered = langData.langs.filter(lang => lang.langid !== 1);
+          if (filtered.length === 0) filtered = langData.langs;
           setLanguages(filtered);
-          setSelectedLanguage(filtered[0] ?? null);
+          
+          try {
+            const stored = localStorage.getItem('selectedLanguage');
+            const parsed = stored ? JSON.parse(stored) : null;
+            if (parsed && filtered.find(l => Number(l.langid) === Number(parsed.langid))) {
+              setSelectedLanguage(parsed);
+            } else {
+              setSelectedLanguage(filtered[0] ?? null);
+            }
+          } catch {
+            setSelectedLanguage(filtered[0] ?? null);
+          }
         }
       } catch (err) {
         console.error('Greška pri dohvaćanju podataka:', err);
@@ -58,6 +63,14 @@ function HomePageUser() {
 
     if (token) fetchData();
   }, [token]);
+
+  
+  useEffect(() => {
+    try {
+      if (selectedLanguage) localStorage.setItem('selectedLanguage', JSON.stringify(selectedLanguage));
+      else localStorage.removeItem('selectedLanguage');
+    } catch {}
+  }, [selectedLanguage]);
 
   const handleCardClick = (dict) => setSelectedDict(dict);
   const closeModal = () => setSelectedDict(null);
