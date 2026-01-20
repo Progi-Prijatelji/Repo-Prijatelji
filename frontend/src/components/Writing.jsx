@@ -159,22 +159,3 @@ const Writing = ( {words} ) => {
 };
 
 export default Writing;
-
-// router.post('/updateWord', verifyToken, async (req, res) =>{
-//   const {email, wordid, correction} = req.body
-
-//   try {
-//     const userResult = await client.query(`SELECT userid FROM users WHERE email = $1`,[email]);
-//     const userid = userResult.rows[0].userid;
-
-//     if(correction){
-//       await client.query(`UPDATE userword SET lastTimeDate = NOW(), container = container + 1 WHERE userid = $1 AND wordid = $2)`, [userid, wordid]);
-//     } else{
-//       await client.query(`UPDATE userword SET container = GREATEST(container - 1, 1), lastTimeDate = NOW() WHERE userid = $1 AND wordid = $2`, [userid, wordid]);
-//     }
-
-//     res.json({success: true});  
-//   } catch (err) {
-//     res.status(500).json({success: false});
-//   }
-// });
