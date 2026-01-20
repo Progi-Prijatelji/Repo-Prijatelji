@@ -1,13 +1,13 @@
 
 .admin-page {
   /*width: 100vw;*/
-  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+  background: linear-gradient(135deg, #f5e6ff, #d3bce8);
   display: flex;
   justify-content: center;
   align-items: stretch;
   font-family: "Poppins", sans-serif;
   padding-top: 150px; /* razmak od headera */
-  background: linear-gradient(135deg, #f5e6ff, #ffe7e1);
+  background: linear-gradient(135deg, #f5e6ff, #d3bce8);
  /* min-height: 100vh;*/
   padding-left: 10px;
   padding-right: 10px;
