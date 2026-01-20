@@ -105,7 +105,10 @@ const Writing = ( {words} ) => {
 
 
   if (words.length === 0) {
-        return <div>Nema rijeci</div>;
+        return <div className="congrats-message">
+                    <h2>Trenutno nemate riječi za učenje.</h2>
+                    
+                </div>
     }
     
   return (

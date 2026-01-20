@@ -6,7 +6,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
   const value = language?.langid ?? '';
 
   return (
-    <div className="language-selector-wrapper admin-btn">
+    <div className="language-selector-wrapper">
       <select
         value={value}
         onChange={(e) => {
@@ -15,7 +15,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
           onChange(lang || null);
           console.log('Selected language:', lang);
         }}
-        className="language-selector"
+        className="language-selector admin-btn"
       >
         <option value="" disabled hidden>Odaberi jezik</option>
         {langs.map((lang) => (

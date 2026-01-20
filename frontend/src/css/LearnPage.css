@@ -50,7 +50,7 @@ html, body, #root {
     padding: 18px;
     font-size: 18px;
     border-radius: 10px;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     background: #f8f8f8;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -60,7 +60,7 @@ html, body, #root {
     cursor: pointer;    
     box-shadow: 0 3px 8px rgba(0,0,0,0.12);
     background: #fff;
-    border-color: #d3bce8;
+    border: 3px solid #5d2e86;
 }
 
 .score-lable{
@@ -154,7 +154,7 @@ html, body, #root {
 
 .writing-section input:focus{
     border-color: #000000;
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 8px #e7d9f5;
 }
 .writing-section button{
     padding: 12px 24px;
@@ -257,7 +257,7 @@ html, body, #root {
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  margin: 8px;
+ 
 }
 
 .admin-btn:hover {

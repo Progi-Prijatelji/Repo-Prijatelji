@@ -181,8 +181,11 @@ const Pronunciation = ({ words = [] }) => {
 
 
   if (words.length === 0) {
-    return <div className="learn-main-container">Nema riječi</div>;
-  }
+        return <div className="congrats-message">
+                    <h2>Trenutno nemate riječi za učenje.</h2>
+                    
+                </div>
+    }
 
   return (
     <div className="learn-main-container pronunciation-page" style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
