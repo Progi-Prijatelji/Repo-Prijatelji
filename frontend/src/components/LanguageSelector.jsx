@@ -6,7 +6,7 @@ const LanguageSelector = ({ language, languages = [], onChange }) => {
   const value = language?.langid ?? '';
 
   return (
-    <div className="language-selector-wrapper">
+    <div className="language-selector-wrapper admin-btn">
       <select
         value={value}
         onChange={(e) => {

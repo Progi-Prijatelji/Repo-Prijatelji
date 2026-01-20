@@ -122,7 +122,7 @@ const Writing = ( {words} ) => {
                         <p>Napredak: {progress} / {words.length}</p>
                         <div className="progress-fill" style={{ width: `${(progress / words.length) * 100}%` }}></div>
                     </div>
-                    {questionWord}
+                    
                     <div className="audio-section">
                         <button onClick={handleAudio} disabled={!audioReady}>
                           <Mic className="ikona"/>

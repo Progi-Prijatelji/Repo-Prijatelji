@@ -82,9 +82,9 @@ function HomePageUser() {
             <div className="modal-overlay" onClick={closeModal}>
               <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="modal-close" onClick={closeModal}>✕</button>
-                <h2>{selectedDict.dictname}</h2>
-                <p><strong>Opis:</strong> {selectedDict.description}</p>
-                <p><strong>Jezik:</strong> {selectedLanguage?.langname ?? '---'}</p>
+                <h2>{selectedDict.dictname.charAt(0).toUpperCase() + selectedDict.dictname.slice(1)}</h2>
+                <p><strong>Opis:</strong> {selectedDict.description.charAt(0).toUpperCase() + selectedDict.description.slice(1)}</p>
+                <p><strong>Jezik:</strong> {selectedLanguage?.langname.charAt(0).toUpperCase() + selectedLanguage?.langname.slice(1) ?? '---'}</p>
                 <h2>Odaberi mod:</h2>
                 <div className="mods-grid">
                   <div className="mod-card" onClick={() => handleModeClick('fton')}>

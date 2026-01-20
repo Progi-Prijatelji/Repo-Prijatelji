@@ -88,7 +88,7 @@ function LearnPage() {
     <>
       <Header />
       <div className="learn-page">
-        <button className="back-button" onClick={() => navigate(-1)}>
+        <button className="back-button admin-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={20} />
           Nazad
         </button>
