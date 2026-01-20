@@ -14,7 +14,11 @@ const NativeToForeign = ( { words, allWords, allPhrases } ) => {
 
     useEffect(() => {
         if( words.length > 0 ) {
-            const normalized = words.map(w => ({ ...w, wordid: Number(w.wordid ?? w.wordID) }));
+            const normalized = words.map(w => ({ 
+                ...w, 
+                wordid: Number(w.wordid ?? w.wordID),
+                translationID: w.translationID ? Number(w.translationID) : (w.translationid ? Number(w.translationid) : null)
+            }));
             const mappedTranslations = allWords
                 .map(w => w.word)
                 .filter(Boolean);
@@ -56,7 +60,9 @@ const NativeToForeign = ( { words, allWords, allPhrases } ) => {
             .sort(() => Math.random() - 0.5);
 
         
-        const phrasesForWord = allPhrases.filter(p => p.wordid === randWord.translationID);
+        const targetId = randWord.translationID ?? randWord.translationid ?? randWord.wordid;
+        const phrasesForWord = allPhrases.filter(p => p.wordid === targetId);
+        console.log("Phrases for word ID", randWord.translationID, phrasesForWord);
         const randomPhrase = phrasesForWord.length
             ? phrasesForWord[Math.floor(Math.random() * phrasesForWord.length)].phrase
             : '';

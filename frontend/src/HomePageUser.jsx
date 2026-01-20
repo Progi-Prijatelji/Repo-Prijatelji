@@ -64,7 +64,7 @@ function HomePageUser() {
           <LanguageSelector
             language={selectedLanguage}
             languages={languages}
-            onChange={{setSelectedLanguage}}
+            onChange={setSelectedLanguage}
           />
           <div className="dictionary-list">
             {selectedLanguage && dictionaries

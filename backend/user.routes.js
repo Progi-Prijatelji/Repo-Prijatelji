@@ -70,7 +70,7 @@ router.post('/sendWordsInDictForUser', verifyToken, async (req, res) =>{
       }
     }  
       //sve riejci koje se mogu uciti, ili rijeci koje se nikada nisu ucile do sad ili rijeci koje su u pripadajucem konatineru dovoljno vremena
-    const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation, w.audiofile, w.audiopostid 
+    const returnWords = await client.query(`SELECT w.word AS word, w.wordid AS wordID, t.word AS translation, w.translationid AS translationID, w.audiofile, w.audiopostid 
                                             FROM dictword dw 
                                             JOIN words w ON w.wordid = dw.wordid
                                             LEFT JOIN words t ON t.wordid = w.translationid 
