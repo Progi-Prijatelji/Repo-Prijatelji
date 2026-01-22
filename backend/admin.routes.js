@@ -348,7 +348,9 @@ router.post('/changeWord', verifyToken, verifyAdmin, async (req, res) =>{
    const {wordid, newWord, phrases} = req.body;
 
    try {
-    await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
+    if (newWord !== ""){
+      await client.query(`update words set word = $2 where wordid = $1`, [wordid, newWord])
+    }
     await client.query(`delete from phrases where wordid = $1`, [wordid]);
     for (phrase of phrases){
       if (phrase !== "") {
